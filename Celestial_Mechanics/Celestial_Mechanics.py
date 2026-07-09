@@ -260,6 +260,41 @@ class Integration:
 
 
 
+    def CR3BP_Cj_from_v(self, x, mu, M=1, G=1, d=1):
+
+        omega = np.sqrt(G * M / d**3)
+
+        Gm1 = G * (1 - mu) * M
+        Gm2 = G * mu * M
+
+        v_2 = x[3]**2 + x[4]**2 + x[5]**2
+
+        r1 = np.sqrt((x[0] + mu * d)**2 + x[1]**2 + x[2]**2)
+        r2 = np.sqrt(((x[0] - (1 - mu) * d))**2 + x[1]**2 + x[2]**2)
+
+        return -v_2 + omega**2 * (x[0]**2 + x[1]**2) + 2 * (Gm1 / r1 + Gm2 / r2)
+
+
+
+    def CR3BP_v_from_Cj(self, Cj, x, mu, M=1, G=1, d=1):
+
+        omega = np.sqrt(G * M / d**3)
+
+        Gm1 = G * (1 - mu) * M
+        Gm2 = G * mu * M
+
+        r1 = np.sqrt((x[0] + mu * d)**2 + x[1]**2 + x[2]**2)
+        r2 = np.sqrt(((x[0] - (1 - mu) * d))**2 + x[1]**2 + x[2]**2)
+
+        v_2 = omega**2 * (x[0]**2 + x[1]**2) + 2 * (Gm1 / r1 + Gm2 / r2) - Cj
+
+        if v_2 < 0:
+            raise ValueError("Computed v_2 is negative.")
+
+        return np.sqrt(v_2)
+
+
+
     def Integrator(self, m, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12):
 
         G = 6.67430e-11
