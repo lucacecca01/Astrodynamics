@@ -191,6 +191,38 @@ class Transformations:
 
 
 
+    @staticmethod
+    def SV_to_CR3BP_normalized_units(x, d, G, M):
+
+        index = len(x) // 2
+        x = np.array(x)
+
+        LU = d
+        TU = np.sqrt(d**3 / G / M)
+
+        x[:index] /= LU
+        x[index:] *= TU/LU    
+
+        return x
+
+
+
+    @staticmethod
+    def CR3BP_normalized_units_to_SV(x, d, G, M):
+
+        index = len(x) // 2
+        x = np.array(x)
+
+        LU = d
+        TU = np.sqrt(d**3 / G / M)
+
+        x[:index] *= LU
+        x[index:] /= TU/LU    
+
+        return x
+
+
+
 
 
 class Integration:
@@ -232,12 +264,7 @@ class Integration:
 
 
 
-    def CR3BP_ODE(self, t, x, mu, M=1, G=1, d=1):
-
-        omega = np.sqrt(G * M / d**3)
-
-        Gm1 = G * (1 - mu) * M
-        Gm2 = G * mu * M
+    def CR3BP_ODE(self, t, x, mu):
 
         F = np.zeros(len(x))
     
@@ -249,44 +276,34 @@ class Integration:
     
         for i in range(0, len(x), 6):
 
-            r1_cubed = ((x[i] + mu * d)**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
-            r2_cubed = (((x[i] - (1 - mu) * d))**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
+            r1_cubed = ((x[i] + mu)**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
+            r2_cubed = (((x[i] - (1 - mu)))**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
 
-            F[i+3] += 2 * omega * x[i+4]  +  omega**2 * x[i]  -  Gm1 * (x[i] + mu * d) / r1_cubed  -  Gm2 * (x[i] - (1 - mu) * d) / r2_cubed
-            F[i+4] += -2 * omega * x[i+3]  +  omega**2 * x[i+1]  -  Gm1 * x[i+1] / r1_cubed - Gm2 * x[i+1] / r2_cubed
-            F[i+5] += - Gm1 * x[i+2] / r1_cubed - Gm2 * x[i+2] / r2_cubed
+            F[i+3] += 2 * x[i+4]  +  x[i]  -  (1 - mu) * (x[i] + mu) / r1_cubed  -  mu * (x[i] - (1 - mu)) / r2_cubed
+            F[i+4] += -2 * x[i+3]  +  x[i+1]  -  (1 - mu) * x[i+1] / r1_cubed - mu * x[i+1] / r2_cubed
+            F[i+5] += - (1 - mu) * x[i+2] / r1_cubed - mu * x[i+2] / r2_cubed
 
         return F
 
 
 
-    def CR3BP_Cj_from_v(self, x, mu, M=1, G=1, d=1):
-
-        omega = np.sqrt(G * M / d**3)
-
-        Gm1 = G * (1 - mu) * M
-        Gm2 = G * mu * M
+    def CR3BP_Cj_from_v(self, x, mu):
 
         v_2 = x[3]**2 + x[4]**2 + x[5]**2
 
-        r1 = np.sqrt((x[0] + mu * d)**2 + x[1]**2 + x[2]**2)
-        r2 = np.sqrt(((x[0] - (1 - mu) * d))**2 + x[1]**2 + x[2]**2)
+        r1 = np.sqrt((x[0] + mu)**2 + x[1]**2 + x[2]**2)
+        r2 = np.sqrt(((x[0] - (1 - mu)))**2 + x[1]**2 + x[2]**2)
 
-        return -v_2 + omega**2 * (x[0]**2 + x[1]**2) + 2 * (Gm1 / r1 + Gm2 / r2)
+        return -v_2 + (x[0]**2 + x[1]**2) + 2 * ((1 - mu) / r1 + mu / r2)
 
 
 
-    def CR3BP_v_from_Cj(self, Cj, x, mu, M=1, G=1, d=1):
+    def CR3BP_v_from_Cj(self, Cj, x, mu):
 
-        omega = np.sqrt(G * M / d**3)
+        r1 = np.sqrt((x[0] + mu)**2 + x[1]**2 + x[2]**2)
+        r2 = np.sqrt(((x[0] - (1 - mu)))**2 + x[1]**2 + x[2]**2)
 
-        Gm1 = G * (1 - mu) * M
-        Gm2 = G * mu * M
-
-        r1 = np.sqrt((x[0] + mu * d)**2 + x[1]**2 + x[2]**2)
-        r2 = np.sqrt(((x[0] - (1 - mu) * d))**2 + x[1]**2 + x[2]**2)
-
-        v_2 = omega**2 * (x[0]**2 + x[1]**2) + 2 * (Gm1 / r1 + Gm2 / r2) - Cj
+        v_2 = (x[0]**2 + x[1]**2) + 2 * ((1 - mu) / r1 + mu / r2) - Cj
 
         if v_2 < 0:
             raise ValueError("Computed v_2 is negative.")
@@ -295,23 +312,31 @@ class Integration:
 
 
 
-    def Integrator(self, m, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12):
-
-        G = 6.67430e-11
+    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None):
          
-        m = np.atleast_1d(m)
-        mu = G * m
+        if model == 'NBP':
+            m = np.atleast_1d(m)
+            mu = G * m
+
+        elif model == 'CR3BP':
+            M = np.sum(m)
+            mu = m[1] / M
+
+        else:
+            raise ValueError(f"Model not found: {model}")
+
 
         if integrator == 'scipy':
 
-            T = np.arange(t0, tf+dt, dt)
+            N = int(round((tf - t0) / dt)) + 1
+            T = np.linspace(t0, tf, N)
 
             if isinstance(x0_list[0], (list, tuple, np.ndarray)):
                 x0 = np.concatenate(x0_list)
             else:
                 x0 = x0_list
 
-            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu,), t_eval=T, method=method, rtol=rtol, atol=atol)
+            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events)
 
             return sol.t, sol.y
         
