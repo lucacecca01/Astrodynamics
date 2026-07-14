@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "AstrodynamicsToolbox"
+version = "0.0.1"
+authors = [{ name = "Luca Cecca", email = "lcec128@aucklanduni.ac.nz" }]
+description = "Astrodynamics and Celestial Mechanics toolbox"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "scipy",
+    "numpy",
+    "matplotlib",
+    "rebound"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["Celestial_Mechanics"]
