@@ -75,14 +75,14 @@ SV = []
 
 
 # Define integration initial conditions
-x0_norm = [1.0664483173291939E+0, 0, 0,    0, 3.0863475065250201E-1, 0]
+x0_norm = [9.0453898750573813E-1, 0, 1.4388186844294218E-1,    0, -4.9801575824700677E-2, 0]
 Cj_norm = 3
 
 
 
 # Define integration boundaries
 masses = [m1, m2]
-T_max = 0.5
+T_max = 4
 T_min = 0
 dt = 0.01
 collisions = 0
@@ -99,7 +99,7 @@ initial_positions = sphere(M_SOI / d, [(1-mu), 0, 0])
 # Define initial velocities
 for pos in initial_positions:
     v_norm = Integrator.CR3BP_v_from_Cj(Cj_norm, pos, mu)
-    v_set = sample_on_sphere(v_norm, 10)
+    v_set = sample_on_sphere(v_norm, 1)
 
     for v in v_set:
        initial_conditions.append(np.concatenate((pos, v)))
