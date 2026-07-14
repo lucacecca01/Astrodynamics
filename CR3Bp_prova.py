@@ -82,7 +82,7 @@ Cj_norm = 3
 
 # Define integration boundaries
 masses = [m1, m2]
-T_max = 4
+T_max = 3.75
 T_min = 0
 dt = 0.01
 collisions = 0
@@ -90,9 +90,8 @@ collisions = 0
 
 
 #Define a sphere of radius E_SOI as initial position
-M_SOI = d * (m2/m1)**(2/5)                                # Sphere of influence of the Moon in km
-E_SOI = d_E * (m1/ms)**(2/5)                              # Sphere of influence of the Earth in km
-initial_positions = sphere(M_SOI / d, [(1-mu), 0, 0])
+M_SOI = (m2/m1)**(2/5)                                # Sphere of influence of the Moon in km
+initial_positions = sphere(M_SOI, [(1-mu), 0, 0])
 
 
 
