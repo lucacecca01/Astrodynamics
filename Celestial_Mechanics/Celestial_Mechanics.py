@@ -267,21 +267,17 @@ class Integration:
     def CR3BP_ODE(self, t, x, mu):
 
         F = np.zeros(len(x))
-    
-        for i in range(0, len(x), 6):
             
-            F[i] = x[i+3]
-            F[i+1] = x[i+4]
-            F[i+2]= x[i+5]
-    
-        for i in range(0, len(x), 6):
+        F[0] = x[3]
+        F[1] = x[4]
+        F[2] = x[5]
 
-            r1_cubed = ((x[i] + mu)**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
-            r2_cubed = (((x[i] - (1 - mu)))**2 + x[i+1]**2 + x[i+2]**2) ** 1.5
+        r1_cubed = ((x[0] + mu)**2 + x[1]**2 + x[2]**2) ** 1.5
+        r2_cubed = (((x[0] - (1 - mu)))**2 + x[1]**2 + x[2]**2) ** 1.5
 
-            F[i+3] += 2 * x[i+4]  +  x[i]  -  (1 - mu) * (x[i] + mu) / r1_cubed  -  mu * (x[i] - (1 - mu)) / r2_cubed
-            F[i+4] += -2 * x[i+3]  +  x[i+1]  -  (1 - mu) * x[i+1] / r1_cubed - mu * x[i+1] / r2_cubed
-            F[i+5] += - (1 - mu) * x[i+2] / r1_cubed - mu * x[i+2] / r2_cubed
+        F[3] = 2 * x[4]  +  x[0]  -  (1 - mu) * (x[0] + mu) / r1_cubed  -  mu * (x[0] - (1 - mu)) / r2_cubed
+        F[4] = -2 * x[3]  +  x[1]  -  (1 - mu) * x[1] / r1_cubed - mu * x[1] / r2_cubed
+        F[5] = - (1 - mu) * x[2] / r1_cubed - mu * x[2] / r2_cubed
 
         return F
 
@@ -338,7 +334,7 @@ class Integration:
 
             sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events)
 
-            return sol.t, sol.y
+            return sol.t, sol.y, sol.t_events
         
 
         if integrator == 'rebound':
