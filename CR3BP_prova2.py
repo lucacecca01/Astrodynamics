@@ -1,3 +1,4 @@
+from multiprocessing import get_context
 from Celestial_Mechanics import Transformations
 from Celestial_Mechanics import Integration
 import numpy as np
@@ -179,7 +180,7 @@ def two_body_energy_derivative(r, v, mu, body=2, frame='rotating'):
 
 
 # Define the initial conditions filters
-def accept_initial_condition(pos, v, mu, filters):
+def accept_initial_condition(pos, v, mu, filters, sol=None):
 
     conditions = []
 
@@ -216,11 +217,35 @@ def accept_initial_condition(pos, v, mu, filters):
     return all(conditions)
 
 
-    global _WORKER_CONFIG
-    global _WORKER_INTEGRATOR
 
-    _WORKER_CONFIG = config
-    _WORKER_INTEGRATOR = Integration()
+# Integration function
+def integrate_one(x0):
+
+    sol = Integrator.Integrator(
+        masses, G, x0, T_min, T_max, dt,
+        model='CR3BP',
+        integrator='scipy',
+        method='DOP853',
+        rtol=1e-9,
+        atol=1e-12,
+        events=(min_distance, max_distance)
+    )
+
+    if not (accept_initial_condition(sol[1][:3, -1], sol[1][3:, -1], mu, filters_end, sol) or BYPASS):
+        return None
+
+    trajectory = Transformations.CR3BP_normalized_units_to_SV(sol[1], d, G, M)
+
+    moon_trajectory = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
+
+    earth_trajectory = Transformations.CR3BP_to_inertial([-mu * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
+
+    bar_inertial = Transformations.CR3BP_to_inertial(trajectory, n, sol[0] * TU)
+
+    collision = len(sol[2][0]) > 0
+    escape = len(sol[2][1]) > 0
+
+    return trajectory, bar_inertial, bar_inertial - moon_trajectory, bar_inertial - earth_trajectory, collision, escape
 
 
 
@@ -291,7 +316,7 @@ T_min = 0
 dt = 0.01
 collisions = 0
 escapes = 0
-n_sample = 100
+n_sample = 1000
 
 
 
@@ -327,29 +352,22 @@ initial_conditions = np.array(initial_conditions)
 
 
 # Integration in normalized units and conversion into physical units
-for i, x0 in enumerate (initial_conditions):
+with get_context("fork").Pool() as pool:
+    results = pool.map(integrate_one, initial_conditions)
 
-    sol = Integrator.Integrator(masses, G, x0, T_min, T_max, dt, model='CR3BP', integrator='scipy', method='DOP853', rtol=1e-9, atol=1e-12, events=(min_distance, max_distance))
+for result in results:
+    if result is None:
+        continue
 
-    if accept_initial_condition(sol[1][:3,-1], sol[1][3:,-1], mu, filters_end) or BYPASS:
+    trajectory, bar_inertial, moon_centered, earth_centered, collision, escape = result
 
-        if len(sol[2][0]) > 0:
-            collisions += 1
+    SV.append(trajectory)
+    SV_inertial.append(bar_inertial)
+    moon_inertial.append(moon_centered)
+    earth_inertial.append(earth_centered)
 
-        if len(sol[2][1]) > 0:
-            escapes += 1
-
-        trajectory = Transformations.CR3BP_normalized_units_to_SV(sol[1], d, G, M)
-        SV.append(trajectory)
-
-        moon_trajectory = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
-        earth_trajectory = Transformations.CR3BP_to_inertial([-mu * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
-
-        bar_inertial = Transformations.CR3BP_to_inertial(trajectory, n, sol[0] * TU)
-        SV_inertial.append(bar_inertial)
-
-        moon_inertial.append(bar_inertial - moon_trajectory)
-        earth_inertial.append(bar_inertial - earth_trajectory)
+    collisions += int(collision)
+    escapes += int(escape)
 
 
 
@@ -482,5 +500,3 @@ elif dim == '2D':
     ax3.legend()
 
     plt.show()
-
-   
