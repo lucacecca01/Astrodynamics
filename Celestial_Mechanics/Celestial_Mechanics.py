@@ -223,6 +223,65 @@ class Transformations:
 
 
 
+    @staticmethod
+    def CR3BP_to_inertial(x, n, t):
+
+        x = np.asarray(x)
+        t = np.asarray(t)
+
+        if x.ndim == 1:
+            x = np.tile(x[:, None], (1, len(t)))
+
+        omega = np.array([0, 0, n])
+
+        r = x[:3]
+        v_rot = x[3:] + np.cross(omega, r, axis=0)
+
+        R = np.array([[np.cos(n*t), -np.sin(n*t)],
+                      [np.sin(n*t),  np.cos(n*t)]])
+
+        r_I = np.vstack((R[0,0]*r[0] + R[0,1]*r[1],
+                         R[1,0]*r[0] + R[1,1]*r[1],
+                         r[2]))
+
+        v_I = np.vstack((R[0,0]*v_rot[0] + R[0,1]*v_rot[1],
+                         R[1,0]*v_rot[0] + R[1,1]*v_rot[1],
+                         v_rot[2]))
+
+        return np.vstack((r_I, v_I))
+    
+
+    
+    @staticmethod
+    def inertial_to_CR3BP(x, n, t):
+
+        x = np.asarray(x, dtype=float)
+        t = np.asarray(t)
+
+        if x.ndim == 1:
+            x = np.tile(x[:, None], (1, len(t)))
+
+        omega = np.array([0, 0, n])
+
+        r = x[:3]
+        v_rot = x[3:] - np.cross(omega, r, axis=0)
+
+        R = np.array([[np.cos(n*t), -np.sin(n*t)],
+                      [np.sin(n*t),  np.cos(n*t)]])
+
+        r_R = np.vstack((R.T[0,0]*r[0] + R.T[0,1]*r[1],
+                         R.T[1,0]*r[0] + R.T[1,1]*r[1],
+                         r[2]))
+
+        v_R = np.vstack((R.T[0,0]*v_rot[0] + R.T[0,1]*v_rot[1],
+                         R.T[1,0]*v_rot[0] + R.T[1,1]*v_rot[1],
+                         v_rot[2]))
+
+        return np.vstack((r_R, v_R))
+    
+
+
+
 
 
 class Integration:
