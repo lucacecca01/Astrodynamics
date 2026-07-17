@@ -1,3 +1,4 @@
+from multiprocessing import get_context
 from Celestial_Mechanics import Transformations
 from Celestial_Mechanics import Integration
 import numpy as np
@@ -29,7 +30,7 @@ SOI = ((m1 + m2)/ms)**(2/5) * (d_E + mu * d)
 
 # Define Dimension Space
 dim = '2D'
-BYPASS = True
+BYPASS = False
 
 
 
@@ -43,7 +44,7 @@ def ipersphere(R, dim, offset=None):
 
     if dim == '3D':
 
-        for phi in np.arange(0, 2*np.pi, 0.2):
+        for phi in np.arange(0, np.pi, 0.2):
             for theta in np.arange(0, 2*np.pi, 0.2):
 
                 x = R * np.cos(theta) * np.sin(phi) + offset[0]
@@ -103,11 +104,19 @@ def min_distance(t, x, mu):
 
 
 # Define SOI exit function
-def max_distance(t, x, mu):   
+def max_distance(t, x, mu, body='BAR'): 
 
-    r_bary = np.sqrt(x[0]**2 + x[1]**2 + x[2]**2)
-
-    return SOI / d - r_bary
+    if body == 'BAR':
+        r_bary = np.sqrt(x[0]**2 + x[1]**2 + x[2]**2)
+        return SOI / d - r_bary
+    
+    elif body == 'EARTH':
+        r_earth = np.sqrt((x[0] + mu)**2 + x[1]**2 + x[2]**2)
+        return E_SOI / d - r_earth
+    
+    elif body == 'MOON':
+        r_moon = np.sqrt((x[0] - (1 - mu))**2 + x[1]**2 + x[2]**2)
+        return M_SOI / d - r_moon
 
 
 
@@ -178,50 +187,89 @@ def two_body_energy_derivative(r, v, mu, body=2, frame='rotating'):
 
 
 
+# Define Lunar Radial Velocity
+def lunar_radial_velocity(r, v, mu):
+
+    r_rel = np.asarray(r) - np.array([1 - mu, 0, 0])
+    v_rel = np.asarray(v) + np.cross([0, 0, 1], r_rel)
+
+    return np.dot(r_rel, v_rel) / np.linalg.norm(r_rel)
+
+
+
+# Define Lunar Revolution Angle
+def lunar_revolution_angle(t, x, mu):
+
+    x_inertial = Transformations.CR3BP_to_inertial(x, 1, t)
+    x_moon = Transformations.CR3BP_to_inertial([(1 - mu), 0, 0, 0, 0, 0], 1, t)
+
+    x_moon_rel = x_inertial - x_moon
+
+    rev_angle = np.unwrap(np.arctan2(x_moon_rel[1], x_moon_rel[0]))
+
+    return rev_angle
+
+
+
+# Define Moon Capture Function
+def moon_capture(t, x, mu):
+
+    return two_body_energy(x[:3], x[3:], mu, body=2, frame='rotating')
+
+
+
 # Define the initial conditions filters
-def accept_initial_condition(pos, v, mu, filters):
+def accept_initial_condition(pos, v, mu, filters, sol=None, t=None, x=None):
 
     conditions = []
 
-    if filters["negative_earth_energy"]:
-        conditions.append(two_body_energy(pos, v, mu, body=1, frame='rotating') < 0)
-
-    if filters["positive_earth_energy"]:
-        conditions.append(two_body_energy(pos, v, mu, body=1, frame='rotating') > 0)
-
-    if filters["negative_moon_energy"]:
-        conditions.append(two_body_energy(pos, v, mu, body=2, frame='rotating') < 0)
-
-    if filters["positive_moon_energy"]:
+    if filters["ballistic capture_start"]:
         conditions.append(two_body_energy(pos, v, mu, body=2, frame='rotating') > 0)
-
-    if filters["decreasing_earth_energy"]:
-        conditions.append(two_body_energy_derivative(pos, v, mu, body=1, frame='rotating') < 0)
-
-    if filters["decreasing_moon_energy"]:
+        conditions.append(two_body_energy(pos, v, mu, body=1, frame='rotating') < 0)
         conditions.append(two_body_energy_derivative(pos, v, mu, body=2, frame='rotating') < 0)
 
-    if filters["increasing_earth_energy"]:
-        conditions.append(two_body_energy_derivative(pos, v, mu, body=1, frame='rotating') > 0)
 
-    if filters["increasing_moon_energy"]:
+    if filters["capture"]:
+        r_M = np.sqrt((sol[1][0] - (1 - mu))**2 + sol[1][1]**2 + sol[1][2]**2)
+        conditions.append(np.all(r_M < 2 * M_SOI / d))
+
+        
+    if filters["ballistic capture_end"]:
+        conditions.append(two_body_energy(pos, v, mu, body=2, frame='rotating') < 0)
         conditions.append(two_body_energy_derivative(pos, v, mu, body=2, frame='rotating') > 0)
 
+    if filters["revolution_angle"]:
+        theta = lunar_revolution_angle(sol[0], sol[1], mu)
+        conditions.append(max(abs(theta - theta[0])) > revolution_number * 2 * np.pi)
+  
     if filters["no_collision"]:
         conditions.append(len(sol[2][0]) == 0)
 
-    if filters["no_escape"]:
+    if filters["no_SOI_exit"]:
         conditions.append(len(sol[2][1]) == 0)
 
+    if filters["no_escape"]:
+        theta = lunar_revolution_angle(sol[0], sol[1], mu)
+        conditions.append(len(sol[2][2]) == 0 or max(abs(theta - theta[0])) > 2 * np.pi)
+        
     return all(conditions)
 
 
-    global _WORKER_CONFIG
-    global _WORKER_INTEGRATOR
 
-    _WORKER_CONFIG = config
-    _WORKER_INTEGRATOR = Integration()
+# Integration function
+def integrate_one(x0):
 
+    sol = Integrator.Integrator(
+        masses, G, x0, T_min, T_max, dt,
+        model='CR3BP',
+        integrator='scipy',
+        method='DOP853',
+        rtol=1e-9,
+        atol=1e-12,
+        events=(min_distance, max_distance, moon_capture)
+    )
+
+    return sol
 
 
 
@@ -234,34 +282,31 @@ min_distance.direction = -1
 max_distance.terminal = True
 max_distance.direction = -1
 
+moon_capture.terminal = True
+moon_capture.direction = 1
+
 
 
 # Conditions to apply
 filters_start = {
-    "negative_earth_energy": False,
-    "negative_moon_energy": False,
-    "positive_earth_energy": False,
-    "positive_moon_energy": True,
-    "increasing_earth_energy": False,
-    "decreasing_earth_energy": False,
-    "increasing_moon_energy": False,
-    "decreasing_moon_energy": True,
+    "ballistic capture_start": True,
+    "capture": False,
+    "ballistic capture_end": False,
+    "revolution_angle": False,
     "no_collision": False,
+    "no_SOI_exit": False,
     "no_escape": False
 }
 
 
 filters_end = {
-    "negative_earth_energy": False,
-    "negative_moon_energy": True,
-    "positive_earth_energy": False,
-    "positive_moon_energy": False,
-    "increasing_earth_energy": False,
-    "decreasing_earth_energy": False,
-    "increasing_moon_energy": True,
-    "decreasing_moon_energy": False,
+    "ballistic capture_start": False,
+    "capture": True,
+    "ballistic capture_end": True,
+    "revolution_angle": True,
     "no_collision": True,
-    "no_escape": False
+    "no_SOI_exit": False,
+    "no_escape": True
 }
 
 
@@ -288,15 +333,18 @@ Cj_norm = 3.05
 masses = [m1, m2]
 T_max = 2*np.pi
 T_min = 0
-dt = 0.01
+dt = 0.001
+total = 0
 collisions = 0
-escapes = 0
-n_sample = 100
+SOI_exits = 0
+uncaptures = 0
+n_sample = 1000
+revolution_number = 2
 
 
 
 #Define a sphere of radius M_SOI as initial position                        
-initial_positions = ipersphere(M_SOI / d, dim, [(1-mu), 0, 0])
+initial_positions = ipersphere((1 - 1e-12) * M_SOI / d, dim, [(1-mu), 0, 0])
 
 
 
@@ -327,27 +375,32 @@ initial_conditions = np.array(initial_conditions)
 
 
 # Integration in normalized units and conversion into physical units
-for i, x0 in enumerate (initial_conditions):
+with get_context("fork").Pool() as pool:
+    results = pool.map(integrate_one, initial_conditions)
 
-    sol = Integrator.Integrator(masses, G, x0, T_min, T_max, dt, model='CR3BP', integrator='scipy', method='DOP853', rtol=1e-9, atol=1e-12, events=(min_distance, max_distance))
+for sol in results:
 
-    if accept_initial_condition(sol[1][:3,-1], sol[1][3:,-1], mu, filters_end) or BYPASS:
+    theta = lunar_revolution_angle(sol[0], sol[1], mu)
 
-        if len(sol[2][0]) > 0:
-            collisions += 1
+    if len(sol[2][0]) > 0:
+        collisions += 1
+    if len(sol[2][1]) > 0:
+        SOI_exits += 1
+    if not len(sol[2][2]) == 0 or max(abs(theta - theta[0])) > 2 * np.pi:
+        uncaptures += 1
 
-        if len(sol[2][1]) > 0:
-            escapes += 1
+    if (accept_initial_condition(sol[1][:3, -1], sol[1][3:, -1], mu, filters_end, sol) or BYPASS):
 
         trajectory = Transformations.CR3BP_normalized_units_to_SV(sol[1], d, G, M)
-        SV.append(trajectory)
 
-        moon_trajectory = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
+        moon_trajectory = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], n, sol[0]* TU)
+
         earth_trajectory = Transformations.CR3BP_to_inertial([-mu * d, 0, 0, 0, 0, 0], n, sol[0] * TU)
 
         bar_inertial = Transformations.CR3BP_to_inertial(trajectory, n, sol[0] * TU)
-        SV_inertial.append(bar_inertial)
 
+        SV.append(trajectory)
+        SV_inertial.append(bar_inertial)
         moon_inertial.append(bar_inertial - moon_trajectory)
         earth_inertial.append(bar_inertial - earth_trajectory)
 
@@ -364,8 +417,11 @@ Moon = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], 1, T)
 total = len(initial_conditions)
 print("\n=== Simulation Results ===")
 print(f"Total trajectories: {total}")
-print(f"Collisions:         {collisions} ({100 * collisions / total:.1f} %)")
-print(f"Escapes:            {escapes} ({100 * escapes / total:.1f} %)")
+print(f"Collisions:                       {collisions} ({100 * collisions / total:.1f} %)")
+print(f"BAR_SOI Exits:                    {SOI_exits} ({100 * SOI_exits / total:.1f} %)")
+print(f"Escaped with N_rev < 1:           {uncaptures} ({100 * uncaptures / total:.1f} %)")
+print(f"Still bounded or N_rev >= 1:      {total - collisions - SOI_exits - uncaptures} ({100 * (total - collisions - SOI_exits - uncaptures) / total:.1f} %)")
+print(f"N_rev >= {revolution_number}:                       {len(SV)} ({100 * (len(SV)) / total:.1f} %)")
 
 
 
@@ -443,6 +499,7 @@ elif dim == '2D':
     for traj in SV_inertial:
 
         ax2.plot(traj[0, :], traj[1, :], alpha=0.8)
+        ax2.scatter(traj[0, 0], traj[1, 0], s=5, zorder=10)
 
     ax2.scatter(Earth[0, 0], Earth[1, 0], s=50, color='b', label='Earth', zorder=0)
     ax2.scatter(Moon[0, 0], Moon[1, 0], s=50, color='darkred', label='Moon', zorder=0) 
@@ -456,7 +513,7 @@ elif dim == '2D':
     for traj in moon_inertial:
 
         ax3.plot(traj[0, :], traj[1, :], alpha=0.8)
-
+        ax3.scatter(traj[0, 0], traj[1, 0], s=5, zorder=10)
 
     
     ax1.ticklabel_format(axis="x", style="sci", scilimits=(0, 0), useMathText=True) 
@@ -482,5 +539,3 @@ elif dim == '2D':
     ax3.legend()
 
     plt.show()
-
-   

@@ -227,7 +227,7 @@ class Transformations:
     def CR3BP_to_inertial(x, n, t):
 
         x = np.asarray(x)
-        t = np.asarray(t)
+        t = np.atleast_1d(t)
 
         if x.ndim == 1:
             x = np.tile(x[:, None], (1, len(t)))
@@ -256,7 +256,7 @@ class Transformations:
     def inertial_to_CR3BP(x, n, t):
 
         x = np.asarray(x, dtype=float)
-        t = np.asarray(t)
+        t = np.atleast_1d(t)
 
         if x.ndim == 1:
             x = np.tile(x[:, None], (1, len(t)))

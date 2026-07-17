@@ -453,7 +453,7 @@ elif dim == '2D':
 
 
 
-    ax2.set_title("Baricetric Inertial Frame")  
+    ax2.set_title("Baricentric Inertial Frame")  
 
     ax2.plot(Earth[0, :], Earth[1, :], '--', color='b', alpha=1, linewidth=2, zorder=10)
     ax2.plot(Moon[0, :], Moon[1, :], '--', color='darkred', alpha=1, linewidth=2, zorder=10)
