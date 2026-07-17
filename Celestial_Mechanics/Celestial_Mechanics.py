@@ -268,13 +268,15 @@ class Transformations:
 
         R = np.array([[np.cos(n*t), -np.sin(n*t)],
                       [np.sin(n*t),  np.cos(n*t)]])
+        
+        R_T = R.swapaxes(0, 1)
 
-        r_R = np.vstack((R.T[0,0]*r[0] + R.T[0,1]*r[1],
-                         R.T[1,0]*r[0] + R.T[1,1]*r[1],
+        r_R = np.vstack((R_T[0,0]*r[0] + R_T[0,1]*r[1],
+                         R_T[1,0]*r[0] + R_T[1,1]*r[1],
                          r[2]))
 
-        v_R = np.vstack((R.T[0,0]*v_rot[0] + R.T[0,1]*v_rot[1],
-                         R.T[1,0]*v_rot[0] + R.T[1,1]*v_rot[1],
+        v_R = np.vstack((R_T[0,0]*v_rot[0] + R_T[0,1]*v_rot[1],
+                         R_T[1,0]*v_rot[0] + R_T[1,1]*v_rot[1],
                          v_rot[2]))
 
         return np.vstack((r_R, v_R))

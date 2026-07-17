@@ -228,12 +228,10 @@ def accept_initial_condition(pos, v, mu, filters, sol=None, t=None, x=None):
         conditions.append(two_body_energy(pos, v, mu, body=1, frame='rotating') < 0)
         conditions.append(two_body_energy_derivative(pos, v, mu, body=2, frame='rotating') < 0)
 
-
     if filters["capture"]:
         r_M = np.sqrt((sol[1][0] - (1 - mu))**2 + sol[1][1]**2 + sol[1][2]**2)
         conditions.append(np.all(r_M < 2 * M_SOI / d))
-
-        
+     
     if filters["ballistic capture_end"]:
         conditions.append(two_body_energy(pos, v, mu, body=2, frame='rotating') < 0)
         conditions.append(two_body_energy_derivative(pos, v, mu, body=2, frame='rotating') > 0)
@@ -305,7 +303,7 @@ filters_end = {
     "ballistic capture_end": True,
     "revolution_angle": True,
     "no_collision": True,
-    "no_SOI_exit": False,
+    "no_SOI_exit": True,
     "no_escape": True
 }
 
@@ -338,6 +336,8 @@ total = 0
 collisions = 0
 SOI_exits = 0
 uncaptures = 0
+captured = 0
+max_revolutions = 0
 n_sample = 1000
 revolution_number = 2
 
@@ -381,13 +381,25 @@ with get_context("fork").Pool() as pool:
 for sol in results:
 
     theta = lunar_revolution_angle(sol[0], sol[1], mu)
+    r_M = np.sqrt((sol[1][0] - (1 - mu))**2 + sol[1][1]**2 + sol[1][2]**2)
 
     if len(sol[2][0]) > 0:
         collisions += 1
+
     if len(sol[2][1]) > 0:
         SOI_exits += 1
-    if not len(sol[2][2]) == 0 or max(abs(theta - theta[0])) > 2 * np.pi:
+
+    if len(sol[2][2]) > 0 and max(abs(theta - theta[0])) < 2 * np.pi:
         uncaptures += 1
+
+    if two_body_energy(sol[1][:3, -1], sol[1][3:, -1], mu, body=2, frame='rotating') < 0 and len(sol[2][1]) == 0 and len(sol[2][0]) == 0 and np.all(r_M < 2 * M_SOI / d):
+
+        if len(sol[2][2]) == 0 or max(abs(theta - theta[0])) > 2 * np.pi:
+            captured += 1
+
+        if max(abs(theta - theta[0])) > revolution_number * 2 * np.pi:
+            max_revolutions += 1
+    
 
     if (accept_initial_condition(sol[1][:3, -1], sol[1][3:, -1], mu, filters_end, sol) or BYPASS):
 
@@ -420,8 +432,8 @@ print(f"Total trajectories: {total}")
 print(f"Collisions:                       {collisions} ({100 * collisions / total:.1f} %)")
 print(f"BAR_SOI Exits:                    {SOI_exits} ({100 * SOI_exits / total:.1f} %)")
 print(f"Escaped with N_rev < 1:           {uncaptures} ({100 * uncaptures / total:.1f} %)")
-print(f"Still bounded or N_rev >= 1:      {total - collisions - SOI_exits - uncaptures} ({100 * (total - collisions - SOI_exits - uncaptures) / total:.1f} %)")
-print(f"N_rev >= {revolution_number}:                       {len(SV)} ({100 * (len(SV)) / total:.1f} %)")
+print(f"Still bounded or N_rev >= 1:      {captured} ({100 * (captured) / total:.1f} %)")
+print(f"N_rev >= {revolution_number}:                       {max_revolutions} ({100 * (max_revolutions) / total:.1f} %)")
 
 
 

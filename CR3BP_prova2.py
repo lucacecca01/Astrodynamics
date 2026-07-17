@@ -30,7 +30,7 @@ SOI = ((m1 + m2)/ms)**(2/5) * (d_E + mu * d)
 
 # Define Dimension Space
 dim = '2D'
-BYPASS = False
+BYPASS = True
 
 
 
@@ -316,7 +316,7 @@ T_min = 0
 dt = 0.01
 collisions = 0
 escapes = 0
-n_sample = 1000
+n_sample = 100
 
 
 
