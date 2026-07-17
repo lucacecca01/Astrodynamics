@@ -319,10 +319,8 @@ earth_inertial = []
 
 
 # Define integration initial conditions
-x0_norm = [9.0453898750573813E-1, 0, 1.4388186844294218E-1,    0, -4.9801575824700677E-2, 0]
 Cj_max = 3.19
 Cj_min = 2.96
-
 Cj_norm = 3.05
 
 
@@ -370,7 +368,6 @@ for pos in initial_positions:
 
 # Initialize initial conditions
 initial_conditions = np.array(initial_conditions)
-#initial_conditions = np.array([x0_norm])
 
 
 
