@@ -299,23 +299,26 @@ filters_start = {
 
 filters_end = {
     "ballistic capture_start": False,
-    "capture": True,
+    "capture": False,
     "ballistic capture_end": True,
-    "revolution_angle": True,
-    "no_collision": True,
-    "no_SOI_exit": True,
-    "no_escape": True
+    "revolution_angle": False,
+    "no_collision": False,
+    "no_SOI_exit": False,
+    "no_escape": False
 }
 
 
 
 # Define Lists
 initial_conditions = []
+times = []
 SV = []
 SV_inertial = []
 moon_inertial = []
 earth_inertial = []
-
+moon_energy = []
+earth_energy = []
+Cj = []
 
 
 # Define integration initial conditions
@@ -336,8 +339,8 @@ SOI_exits = 0
 uncaptures = 0
 captured = 0
 max_revolutions = 0
-n_sample = 1000
-revolution_number = 2
+n_sample = 10
+revolution_number = 1
 
 
 
@@ -408,10 +411,24 @@ for sol in results:
 
         bar_inertial = Transformations.CR3BP_to_inertial(trajectory, n, sol[0] * TU)
 
+        e_energy = np.array([two_body_energy(sol[1][:3, i], sol[1][3:, i], mu, body=1, frame='rotating')
+            for i in range(len(sol[0]))
+        ])
+
+        m_energy = np.array([two_body_energy(sol[1][:3, i], sol[1][3:, i], mu, body=2, frame='rotating')
+            for i in range(len(sol[0]))
+        ])
+
+        Jacobi_constant = Integrator.CR3BP_Cj_from_v(sol[1], mu)
+
+        times.append(sol[0])
         SV.append(trajectory)
         SV_inertial.append(bar_inertial)
         moon_inertial.append(bar_inertial - moon_trajectory)
         earth_inertial.append(bar_inertial - earth_trajectory)
+        moon_energy.append(m_energy)
+        earth_energy.append(e_energy)
+        Cj.append(Jacobi_constant)
 
 
 
@@ -469,8 +486,20 @@ if dim=='3D':
 
 elif dim == '2D':
 
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 8))
+    fig = plt.figure(figsize=(19, 10))
 
+    gs = fig.add_gridspec(nrows=2, ncols=3, height_ratios=[2, 1], hspace=0.2, wspace=0.2)
+
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+
+    ax4 = fig.add_subplot(gs[1, 0])
+    ax5 = fig.add_subplot(gs[1, 1])
+    ax6 = fig.add_subplot(gs[1, 2])
+
+    for ax in (ax1, ax2, ax3):
+        ax.set_box_aspect(1)
 
     ax1.set_title("Rotating Frame")  
 
@@ -524,7 +553,18 @@ elif dim == '2D':
         ax3.plot(traj[0, :], traj[1, :], alpha=0.8)
         ax3.scatter(traj[0, 0], traj[1, 0], s=5, zorder=10)
 
+
     
+    for time, Cj_traj, e_energy, m_energy in zip(times, Cj, earth_energy, moon_energy):
+
+        ax4.plot(time, Cj_traj - Cj_traj[0], alpha=0.8)
+        ax5.plot(time, e_energy, alpha=0.8)
+        ax6.plot(time, m_energy, alpha=0.8)
+
+    ax4.axhline(0, color='k', linestyle='--', alpha=0.8)
+    ax5.axhline(0, color='k', linestyle='--', alpha=0.8)
+    ax6.axhline(0, color='k', linestyle='--', alpha=0.8)
+
     ax1.ticklabel_format(axis="x", style="sci", scilimits=(0, 0), useMathText=True) 
     ax1.ticklabel_format(axis="y", style="sci", scilimits=(0, 0), useMathText=True)
     ax1.set_xlabel("X [km]")
@@ -546,5 +586,17 @@ elif dim == '2D':
     ax3.axis("equal")
     ax3.grid(alpha=0.25) 
     ax3.legend()
+
+    ax4.set_title("Jacobi Constant Error")
+    ax4.set_xlabel("Time [TU]")
+    ax4.set_ylabel(r"$C_J-C_J(0)$")
+
+    ax5.set_title("Earth Specific Energy")
+    ax5.set_xlabel("Time [TU]")
+    ax5.set_ylabel(r"$\varepsilon_E$")
+
+    ax6.set_title("Moon Specific Energy")
+    ax6.set_xlabel("Time [TU]")
+    ax6.set_ylabel(r"$\varepsilon_M$")
 
     plt.show()
