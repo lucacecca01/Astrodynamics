@@ -395,7 +395,7 @@ class Integration:
 
             sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events)
 
-            return sol.t, sol.y, sol.t_events
+            return sol.t, sol.y, sol.t_events, sol.y_events
         
 
         if integrator == 'rebound':
