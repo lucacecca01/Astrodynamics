@@ -42,7 +42,8 @@ class Transformations:
 
 
 
-    def sv_from_coe(self, mu, a, e, i, RA, w, anomaly, r_p=None, anomaly_type='true', deg_or_rad='deg'):  
+    @staticmethod
+    def sv_from_coe(mu, a, e, i, RA, w, anomaly, r_p=None, anomaly_type='true', deg_or_rad='deg'):  
 
         if deg_or_rad not in ("deg", "rad"):
             raise ValueError("deg_or_rad has to be 'deg' or 'rad'")
@@ -103,7 +104,8 @@ class Transformations:
     
 
 
-    def coe_from_sv(self, R, V, mu, deg_or_rad='deg'):
+    @staticmethod
+    def coe_from_sv(R, V, mu, deg_or_rad='deg'):
 
         if deg_or_rad not in ("deg", "rad"):
             raise ValueError("deg_or_rad has to be 'deg' or 'rad'")
@@ -173,7 +175,8 @@ class Transformations:
 
 
 
-    def rtn_to_inertial(self, vec_rtn, r_eci, v_eci):
+    @staticmethod
+    def rtn_to_inertial(vec_rtn, r_eci, v_eci):
 
         n = np.cross(r_eci, v_eci)
 
