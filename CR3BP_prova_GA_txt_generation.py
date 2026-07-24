@@ -5,7 +5,7 @@ from Celestial_Mechanics import Transformations
 from Celestial_Mechanics import Integration
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize, BoundaryNorm
+from matplotlib.colors import Normalize, BoundaryNorm, ListedColormap
 import time
 
 start_time = time.perf_counter()
@@ -208,6 +208,7 @@ def earth_radial_velocity(t, x, mu):
     return (x[0] + mu)*x[3] + x[1]*x[4] + x[2]*x[5]
 
 
+
 # Define Lunar Revolution Angle
 def lunar_revolution_angle(t, x, mu):
 
@@ -269,7 +270,12 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
     conditions = []
 
     if filters["escape"]:
-        conditions.append(two_body_energy(pos[:, -1], v[:, -1], mu, body=1, frame='rotating') > 0)
+        if len(sol[3][2]) == 0:
+            return False
+
+        x_soi = sol[3][2][-1]
+
+        conditions.append(two_body_energy(x_soi[:3], x_soi[3:], mu, body=1, frame='rotating') > 0)
 
 
     if filters["capture"]:
@@ -282,7 +288,7 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
         r_rel = x_perigee[:3] - np.array([-mu, 0, 0])
         v_rel = x_perigee[3:] + np.cross([0, 0, 1], r_rel)
 
-        conditions.append(two_body_energy(pos[:, -1], v[:, -1], mu, body=1, frame='rotating') < moon_earth_energy)
+        conditions.append(two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating') < moon_earth_energy)
         conditions.append(earth_distance > (200 + R_E) / d and earth_distance < (800 + R_E) / d)
 
         if filters["prograde"]:
@@ -295,15 +301,21 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
     if filters["lunar_flyby"]:
         if SOI_exit_index is None:
             return False
+
+        x_moon_exit = sol[3][1][-1]
+        x_end = sol[3][2][-1]
         
-        moon_energy_SOI_exit = two_body_energy(pos[:, SOI_exit_index], v[:, SOI_exit_index], mu, body=2, frame='rotating')
-        moon_final_distance = np.linalg.norm(pos[:,-1] - np.array([(1 - mu), 0, 0]))
+        moon_energy_SOI_exit = two_body_energy(x_moon_exit[:3], x_moon_exit[3:], mu, body=2, frame='rotating')
+        moon_final_distance = np.linalg.norm(x_end[:3] - np.array([(1 - mu), 0, 0]))
 
         conditions.append(moon_final_distance > M_SOI / d)
         conditions.append(moon_energy_SOI_exit > 0)
 
 
     if filters["significant_first_flyby"]:
+        if len(sol[3][1]) == 0:
+            return False
+        
         x_in  = sol[1][:, 0]
         x_out = sol[3][1][0]
 
@@ -330,6 +342,7 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
     if filters["no_collision"]:
         conditions.append(len(sol[2][0]) == 0)
 
+
     return all(conditions)
 
 
@@ -349,7 +362,7 @@ def accept_retro_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
         earth_distance = np.linalg.norm(x_perigee[:3] - np.array([-mu, 0, 0]))
         moon_earth_energy = two_body_energy([1 - mu, 0, 0], [0, 0, 0], mu, body=1, frame='rotating')
 
-        conditions.append(two_body_energy(pos[:, -1], v[:, -1], mu, body=1, frame='rotating') < 0)
+        conditions.append(two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating') < 0)
         conditions.append(earth_distance > (200 + R_E) / d and earth_distance < (800 + R_E) / d)
 
         if filters["prograde"]:
@@ -360,7 +373,12 @@ def accept_retro_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
     
 
     if filters["capture"]:
-        conditions.append(two_body_energy(pos[:, -1], v[:, -1], mu, body=1, frame='rotating') > 0)
+        if len(sol[3][1]) == 0:
+            return False
+
+        x_soi = sol[3][1][-1]
+        
+        conditions.append(two_body_energy(x_soi[:3], x_soi[3:], mu, body=1, frame='rotating') > 0)
 
 
     if filters["no_collision"]:
@@ -418,16 +436,29 @@ def integrate_one(x0, T_min, T_max, dt, events=(min_distance, moon_SOI), filter_
 
 # Conditions to apply
 filters = {
-    "escape": True,
-    "capture": False,
+    "escape": False,
+    "capture": True,
     "lunar_flyby": True,
-    "maximum_flybys": True,
+    "maximum_flybys": False,
     "no_collision": True,
     "significant_first_flyby": True,
     "maximum_revolutions": False,
     "prograde": False,
     "retrograde": False
 }
+
+
+
+
+flyby_colors = [
+    "#6A00A8",  # 1: viola
+    "#00B4D8",  # 2: ciano
+    "#FF8C00",  # 3: arancione
+    "#2DC653",  # 4: verde
+    "#FF006E",  # 5: magenta
+    "#FFD60A",  # 6: giallo
+]
+
 
 
 
@@ -470,13 +501,17 @@ rp = []
 delta_E = []
 Cj_cicle = []
 flyby_counts = []
+perigee = []
+final_energy = []
 
 
 # Define integration initial conditions
-Cj_max = 2.4
-Cj_min = 0.8
+Cj_max = 2.5
+Cj_min = 0
+Cj_samples = 100
 cmap_1 = plt.cm.viridis
 cmap_2 = plt.cm.Spectral_r
+cmap_4 = plt.cm.plasma_r
 
 
 
@@ -496,12 +531,12 @@ flyby_tol = 0.1
 
 # Define integration time and step size
 if filters["escape"]:
-    T_max = 2 * np.pi
-    T_retro = -2 * np.pi
+    T_max = 8 * np.pi
+    T_retro = -4 * np.pi
     dt = 0.01
     dt_retro = -0.01
 elif filters["capture"]:
-    T_max = 2 * np.pi
+    T_max = 8 * np.pi
     T_retro = -4 * np.pi
     dt = 0.01
     dt_retro = -0.01
@@ -519,7 +554,7 @@ pool = get_context("fork").Pool()
 
 
 # Iterate over Jacobi constants
-for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
+for Cj_norm in np.arange(Cj_min, Cj_max, 0.01):
 
 
     initial_conditions = []
@@ -566,8 +601,8 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
             x0_forward = [result[0][1][:, 0] for result in retro_results]
 
         else:
+            retro_res = []
             retro_results = [None] * len(initial_conditions)
-            transition_indices.append(0)
             x0_forward = initial_conditions
 
         # Integrate prograde trajectories
@@ -577,7 +612,6 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
         retro_collisions += sum(result[1] for result in retro_res)
         forward_collisions += sum(result[1] for result in total_sol)
         forward_results = [result[0] for result in total_sol]
-
 
 
     elif filters["capture"]:
@@ -596,8 +630,8 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
             retro_results = [result[0] for result in retro_res]
 
         else:
+            retro_res = []
             retro_results = [None] * len(forward_results)
-            transition_indices.extend([0] * len(forward_results))
 
         retro_collisions += sum(result[1] for result in retro_res)
         forward_collisions += sum(result[1] for result in total_sol)
@@ -626,6 +660,9 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
             moon_energy.append(m_f)
             Cj.append(Cj_f)
             Cj_cicle.append(Cj_norm)
+            transition_indices.append(0)
+            flyby_counts.append(len(sol_f[2][1]))
+            perigee.append(np.linalg.norm(sol_f[3][2][-1][:3] - np.array([-mu, 0, 0])))
             continue
         
         sol_r, traj_r, bar_r, moon_r, earth_r, e_r, m_r, Cj_r = retro
@@ -642,6 +679,10 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 100):
         Cj.append(np.concatenate((Cj_r[::-1], Cj_f[1:]), axis=0))
         Cj_cicle.append(Cj_norm)
         flyby_counts.append(len(sol_f[2][1]))
+
+        sol_perigee = sol_r if filters["escape"] else sol_f
+        perigee.append(np.linalg.norm(sol_perigee[3][2][-1][:3] - np.array([-mu, 0, 0])))
+        final_energy.append(e_f[-1] if filters["escape"] else e_r[-1])
 
 
 
@@ -665,25 +706,41 @@ else:
 if filters["escape"]:
     v_circ = np.array([np.sqrt(G * m1 / np.linalg.norm(traj[:3, 0])) for traj in earth_inertial])
     delta_v = np.array([np.linalg.norm(traj[3:, 0]) - v_circ[i] for i, traj in enumerate(earth_inertial)])
-    rp_e = np.array([np.linalg.norm(traj[:3, 0]) - R_E for traj in earth_inertial])
 elif filters["capture"]:
     v_circ = np.array([np.sqrt(G * m1 / np.linalg.norm(traj[:3, -1])) for traj in earth_inertial])
     delta_v = np.array([np.linalg.norm(traj[3:, -1]) - v_circ[i] for i, traj in enumerate(earth_inertial)])
-    rp_e = np.array([np.linalg.norm(traj[:3, -1]) - R_E for traj in earth_inertial])
 
 
 delta_E  = np.array(np.abs([e[-1] - e[0] for e in earth_energy]))
-norm_2 = Normalize(delta_v.min(), delta_v.max())
-
 flyby_counts = np.asarray(flyby_counts)
-bounds_3 = np.arange(flyby_counts.min() - 0.5, flyby_counts.max() + 1.5)
-cmap_3 = plt.get_cmap("turbo", len(bounds_3) - 1)
-norm_3 = BoundaryNorm(bounds_3, cmap_3.N)
+perigee = np.asarray(perigee)
+
+
+try:
+    norm_2 = Normalize(delta_v.min(), delta_v.max())
+    bounds_3 = np.arange(flyby_counts.min() - 0.5, flyby_counts.max() + 1.5)
+    n_flyby_levels = len(bounds_3) - 1
+    cmap_3 = ListedColormap(flyby_colors[:n_flyby_levels])
+    norm_3 = BoundaryNorm(bounds_3, cmap_3.N)
+    final_energy = np.asarray(final_energy)
+    norm_4 = Normalize(final_energy.min(), final_energy.max())
+except ValueError:
+    print("No accepted trajectories.")
 
 
 
 # Evaluate perilune and perigee distances for each trajectory
 rp_m = np.array([np.min(np.linalg.norm(traj[:3, :], axis=0)) / R_L for traj in moon_inertial])
+
+
+
+
+# Save the results to a text file
+i = 0
+r0, v0 = np.array([x[:3, i] for x in SV_inertial]), np.array([x[3:, i] for x in SV_inertial])
+t0 = np.array([t[i] * TU for t in times])
+data = np.column_stack((r0, v0, t0, Cj_cicle, delta_E*G*M/d, delta_v, final_energy*G*M/d, perigee*d-R_E, (rp_m-1)*R_L))
+np.savetxt("Capture_trajectories.txt", data, header="r0x r0y r0z v0x v0y v0z t0_days Cj DE DV Emax h_perigeo h_min_periluneo")
 
 
 
@@ -764,29 +821,16 @@ elif dim == '2D':
         ax.set_box_aspect(1)
 
 
-    ax1.set_title("Rotating Frame")  
-    ax1.scatter(initial_positions[:,0] * d, initial_positions[:,1] * d, s=0.5, alpha=0.8, color='grey')
-
-    for trajectory, Cj_value in zip(SV, Cj_cicle):
-
-        X = trajectory[0, :]
-        Y = trajectory[1, :]
-
-        ax1.plot(X, Y, color=cmap_1(norm_1(Cj_value)))
-
-    x = np.linspace(-1.5, 1.5, 600) 
-    X, Y = np.meshgrid(x, x)
-
-    r1 = np.sqrt((X + mu)**2 + Y**2)
-    r2 = np.sqrt((X - (1 - mu))**2 + Y**2)
-    C = X**2 + Y**2 + 2*((1 - mu)/r1 + mu/r2)
-
-    #ax1.contour(X*d, Y*d, C, levels=[Cj_norm], colors="k")
-
-    ax1.scatter((1-mu)*d, 0, s=50, zorder=10, label='Moon', color='darkred')
-    ax1.scatter(-mu*d, 0, s=50, zorder=10, label='Earth', color='b')
-    ax1.scatter(0.8369151258 * d, 0, s=45, marker='x', color='black', label='Lagrange points', zorder=10)
-    ax1.scatter(1.1556821654 * d, 0, s=45, marker='x', color='black', zorder=10)
+    ax1.plot(Earth[0, :], Earth[1, :], '--', color='b', alpha=1, linewidth=2, zorder=10)
+    ax1.plot(Moon[0, :], Moon[1, :], '--', color='k', alpha=1, linewidth=2, zorder=10)
+        
+    for traj, index, Cj_value in zip(SV_inertial, transition_indices, Cj_cicle):
+    
+        ax1.plot(traj[0, :], traj[1, :], alpha=1, color=cmap_1(norm_1(Cj_value)))
+        ax1.scatter(traj[0, index], traj[1, index], s=5, zorder=10, color=cmap_1(norm_1(Cj_value)))
+    
+    ax1.scatter(Earth[0, 0], Earth[1, 0], s=50, color='b', label='Earth', zorder=0)
+    ax1.scatter(Moon[0, 0], Moon[1, 0], s=50, color='darkred', label='Moon', zorder=0) 
 
 
 
@@ -795,28 +839,34 @@ elif dim == '2D':
     ax2.plot(Earth[0, :], Earth[1, :], '--', color='b', alpha=1, linewidth=2, zorder=10)
     ax2.plot(Moon[0, :], Moon[1, :], '--', color='k', alpha=1, linewidth=2, zorder=10)
     
-    for traj, index, Cj_value in zip(SV_inertial, transition_indices, Cj_cicle):
+    for traj, index, delta_v_value in zip(SV_inertial, transition_indices, delta_v):
 
-        ax2.plot(traj[0, :], traj[1, :], alpha=1, color=cmap_1(norm_1(Cj_value)))
-        ax2.scatter(traj[0, index], traj[1, index], s=5, zorder=10, color=cmap_1(norm_1(Cj_value)))
+        color = cmap_2(norm_2(delta_v_value))
+
+        ax2.plot(traj[0, :], traj[1, :], alpha=1, color=color)
+        ax2.scatter(traj[0, index], traj[1, index], s=5, zorder=10, color=color)
 
     ax2.scatter(Earth[0, 0], Earth[1, 0], s=50, color='b', label='Earth', zorder=0)
     ax2.scatter(Moon[0, 0], Moon[1, 0], s=50, color='darkred', label='Moon', zorder=0) 
 
 
 
-    ax3.set_title("Moon Inertial Frame")  
+    ax3.plot(Earth[0, :], Earth[1, :], '--', color='b', alpha=1, linewidth=2, zorder=10)
+    ax3.plot(Moon[0, :], Moon[1, :], '--', color='k', alpha=1, linewidth=2, zorder=10)
+            
+    for traj, index, flyby_value in zip(SV_inertial, transition_indices, flyby_counts):
 
-    ax3.scatter(0, 0, s=50, color='darkred', label='Moon', zorder=0) 
+        color = cmap_3(norm_3(flyby_value))
+        
+        ax3.plot(traj[0, :], traj[1, :], alpha=1, color=color)
+        ax3.scatter(traj[0, index], traj[1, index], s=5, zorder=10, color=color)
+        
+    ax3.scatter(Earth[0, 0], Earth[1, 0], s=50, color='b', label='Earth', zorder=0)
+    ax3.scatter(Moon[0, 0], Moon[1, 0], s=50, color='darkred', label='Moon', zorder=0) 
+
+
     
-    for traj, index, Cj_value in zip(moon_inertial, transition_indices, Cj_cicle):
-
-        ax3.plot(traj[0, :], traj[1, :], alpha=1, color=cmap_1(norm_1(Cj_value)))
-        ax3.scatter(traj[0, index], traj[1, index], s=5, zorder=10, color=cmap_1(norm_1(Cj_value)))
-
-
-    
-    for time, e_energy, delta_v_value, Cj_value in zip(times, earth_energy, delta_v, Cj_cicle):
+    for time, e_energy, delta_v_value, Cj_value, energy_value in zip(times, earth_energy, delta_v, Cj_cicle, final_energy):
 
         color = cmap_2(norm_2(delta_v_value))
 
@@ -824,11 +874,16 @@ elif dim == '2D':
 
 
     ax5.scatter(rp_m, delta_E, c=delta_v, alpha=1, s=5, cmap=cmap_2, norm=norm_2)
-    ax6.scatter(rp_e, delta_E, c=delta_v, alpha=1, s=5, cmap=cmap_2, norm=norm_2)
+    ax6.scatter(perigee*d - R_E, (delta_E * G * M / d) / delta_v**2, c=final_energy, alpha=1, s=5, cmap=cmap_4, norm=norm_4)
 
 
-    colorbar_1 = fig.colorbar(plt.cm.ScalarMappable(norm=norm_1, cmap=cmap_1),ax=[ax1, ax2, ax3],label=r"$C_J$")
-    colorbar_2 = fig.colorbar(plt.cm.ScalarMappable(norm=norm_2, cmap=cmap_2),ax=[ax5, ax6],label=r"$\Delta V$ [km/s]")
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_1, cmap=cmap_1), ax=ax1, label=r"$C_J$")
+
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_2, cmap=cmap_2), ax=ax2, label=r"$\Delta V$ [km/s]")
+
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_3, cmap=cmap_3), ax=ax3, label="Number of flybys", ticks=np.arange(flyby_counts.min(), flyby_counts.max() + 1))
+
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_4, cmap=cmap_4), ax=ax6, label=r"$E_{max}$")
 
 
     moon_earth_energy = two_body_energy([1 - mu, 0, 0], [0, 0, 0], mu, body=1, frame='rotating')
@@ -868,8 +923,8 @@ elif dim == '2D':
     ax5.set_xlabel(r"$r_{p,M}/R_L$")
     ax5.set_ylabel(r"$\Delta E$")
 
-    ax6.set_title("Energy Change vs Perigee Altitude")
-    ax6.set_xlabel(r"$h_{p,E}$ [km]")
-    ax6.set_ylabel(r"$\Delta E$")
+    ax6.set_title("Trajectory Efficiency vs Perigee Distance")
+    ax6.set_xlabel(r"$h_{p,E}$")
+    ax6.set_ylabel(r"$\Delta E/\Delta V^2$")
 
     plt.show()
