@@ -75,8 +75,8 @@ def earth_perigee_escape(t, x, mu):
 def earth_perigee_capture(t, x, mu):
     r = x[:3] - np.array([-mu, 0.0, 0.0])
 
-    if np.linalg.norm(r) > (R_E + 1000) / d:  # Outside Earth, continue integration
-        return 1.0  # Inside Earth, continue integration
+    if np.linalg.norm(r) > (R_E + 1000) / d:  
+        return 1.0 
 
     return np.dot(r, x[3:])
 
