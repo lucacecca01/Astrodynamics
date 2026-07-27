@@ -141,7 +141,9 @@ for traj in X:
     spacecraft = traj[2, :, :]
 
     Vf = np.linalg.norm(spacecraft[-1, 3:]) 
-    print(f"Final velocity: {Vf:.3f} km/s  ({Vf+29.78:.3f} km/s)")
+    a = (2 / d_E - (Vf + 29.78)**2 / G / ms)**(-1)
+    r_a = 2*a - d_E
+    print(f"Final velocity: {Vf:.3f} km/s  ({Vf+29.78:.3f} km/s with apohelium of {r_a/d_E:.3f} AU)")
 
     plt.plot(earth[:, 0], earth[:, 1], label='Earth', color='blue')
     plt.plot(moon[:, 0], moon[:, 1], label='Moon', color='darkred')
