@@ -360,10 +360,14 @@ def accept_retro_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
         r_rel = x_perigee[:3] - np.array([-mu, 0, 0])
         v_rel = x_perigee[3:] + np.cross([0, 0, 1], r_rel)
         earth_distance = np.linalg.norm(x_perigee[:3] - np.array([-mu, 0, 0]))
+        theta_earth = earth_revolution_angle(sol[0], sol[1], mu)
         moon_earth_energy = two_body_energy([1 - mu, 0, 0], [0, 0, 0], mu, body=1, frame='rotating')
 
         conditions.append(two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating') < 0)
         conditions.append(earth_distance > (200 + R_E) / d and earth_distance < (800 + R_E) / d)
+
+        if filters["maximum_revolutions"]:
+            conditions.append(max(abs(theta_earth - theta_earth[0])) < 2*np.pi)
 
         if filters["prograde"]:
             conditions.append(np.cross(r_rel, v_rel)[2] > 0)

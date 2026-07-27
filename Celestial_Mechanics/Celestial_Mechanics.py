@@ -372,7 +372,7 @@ class Integration:
 
 
 
-    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None):
+    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None, stop_condition=None):
          
         if model == 'NBP':
             m = np.atleast_1d(m)
@@ -406,15 +406,16 @@ class Integration:
             sim = rebound.Simulation()
             sim.integrator = method
             sim.integrator.epsilon = rtol
+            sim.G = G
 
             if isinstance(x0_list[0], (list, tuple, np.ndarray)):
                 n_body = len(x0_list)
-                for mass, x0 in zip(mu, x0_list):
+                for mass, x0 in zip(m, x0_list):
                     sim.add(m=mass, x=x0[0], y=x0[1], z=x0[2], vx=x0[3], vy=x0[4], vz=x0[5])
             else:
                 n_body = len(x0_list) // 6
                 for i in range(n_body):
-                    sim.add(m=mu[i], x=x0_list[6*i], y=x0_list[6*i+1], z=x0_list[6*i+2], vx=x0_list[6*i+3], vy=x0_list[6*i+4], vz=x0_list[6*i+5])
+                    sim.add(m=m[i], x=x0_list[6*i], y=x0_list[6*i+1], z=x0_list[6*i+2], vx=x0_list[6*i+3], vy=x0_list[6*i+4], vz=x0_list[6*i+5])
 
             N = int((tf - t0)/dt) + 1
             T = np.linspace(t0, tf, N)
@@ -426,6 +427,9 @@ class Integration:
                     
                 for j, p in enumerate(sim.particles):
                     sol[j, i] = [p.x, p.y, p.z, p.vx, p.vy, p.vz]
+
+                if stop_condition is not None and stop_condition(t, sol[:, i]):
+                    return T[:i+1], sol[:, :i+1]
 
             return T, sol
 
