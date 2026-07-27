@@ -33,7 +33,7 @@ E_SOI = (m1 / ms) ** (2 / 5) * d_E
 # Integration settings in normalized time units
 T_FORWARD = 8 * np.pi
 T_RETROGRADE = -4 * np.pi
-DT = 0.01
+DT = 0.0001
 
 
 flyby_colors = [
@@ -74,7 +74,12 @@ def earth_perigee_escape(t, x, mu):
 
 def earth_perigee_capture(t, x, mu):
     r = x[:3] - np.array([-mu, 0.0, 0.0])
+
+    if np.linalg.norm(r) > (R_E + 1000) / d:  # Outside Earth, continue integration
+        return 1.0  # Inside Earth, continue integration
+
     return np.dot(r, x[3:])
+
 
 
 min_distance.terminal = True
@@ -194,7 +199,7 @@ def plot_trajectories(datasets):
         ("flybys", cmap_flyby, norm_flyby, "Number of flybys"),
     )
 
-    fig, axes = plt.subplots(2, 3, figsize=(19, 11), constrained_layout=True)
+    fig, axes = plt.subplots(2, 3, figsize=(19, 10), constrained_layout=True)
     soi_angle = np.linspace(0, 2 * np.pi, 500)
     earth_x, earth_y = earth[0, 0], earth[1, 0]
 
