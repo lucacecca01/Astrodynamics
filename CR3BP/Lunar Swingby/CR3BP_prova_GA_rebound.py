@@ -115,7 +115,7 @@ capture_initial_times = capture_database[:, 6]
 # Use multiprocessing to integrate trajectories in parallel
 pool = get_context("fork").Pool()
 
-for x0_traj, epoch, row in zip(escape_initial_conditions[0:5], escape_initial_times[0:5], escape_database[0:5]):
+for x0_traj, epoch, row in zip(escape_initial_conditions[0:10], escape_initial_times[0:10], escape_database[0:10]):
     print(f"DE: {row[columns['DE']]:.3f} | Emax: {row[columns['Emax']]:.3f} | DV: {row[columns['DV']]:.3f} | hmax: {row[columns['h_perigeo']]:.0f} km | hmin: {row[columns['h_periluneo']]:.0f} km | Cj: {row[columns['Cj']]:.3f}")
     earth = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, epoch)[:, 0]
     moon = Transformations.CR3BP_to_inertial([(1-mu)*d, 0, 0, 0, 0, 0], n, epoch)[:, 0]
