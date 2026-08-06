@@ -38,7 +38,7 @@ SOI = ((m1 + m2)/ms)**(2/5) * (d_E + mu * d)
 dim = '2D'
 BYPASS_I = False
 BYPASS_F = False
-RETROGRADE = True
+RETROGRADE = False
 
 
 
@@ -566,8 +566,8 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 10):
             x0_forward = [result[0][1][:, 0] for result in retro_results]
 
         else:
+            retro_res = []
             retro_results = [None] * len(initial_conditions)
-            transition_indices.append(0)
             x0_forward = initial_conditions
 
         # Integrate prograde trajectories
@@ -626,6 +626,8 @@ for Cj_norm in np.linspace(Cj_min, Cj_max, 10):
             moon_energy.append(m_f)
             Cj.append(Cj_f)
             Cj_cicle.append(Cj_norm)
+            transition_indices.append(0)
+            flyby_counts.append(len(sol_f[2][1]))
             continue
         
         sol_r, traj_r, bar_r, moon_r, earth_r, e_r, m_r, Cj_r = retro
@@ -699,8 +701,8 @@ Moon = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], 1, T)
 initial_conditions = np.array(all_initial_conditions)
 if total > 0:
     print("\n=== Simulation Results ===")
-    print(f"Total computed trajectories: {total}")
-    print(f"Total accepted trajectories: {len(SV)}")
+    print(f"Total computed trajectories:      {total}")
+    print(f"Total accepted trajectories:      {len(SV)} ({100 * len(SV) / total:.1f} %)")
     print(f"Forward collisions:               {forward_collisions} ({100 * forward_collisions / total:.1f} %)")
     print(f"Retrograde collisions:            {retro_collisions} ({100 * retro_collisions / total:.1f} %)\n")
 else:

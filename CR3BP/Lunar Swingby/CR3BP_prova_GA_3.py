@@ -40,6 +40,7 @@ BYPASS_I = False
 BYPASS_F = False
 RETROGRADE = True
 SAVE = False
+PLOT = True
 
 
 
@@ -109,6 +110,25 @@ def ETD_velocity(pos, Cj, v_norm):
 
 
 
+# Define the perilune velocity function
+def perilune_velocity(pos, v_norm, mu):
+
+    r_rel = pos - np.array([1 - mu, 0, 0])
+
+    theta = np.arctan2(r_rel[1], r_rel[0])
+    alpha_1 = theta + np.pi / 2
+    alpha_2 = theta - np.pi / 2
+
+    vx_1 = v_norm * np.cos(alpha_1)
+    vy_1 = v_norm * np.sin(alpha_1)
+
+    vx_2 = v_norm * np.cos(alpha_2)
+    vy_2 = v_norm * np.sin(alpha_2)
+
+    return np.array([vx_1, vy_1, 0]), np.array([vx_2, vy_2, 0])
+
+
+
 # Define collision function
 def min_distance(t, x, mu):
 
@@ -123,6 +143,13 @@ def min_distance(t, x, mu):
 def moon_SOI(t, x, mu): 
     r_moon = np.sqrt((x[0] - (1 - mu))**2 + x[1]**2 + x[2]**2)
     return M_SOI / d - r_moon
+
+
+
+# Define moon encouter function
+def moon_encounter(t, x, mu): 
+    r_moon = np.sqrt((x[0] - (1 - mu))**2 + x[1]**2 + x[2]**2)
+    return 2 * M_SOI / d - r_moon
 
 
 
@@ -241,12 +268,11 @@ def baricentric_energy_derivative(r, v, mu, frame='rotating'):
 
 
 # Define Lunar Radial Velocity
-def lunar_radial_velocity(r, v, mu):
+def lunar_radial_velocity(t, x, mu):
 
-    r_rel = np.asarray(r) - np.array([1 - mu, 0, 0])
-    v_rel = np.asarray(v) + np.cross([0, 0, 1], r_rel)
+    r_dot = (x[0] - (1 - mu))*x[3] + x[1]*x[4] + x[2]*x[5]
 
-    return np.dot(r_rel, v_rel) / np.linalg.norm(r_rel)
+    return r_dot
 
 
 
@@ -312,15 +338,22 @@ def accept_initial_condition(pos, v, mu, filters, Cj):
 
     conditions = []
 
-    #if filters["escape"]:
-        #conditions.append(baricentric_energy_derivative(pos, v, mu, frame='rotating') > 0)
-
     if filters["lunar_flyby"]:
         conditions.append(two_body_energy(pos, v, mu, body=2, frame='rotating') > 0)
 
     if filters["ETD"]:
         conditions.append(np.abs(baricentric_energy(pos, v, mu, frame='rotating')) < 1e-12)
-   
+
+        if filters["escape"]:
+            conditions.append(baricentric_energy_derivative(pos, v, mu, frame='rotating') > 0)
+        
+        if filters["capture"]:
+            conditions.append(baricentric_energy_derivative(pos, v, mu, frame='rotating') < 0)
+
+    if filters["perilune"]:
+        x = np.concatenate((pos, v))
+        conditions.append(abs(lunar_radial_velocity(0, x, mu)) < 10e-12)
+
     return all(conditions)
 
 
@@ -346,11 +379,10 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
         
         x_perigee = sol[3][2][-1]
         earth_distance = np.linalg.norm(x_perigee[:3] - np.array([-mu, 0, 0]))
-        moon_earth_energy = two_body_energy([1 - mu, 0, 0], [0, 0, 0], mu, body=1, frame='rotating')
         r_rel = x_perigee[:3] - np.array([-mu, 0, 0])
         v_rel = x_perigee[3:] + np.cross([0, 0, 1], r_rel)
 
-        conditions.append(two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating') < moon_earth_energy)
+        conditions.append(two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating') < 0)
         conditions.append(earth_distance > (200 + R_E) / d and earth_distance < (800 + R_E) / d)
 
         if filters["prograde"]:
@@ -434,16 +466,17 @@ def accept_retro_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
             conditions.append(np.cross(r_rel, v_rel)[2] > 0)
 
         if filters["retrograde"]:
-                    conditions.append(np.cross(r_rel, v_rel)[2] < 0)
+            conditions.append(np.cross(r_rel, v_rel)[2] < 0)
     
 
     if filters["capture"]:
-        if len(sol[3][1]) == 0:
+        if len(sol[3][2]) == 0:
             return False
 
-        x_soi = sol[3][1][-1]
+        x_soi = sol[3][2][-1]
         
-        conditions.append(two_body_energy(x_soi[:3], x_soi[3:], mu, body=1, frame='rotating') > 0)
+        conditions.append(baricentric_energy(x_soi[:3], x_soi[3:], mu, frame='rotating') > 0)
+        conditions.append(earth_radial_velocity(0, x_soi, mu) < 0)
 
 
     if filters["no_collision"]:
@@ -506,13 +539,14 @@ filters = {
     "escape": True,
     "capture": False,
     "ETD": True,
+    "perilune": False,
     "lunar_flyby": True,
     "maximum_flybys": False,
     "no_collision": True,
     "significant_first_flyby": False,
     "maximum_revolutions": False,
     "prograde": False,
-    "retrograde": False
+    "retrograde": True
 }
 
 
@@ -538,6 +572,9 @@ min_distance.direction = -1
 
 moon_SOI.terminal = False
 moon_SOI.direction = -1
+
+moon_encounter.terminal = False
+moon_encounter.direction = -1
 
 earth_SOI.terminal = True
 earth_SOI.direction = -1
@@ -581,15 +618,26 @@ Cj_cicle = []
 flyby_counts = []
 perigee = []
 final_energy = []
+encounters = []
+delta_v = []
 
 
 # Define integration initial conditions
 Cj_max = 3.1
-Cj_min = 0
+Cj_min = -3
 Cj_samples = 10
 cmap_1 = plt.cm.viridis
 cmap_2 = plt.cm.Spectral_r
 cmap_4 = plt.cm.plasma_r
+
+
+
+if filters["prograde"]:
+    Cj_min = 0
+    Cj_max = 3.1
+elif filters["retrograde"]:
+    Cj_min = -3
+    Cj_max = 2
 
 
 
@@ -612,17 +660,17 @@ if filters["escape"]:
     T_max = 2 * np.pi
     T_retro = -4 * np.pi
     dt = 0.01
-    dt_retro = -0.001
+    dt_retro = -0.01
 elif filters["capture"]:
-    T_max = 8 * np.pi
-    T_retro = -4 * np.pi
+    T_max = 4 * np.pi
+    T_retro = -2 * np.pi
     dt = 0.01
     dt_retro = -0.01
 
 
 
 #Define a sphere of radius M_SOI as initial position                        
-initial_positions = sample_on_ipersphere(R_L / d, (1 - 1e-12) * M_SOI / d, dim, n_samples_r, n_samples_theta, [(1-mu), 0, 0])
+initial_positions = sample_on_ipersphere((1 + 1e-12) * R_L / d, (1 - 1e-12) * M_SOI / d, dim, n_samples_r, n_samples_theta, [(1-mu), 0, 0])
 
 
 
@@ -632,7 +680,7 @@ pool = get_context("fork").Pool()
 
 
 # Iterate over Jacobi constants
-for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
+for Cj_norm in np.arange(Cj_min, Cj_max, 0.1):
 
 
     initial_conditions = []
@@ -647,10 +695,13 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
 
         r = np.linalg.norm(pos)
 
-        if np.abs((Cj_norm / 2 - r**2) / (v_norm * r)) > 1:
-            continue
+        if filters["ETD"]:
+            if np.abs((Cj_norm / 2 - r**2) / (v_norm * r)) > 1:
+                continue
+            v_set = ETD_velocity(pos, Cj_norm, v_norm)
 
-        v_set = ETD_velocity(pos, Cj_norm, v_norm)
+        elif filters["perilune"]:
+            v_set = perilune_velocity(pos, v_norm, mu)
 
         for v in v_set:
             if accept_initial_condition(pos, v, mu, filters, Cj_norm) or BYPASS_I:
@@ -668,13 +719,13 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
 
 
 
-    # Integration in normalized units and conversion into physical units
+    # Integration
     if filters["escape"]:
 
         # Integrate retrograde trajectories
         if RETROGRADE:
           
-            retro_res = pool.starmap(integrate_one, ((x0, T_min, T_retro, dt_retro, (min_distance, earth_SOI, earth_perigee, moon_SOI), accept_retro_condition) for x0 in initial_conditions), chunksize=1) 
+            retro_res = pool.starmap(integrate_one, ((x0, T_min, T_retro, dt_retro, (min_distance, earth_SOI, earth_perigee, moon_SOI, moon_encounter), accept_retro_condition) for x0 in initial_conditions), chunksize=1) 
             retro_results = [result[0] for result in retro_res if result[0] is not None]
             x0_forward = [result[0][1][:, 0] for result in retro_results]
 
@@ -684,7 +735,7 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
             x0_forward = initial_conditions
 
         # Integrate prograde trajectories
-        total_sol = pool.starmap(integrate_one, ((x0, T_min, T_max, dt, (min_distance, moon_SOI, earth_SOI), accept_final_condition) for x0 in x0_forward), chunksize=1)
+        total_sol = pool.starmap(integrate_one, ((x0, T_min, T_max, dt, (min_distance, moon_SOI, earth_SOI, moon_encounter), accept_final_condition) for x0 in x0_forward), chunksize=1)
 
         # Store the results
         retro_collisions += sum(result[1] for result in retro_res)
@@ -692,10 +743,11 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
         forward_results = [result[0] for result in total_sol]
 
 
+    # Integration
     elif filters["capture"]:
 
         # Integrate prograde trajectories
-        total_sol = pool.starmap(integrate_one, ((x0, T_min, T_max, dt, (min_distance, moon_SOI, earth_radial_velocity), accept_final_condition) for x0 in initial_conditions), chunksize=1)
+        total_sol = pool.starmap(integrate_one, ((x0, T_min, T_max, dt, (min_distance, moon_SOI, earth_perigee, moon_encounter), accept_final_condition) for x0 in initial_conditions), chunksize=1)
 
         # Fill the lists with the accepted trajectories
         forward_results = [result[0] for result in total_sol   if result[0] is not None]
@@ -704,7 +756,7 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
         if RETROGRADE:
 
             x0_retro = [result[0][1][:, 0] for result in forward_results]
-            retro_res = pool.starmap(integrate_one, ((x0, T_min, T_retro, dt_retro*10, (min_distance, earth_SOI), accept_retro_condition) for x0 in x0_retro), chunksize=1)
+            retro_res = pool.starmap(integrate_one, ((x0, T_min, T_retro, dt_retro, (min_distance, moon_SOI, earth_SOI, earth_perigee, moon_encounter), accept_retro_condition) for x0 in x0_retro), chunksize=1)
             retro_results = [result[0] for result in retro_res]
 
         else:
@@ -741,10 +793,29 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
             Cj.append(Cj_f)
             Cj_cicle.append(Cj_norm)
             transition_indices.append(0)
-            flyby_counts.append(len(sol_f[2][1]))
-            perigee.append(np.linalg.norm(sol_f[3][2][-1][:3] - np.array([-mu, 0, 0])))
+            flyby_counts.append(len(sol_f[2][3]))
+            encounters.append(sol_f[2][3])
             final_energy.append(e_f[-1] if filters["escape"] else 0)
+
+            if filters["escape"]:
+                perigee.append(0)
+                delta_v.append(1)
+                delta_E.append(e_f[-1] - e_f[0])
+
+            elif filters["capture"]:
+                x_perigee = sol_f[3][2][-1]
+                e_perigee = two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating')
+
+                r_rel = x_perigee[:3] - np.array([-mu, 0, 0])
+                v_rel = x_perigee[3:] + np.cross([0, 0, 1], r_rel)
+                v_circ = np.sqrt((G * m1) / (np.linalg.norm(r_rel) * d))
+
+                perigee.append(np.linalg.norm(r_rel))
+                delta_v.append(np.linalg.norm(v_rel) * d / TU - v_circ)
+                delta_E.append(e_f[-1] - e_f[0])
+
             continue
+
         
         sol_r, traj_r, bar_r, moon_r, earth_r, e_r, m_r, b_r, Cj_r = retro
 
@@ -760,11 +831,26 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
         bar_energy.append(np.concatenate((b_r[::-1], b_f[1:]), axis=0))
         Cj.append(np.concatenate((Cj_r[::-1], Cj_f[1:]), axis=0))
         Cj_cicle.append(Cj_norm)
-        flyby_counts.append(len(sol_f[2][1]) + len(sol_r[2][3]) - 1)
+        flyby_counts.append(len(sol_f[2][3]) + len(sol_r[2][4]) - 1)
+        encounters.append(np.concatenate((sol_r[2][4][1:], sol_f[2][3][1:])))
 
         sol_perigee = sol_r if filters["escape"] else sol_f
-        perigee.append(np.linalg.norm(sol_perigee[3][2][-1][:3] - np.array([-mu, 0, 0])))
-        final_energy.append(e_f[-1] if filters["escape"] else e_r[-1])
+        sol_SOI = sol_f if filters["escape"] else sol_r
+        
+        x_perigee = sol_perigee[3][2][-1]
+        x_SOI = sol_SOI[3][2][-1]
+
+        e_perigee = two_body_energy(x_perigee[:3], x_perigee[3:], mu, body=1, frame='rotating')
+        e_SOI = two_body_energy(x_SOI[:3], x_SOI[3:], mu, body=1, frame='rotating')
+
+        r_rel = x_perigee[:3] - np.array([-mu, 0, 0])
+        v_rel = x_perigee[3:] + np.cross([0, 0, 1], r_rel)
+        v_circ = np.sqrt((G * m1) / (np.linalg.norm(r_rel) * d))
+
+        perigee.append(np.linalg.norm(r_rel))
+        delta_v.append(np.linalg.norm(v_rel) * d / TU - v_circ)
+        delta_E.append(e_SOI - e_perigee)
+        final_energy.append(e_SOI)
 
 
 
@@ -772,6 +858,19 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.5):
 # Close the multiprocessing pool
 pool.close()
 pool.join()
+
+
+
+# Print results and exit if no trajectories were accepted
+if len(SV) == 0:
+    elapsed_time = time.perf_counter() - start_time
+
+    print("\n=== Simulation Results ===")
+    print(f"Total computed trajectories: {total}")
+    print("Total accepted trajectories: 0")
+    print(f"Execution time: {elapsed_time:.2f} s")
+
+    raise SystemExit
 
 
 
@@ -784,18 +883,12 @@ else:
 
 
 
-# Evaluate orbital elements at time t0 and tf
-if filters["escape"]:
-    v_circ = np.array([np.sqrt(G * m1 / np.linalg.norm(traj[:3, 0])) for traj in earth_inertial])
-    delta_v = np.array([np.linalg.norm(traj[3:, 0]) - v_circ[i] for i, traj in enumerate(earth_inertial)])
-elif filters["capture"]:
-    v_circ = np.array([np.sqrt(G * m1 / np.linalg.norm(traj[:3, -1])) for traj in earth_inertial])
-    delta_v = np.array([np.linalg.norm(traj[3:, -1]) - v_circ[i] for i, traj in enumerate(earth_inertial)])
 
-
-delta_E  = np.array(np.abs([e[-1] - e[0] for e in earth_energy]))
+# Create the color normalization based on the accepted final energies
+delta_E  = np.asarray(delta_E)
 flyby_counts = np.asarray(flyby_counts)
 perigee = np.asarray(perigee)
+delta_v = np.asarray(delta_v)
 
 
 try:
@@ -813,7 +906,7 @@ except ValueError:
 
 # Evaluate perilune and perigee distances for each trajectory
 rp_m = np.array([np.min(np.linalg.norm(traj[:3, :], axis=0)) / R_L for traj in moon_inertial])
-
+trajectory_type = "Escape" if filters["escape"] else "Capture"
 
 
 
@@ -823,11 +916,11 @@ if SAVE and RETROGRADE:
     r0, v0 = np.array([x[:3, i] for x in SV_inertial]), np.array([x[3:, i] for x in SV_inertial])
     t0 = np.array([t[i] * TU for t in times])
     data = np.column_stack((r0, v0, t0, Cj_cicle, delta_E*G*M/d, delta_v, final_energy*G*M/d, perigee*d-R_E, (rp_m-1)*R_L))
-    np.savetxt("Escape_trajectories_2.txt", data, header="r0x r0y r0z v0x v0y v0z t0_days Cj DE DV Emax h_perigeo h_min_periluneo")
+    np.savetxt(f"{trajectory_type}_trajectories_2.txt", data, header="r0x r0y r0z v0x v0y v0z t0_days Cj DE DV Emax h_perigeo h_min_periluneo")
 elif SAVE:
     i = 0
     r0, v0 = np.array([x[:3, i] for x in SV]), np.array([x[3:, i] for x in SV])
-    np.savetxt("Escape_initial_conditions_CR3BP.txt", np.column_stack((r0, v0)))
+    np.savetxt(f"{trajectory_type}_initial_conditions_CR3BP.txt", np.column_stack((r0, v0)))
 
 
 
@@ -843,8 +936,8 @@ Moon = Transformations.CR3BP_to_inertial([(1 - mu) * d, 0, 0, 0, 0, 0], 1, T)
 initial_conditions = np.array(all_initial_conditions)
 if total > 0:
     print("\n=== Simulation Results ===")
-    print(f"Total computed trajectories: {total}")
-    print(f"Total accepted trajectories: {len(SV)}")
+    print(f"Total computed trajectories:      {total}")
+    print(f"Total accepted trajectories:      {len(SV)} ({100 * len(SV) / total:.1f} %)")
     print(f"Forward collisions:               {forward_collisions} ({100 * forward_collisions / total:.1f} %)")
     print(f"Retrograde collisions:            {retro_collisions} ({100 * retro_collisions / total:.1f} %)\n")
 else:
@@ -858,7 +951,7 @@ print(f"Execution time: {elapsed_time:.2f} s\n")
 
 
 # Plot the results
-if dim=='3D' and total > 0:
+if dim=='3D' and total > 0 and PLOT:
 
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection="3d")
@@ -890,7 +983,8 @@ if dim=='3D' and total > 0:
     plt.show()
 
 
-elif dim == '2D':
+
+elif dim == '2D' and total > 0 and PLOT:
 
     fig = plt.figure(figsize=(19, 10))
 
@@ -911,12 +1005,13 @@ elif dim == '2D':
     ax1.set_title("Rotating Frame")  
     ax1.scatter(initial_positions[:,0] * d, initial_positions[:,1] * d, s=0.5, alpha=0.8, color='grey')
 
-    for trajectory, Cj_value in zip(SV, Cj_cicle):
+    for trajectory, index, Cj_value in zip(SV, transition_indices, Cj_cicle):
 
         X = trajectory[0, :]
         Y = trajectory[1, :]
 
         ax1.plot(X, Y, color=cmap_1(norm_1(Cj_value)))
+        ax1.scatter(X[index], Y[index], color='r', s=10, zorder=10)
 
     x = np.linspace(-1.5, 1.5, 600) 
     X, Y = np.meshgrid(x, x)
@@ -966,17 +1061,17 @@ elif dim == '2D':
 
 
     
-    for time, e_e, delta_v_value, Cj_value, energy_value in zip(times, earth_energy, delta_v, Cj_cicle, final_energy):
+    for time, e_e, delta_v_value, Cj_value, energy_value, t_encounters in zip(times, earth_energy, delta_v, Cj_cicle, final_energy, encounters):
 
         color = cmap_2(norm_2(delta_v_value))
 
         ax4.plot(time, e_e, alpha=1, color=color)
 
-
-    for t_moon in sol_r[2][3]:
-        ax4.axvline(t_moon, color="blue", linestyle=":")
+        for t_moon in t_encounters:
+            ax4.axvline(t_moon, color=color, linestyle=":", alpha=1, linewidth=1)
 
     ax5.scatter(rp_m, delta_E, c=delta_v, alpha=1, s=5, cmap=cmap_2, norm=norm_2)
+
     ax6.scatter(perigee*d - R_E, (delta_E * G * M / d) / delta_v**2, c=final_energy, alpha=1, s=5, cmap=cmap_4, norm=norm_4)
 
 
@@ -984,9 +1079,9 @@ elif dim == '2D':
 
     fig.colorbar(plt.cm.ScalarMappable(norm=norm_2, cmap=cmap_2), ax=ax2, label=r"$\Delta V$ [km/s]")
 
-    fig.colorbar(plt.cm.ScalarMappable(norm=norm_3, cmap=cmap_3), ax=ax3, label="Number of flybys", ticks=np.arange(flyby_counts.min(), flyby_counts.max() + 1))
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_3, cmap=cmap_3), ax=ax3, label="Number of encounters", ticks=np.arange(flyby_counts.min(), flyby_counts.max() + 1))
 
-    fig.colorbar(plt.cm.ScalarMappable(norm=norm_4, cmap=cmap_4), ax=ax6, label=r"$E_{max}$")
+    fig.colorbar(plt.cm.ScalarMappable(norm=norm_4, cmap=cmap_4), ax=ax6, label=r"$E_{SOI}$")
 
 
     moon_earth_energy = two_body_energy([1 - mu, 0, 0], [0, 0, 0], mu, body=1, frame='rotating')
@@ -999,21 +1094,21 @@ elif dim == '2D':
     ax1.ticklabel_format(axis="y", style="sci", scilimits=(0, 0), useMathText=True)
     ax1.set_xlabel("X [km]")
     ax1.set_ylabel("Y [km]")
-    ax1.axis("equal")
+    ax1.set_aspect("equal")
     ax1.grid(alpha=0.25)
     ax1.legend()
 
     ax2.ticklabel_format(axis="y", style="sci", scilimits=(0, 0), useMathText=True)
     ax2.ticklabel_format(axis="x", style="sci", scilimits=(0, 0), useMathText=True) 
     ax2.set_xlabel("X [km]") 
-    ax2.axis("equal")
+    ax2.set_aspect("equal")
     ax2.grid(alpha=0.25) 
     ax2.legend()
 
     ax3.ticklabel_format(axis="y", style="sci", scilimits=(0, 0), useMathText=True)
     ax3.ticklabel_format(axis="x", style="sci", scilimits=(0, 0), useMathText=True) 
     ax3.set_xlabel("X [km]") 
-    ax3.axis("equal")
+    ax3.set_aspect("equal")
     ax3.grid(alpha=0.25) 
     ax3.legend()
 
