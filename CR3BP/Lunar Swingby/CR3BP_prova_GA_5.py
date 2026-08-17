@@ -3,6 +3,9 @@ import numpy as np
 from multiprocessing import get_context
 import time
 from matplotlib import pyplot as plt
+import pykep as pk
+from scipy.integrate import solve_ivp
+from scipy.optimize import root
 
 
 # Define constants
@@ -20,7 +23,11 @@ mu = m2/M                    # Moon-to-total mass ratio
 n = np.sqrt(G * M / d**3)    # Moon’s mean motion
 TU = 1 / n                   # Moon’s mean revolution period
 E_SOI = (m1 / ms)**(2/5) * d_E
+M_SOI = (m2 / m1)**(2/5) * d
 
+
+
+PLOT = True
 
 
 
@@ -49,6 +56,48 @@ def earth_SOI_exit(t, x, mu):
 
 
 
+# Define function to compute the corrected departure state based on delta_v
+def corrected_departure_state(delta_v):
+
+    v_trial = v_lambert_departure + delta_v
+
+    x_trial_geocentric = np.hstack((r_departure, v_trial))
+
+    x_trial_barycentric = (x_trial_geocentric + earth_departure_inertial)
+
+    x_trial_rotating = Transformations.inertial_to_CR3BP(x_trial_barycentric, n, departure_time).ravel()
+
+    x_trial_normalized = (Transformations.SV_to_CR3BP_normalized_units(x_trial_rotating, d, G, M))
+
+    return x_trial_normalized
+
+
+
+# Define the shooting residual function for root-finding
+def shooting_residual(delta_v):
+
+    x0_trial = corrected_departure_state(delta_v)
+
+    trial_solution = solve_ivp(
+        Integrator.CR3BP_ODE,
+        [0, transfer_duration],
+        x0_trial,
+        args=(mu,),
+        method="DOP853",
+        rtol=1e-10,
+        atol=1e-12,
+        t_eval=[transfer_duration]
+    )
+
+    if not trial_solution.success:
+        return np.array([1e3, 1e3, 1e3]) 
+
+    final_position = trial_solution.y[:3, -1]
+
+    return (final_position - x_target_normalized[:3])
+
+
+
 earth_SOI_exit.terminal = True
 earth_SOI_exit.direction = -1
 
@@ -68,6 +117,11 @@ Integrator = Integration()
 # Initialize lists to store results
 T = []
 X = []
+far_times = [] 
+far_points_normalized = []
+far_points_rotating = []
+far_points_inertial = [] 
+far_points_geocentric = []
 
 
 
@@ -119,61 +173,267 @@ pool.join()
 
 
 
+
+# Compute far points for each trajectory
+for t, traj in zip(T, X):
+
+    r_moon = traj[:3].T - np.array([1 - mu, 0, 0])
+    r_earth = traj[:3].T - np.array([-mu, 0, 0])
+
+    r_m = np.linalg.norm(r_moon, axis=1)
+    r_e = np.linalg.norm(r_earth, axis=1)
+
+    a_earth = -(1 - mu) * r_earth / r_e[:, None]**3
+    a_moon = -mu * r_moon / r_m[:, None]**3
+
+    a_moon_earth = np.array([mu, 0, 0])
+    a_moon_perturbation = a_moon - a_moon_earth
+
+    threshold = 0.01
+    perturbation = eta = (np.linalg.norm(a_moon_perturbation, axis=1)/ np.linalg.norm(a_earth, axis=1))
+
+    #mask1 = r_m >= 2 * M_SOI / d
+    #mask2 = r_e <= 1
+
+    mask = np.logical_and(eta <= threshold, r_e < 1)
+
+    far_points_rotating_i = Transformations.CR3BP_normalized_units_to_SV(traj[:, mask], d, G, M)
+
+    far_times.append(t[mask] * TU)
+    far_points_normalized.append(traj[:, mask])
+    far_points_rotating.append(far_points_rotating_i)
+    far_points_inertial.append(Transformations.CR3BP_to_inertial(far_points_rotating_i, n, t[mask] * TU))
+
+
+for t, x_baricentric in zip(far_times, far_points_inertial):
+
+    earth = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, t)
+
+    x_geocentric = x_baricentric - earth
+
+    far_points_geocentric.append(x_geocentric)
+
+    
+
+
+
+
+# Lambert's problem
+trajectory_id = 0
+target_id = len(far_times[trajectory_id]) // 2
+
+x_target_normalized = far_points_normalized[trajectory_id][:, target_id]
+x_target_geocentric = far_points_geocentric[trajectory_id][:, target_id]
+
+r_target = x_target_geocentric[:3]
+v_target = x_target_geocentric[3:]
+
+theta_0 = 0.0
+r0 = R_E + 200
+
+r_departure = r0 * np.array([np.cos(theta_0), np.sin(theta_0), 0])
+
+mu_earth = G * m1
+v_circular = np.sqrt(mu_earth / r0)
+
+v_circular = v_circular * np.array([-np.sin(theta_0), np.cos(theta_0), 0])
+
+tof = 3 * day
+
+lambert = pk.lambert_problem(
+    r0=r_departure,
+    r1=r_target,
+    tof=tof,
+    mu=mu_earth,
+    cw=False,
+    multi_revs=0,
+)
+
+v_lambert_departure = np.asarray(lambert.v0[0])
+v_lambert_arrival = np.asarray(lambert.v1[0])
+
+target_time = far_times[trajectory_id][target_id]
+departure_time = target_time - tof
+earth_departure_inertial = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, departure_time).ravel()
+
+x_departure_geocentric = np.hstack((r_departure, v_lambert_departure))
+x_departure_barycentric = (x_departure_geocentric + earth_departure_inertial)
+x_departure_rotating = Transformations.inertial_to_CR3BP(x_departure_barycentric, n, departure_time).ravel()
+x_departure_normalized = (Transformations.SV_to_CR3BP_normalized_units(x_departure_rotating, d, G, M))
+
+
+
+
+# Numerically integrate the transfer in the CR3BP
+transfer_duration = tof / TU
+dt_transfer = 0.0001
+
+transfer_result = integrate_one(x_departure_normalized, 0, transfer_duration, dt_transfer, events=None)
+
+T_transfer = transfer_result[0]
+X_transfer = transfer_result[1]
+
+X_transfer_rotating = (Transformations.CR3BP_normalized_units_to_SV(X_transfer, d, G, M))
+transfer_times = (departure_time + T_transfer * TU)
+
+X_transfer_inertial = Transformations.CR3BP_to_inertial(X_transfer_rotating, n, transfer_times)
+X_target_barycentric = (far_points_inertial[trajectory_id][:, target_id])
+
+position_error = np.linalg.norm(X_transfer_inertial[:3, -1] - X_target_barycentric[:3])
+
+print("\n=== LAMBERT TRANSFER ===")
+print(f"Position error: {position_error:.3f} km")
+
+
+
+
+# Refine the departure velocity using CR3BP integration and a root-finding method
+initial_correction = np.array([0, 0, 0])
+
+shooting_result = root(
+    shooting_residual,
+    initial_correction,
+    method="hybr",
+    tol=1e-12
+    )
+
+if not shooting_result.success:
+    raise RuntimeError(f"CR3BP refinement failed: {shooting_result.message}")
+
+delta_v_refinement = shooting_result.x
+
+v_refined_departure = v_refined_departure = v_lambert_departure + delta_v_refinement
+x_departure_normalized_refined = corrected_departure_state(delta_v_refinement)
+
+
+
+
+
+# Numerically integrate the refined transfer in the CR3BP
+transfer_duration = tof / TU
+dt_transfer = 0.0001
+
+transfer_result = integrate_one(x_departure_normalized_refined, 0, transfer_duration, dt_transfer, events=None)
+
+T_transfer_refined = transfer_result[0]
+X_transfer_refined = transfer_result[1]
+
+X_transfer_rotating_refined = (Transformations.CR3BP_normalized_units_to_SV(X_transfer_refined, d, G, M))
+transfer_times = (departure_time + T_transfer_refined * TU)
+
+X_transfer_inertial_refined = Transformations.CR3BP_to_inertial(X_transfer_rotating_refined, n, transfer_times)
+X_target_barycentric_refined = (far_points_inertial[trajectory_id][:, target_id])
+
+position_error_refined = np.linalg.norm(X_transfer_inertial_refined[:3, -1] - X_target_barycentric_refined[:3])
+velocity_error_refined = np.linalg.norm(X_transfer_inertial_refined[3:, -1] - X_target_barycentric_refined[3:])
+
+print("\n=== Refined CR3BP validation ===")
+print(f"Position error: {position_error_refined:.3f} km")
+
+
+
+
+# Compute delta-v for departure and arrival
+delta_v_departure_refined = np.linalg.norm(v_refined_departure - v_circular)
+delta_v_arrival_refined = velocity_error_refined
+delta_v_total = delta_v_departure_refined + delta_v_arrival_refined
+
+print("\n=== Lambert test ===")
+print(f"Time of flight:     {tof / day:.1f} days")
+print(f"DV departure:       {delta_v_departure_refined:.3f} km/s")
+print(f"DV transfer:        {delta_v_arrival_refined:.3f} km/s")
+print(f"DV total:           {delta_v_total:.3f} km/s")
+
+
+
+
+
 # Print execution time
 elapsed_time = time.perf_counter() - start_time
 print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 
 
+
 # Plotting the results
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
+if PLOT:
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
 
-# Rotating frame
-for traj in X:
-    ax1.plot(traj[0] * d, traj[1] * d)
-    ax1.scatter(traj[0, 0] * d, traj[1, 0] * d)
-
-ax1.scatter(-mu*d, 0, color="blue", label="Earth")
-ax1.scatter((1-mu)*d, 0, color="darkred", label="Moon")
-
-ax1.set_title("Rotating Frame")
-ax1.set_xlabel("X [km]")
-ax1.set_ylabel("Y [km]")
-ax1.set_aspect("equal")
-ax1.set_box_aspect(1)
-ax1.legend()
+    # Rotating frame
+    for traj, far_point in zip(X, far_points_rotating):
+        ax1.plot(traj[0] * d, traj[1] * d)
+        ax1.scatter(traj[0, 0] * d, traj[1, 0] * d)
 
 
-# Barycentric inertial frame
-for time, traj in zip(T, X_bar):
+    ax1.plot(X_transfer[0] * d, X_transfer[1] * d, color="blue", linewidth=2, label="Transfer")
 
-    earth_I = Transformations.CR3BP_to_inertial(
-        [-mu*d, 0, 0, 0, 0, 0],
-        n,
-        time * TU
-    )
+    ax1.scatter(X_transfer[0, 0] * d, X_transfer[1, 0] * d, color="green", s=40)
 
-    moon_I = Transformations.CR3BP_to_inertial(
-        [(1-mu)*d, 0, 0, 0, 0, 0],
-        n,
-        time * TU
-    )
+    ax1.scatter(X_transfer[0, -1] * d, X_transfer[1, -1] * d, color="blue", s=40)
 
-    ax2.plot(traj[0], traj[1])
-    ax2.scatter(traj[0, 0], traj[1, 0])
 
-    ax2.plot(earth_I[0], earth_I[1], "--", color="blue")
-    ax2.plot(moon_I[0], moon_I[1], "--", color="darkred")
+    ax1.plot(X_transfer_refined[0] * d, X_transfer_refined[1] * d, color="red", linewidth=2, label="Transfer refined")
+    
+    ax1.scatter(X_transfer_refined[0, 0] * d, X_transfer_refined[1, 0] * d, color="green", s=40, label="Transfer departure")
+    
+    ax1.scatter(X_transfer_refined[0, -1] * d, X_transfer_refined[1, -1] * d, color="red", s=40, label="Transfer arrival")
 
-ax2.scatter(-mu*d, 0, color="blue", label="Earth at $t=0$")
-ax2.scatter((1-mu)*d, 0, color="darkred", label="Moon at $t=0$")
 
-ax2.set_title("Barycentric Inertial Frame")
-ax2.set_xlabel("X [km]")
-ax2.set_ylabel("Y [km]")
-ax2.set_aspect("equal")
-ax2.set_box_aspect(1)
-ax2.legend()
+    ax1.scatter(-mu*d, 0, color="blue", label="Earth")
+    ax1.scatter((1-mu)*d, 0, color="darkred", label="Moon")
+    ax1.scatter(far_point[0], far_point[1], color="orange", s=2, label="Far points")
 
-plt.tight_layout()
-plt.show()
+    ax1.set_title("Rotating Frame")
+    ax1.set_xlabel("X [km]")
+    ax1.set_ylabel("Y [km]")
+    ax1.set_aspect("equal")
+    ax1.set_box_aspect(1)
+    ax1.legend()
+
+
+    # Barycentric inertial frame
+    for time, traj, far_point in zip(T, X_bar, far_points_inertial):
+
+        earth_I = Transformations.CR3BP_to_inertial(
+            [-mu*d, 0, 0, 0, 0, 0],
+            n,
+            time * TU
+        )
+
+        moon_I = Transformations.CR3BP_to_inertial(
+            [(1-mu)*d, 0, 0, 0, 0, 0],
+            n,
+            time * TU
+        )
+
+        ax2.plot(traj[0], traj[1])
+        ax2.scatter(far_point[0], far_point[1], color="orange", s=2, label="Far points")
+        ax2.scatter(traj[0, 0], traj[1, 0])
+
+        ax2.plot(earth_I[0], earth_I[1], "--", color="blue")
+        ax2.plot(moon_I[0], moon_I[1], "--", color="darkred")
+
+    ax2.plot(X_transfer_inertial[0], X_transfer_inertial[1], color="blue", linewidth=2, label="Transfer")
+
+    ax2.scatter(X_transfer_inertial[0, 0], X_transfer_inertial[1, 0], color="green", s=40)
+
+    ax2.scatter(X_transfer_inertial[0, -1], X_transfer_inertial[1, -1], color="blue", s=40)
+
+    ax2.plot(X_transfer_inertial_refined[0], X_transfer_inertial_refined[1], color="red", linewidth=2, label="Transfer refined")
+    
+    ax2.scatter(X_transfer_inertial_refined[0, 0], X_transfer_inertial_refined[1, 0], color="green", s=40, label="Transfer departure")
+    
+    ax2.scatter(X_transfer_inertial_refined[0, -1], X_transfer_inertial_refined[1, -1], color="red", s=40, label="Transfer arrival")
+
+    ax2.scatter(-mu*d, 0, color="blue", label="Earth at $t=0$")
+    ax2.scatter((1-mu)*d, 0, color="darkred", label="Moon at $t=0$")
+
+    ax2.set_title("Barycentric Inertial Frame")
+    ax2.set_xlabel("X [km]")
+    ax2.set_ylabel("Y [km]")
+    ax2.set_aspect("equal")
+    ax2.set_box_aspect(1)
+    ax2.legend()
+
+    plt.tight_layout()
+    plt.show()
