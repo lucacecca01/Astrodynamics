@@ -258,7 +258,9 @@ columns = {"Cj": 6, "E_SOI": 7, "h_min_moon": 8, "h_last_earth": 9}
 order = np.argsort(database[:, columns[SORT_BY]], kind="stable")
 selection = database[order[::-1] if DESCENDING else order]
 
-x0_selection = selection[100000:100001, :6]
+source_ids = np.array([4508, 54212, 35554, 99374, 98436])
+#x0_selection = database[source_ids[1:2], :6]
+x0_selection = selection[2:3, :6]
 
 
 pool = get_context("fork").Pool()
