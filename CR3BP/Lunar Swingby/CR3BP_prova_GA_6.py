@@ -28,6 +28,9 @@ m1 = 5.974e24
 m2 = 7.348e22
 ms = 1.989e30
 d_E = 1.496e8
+R_E = 6378                   # Earth radius in km
+R_L = 1737                   # Moon radius in km
+mu_earth = G * m1
 
 M = m1 + m2
 mu = m2 / M
@@ -55,7 +58,9 @@ columns = { "tof": 14,
             }
 
 
-performance = (database[:, columns["E_SOI"]] / database[:, columns["DVtotal"]]**2)
+v_p_direct = np.sqrt(2 *mu_earth / (R_E + 200) + 2 * database[:, columns["E_SOI"]])
+DV_direct = v_p_direct - np.sqrt(mu_earth / (R_E + 200))
+performance = (DV_direct - database[:, columns["DVtotal"]])
 
 
 order = np.argsort(performance, kind="stable")
@@ -87,6 +92,8 @@ DV2 = row[16]
 DVtotal = row[17]
 ESOI = row[18]
 h_moon = row[19]
+DV_direct = (np.sqrt(2 * mu_earth / (R_E + 200) + 2 * ESOI) - np.sqrt(mu_earth / (R_E + 200)))
+gain = DV_direct - DVtotal
 
 
 # Earth and Moon at departure epoch
@@ -176,12 +183,14 @@ print("\n=== COMPLETE TRANSFER ===")
 print(f"Departure time: {t_departure / 86400:.2f} days")
 print(f"Maneuver time:  {t_manovra / 86400:.2f} days")
 print(f"Time of flight: {tof / 86400:.2f} days")
+print(f"Moon altitude:  {h_moon:.1f} km")
 print(f"DV1:            {DV1:.3f} km/s")
 print(f"DV2:            {DV2:.3f} km/s")
 print(f"DV total:       {DVtotal:.3f} km/s")
 print(f"ESOI:           {ESOI:.3f} km²/s²")
-print(f"Moon altitude:  {h_moon:.1f} km")
-print(f"Final distance: {final_earth_distance:.1f} km")
+print(f"DV_direct:      {DV_direct:.3f} km/s")
+print(f"DV_gain:        {gain:.3f} km/s ({gain/DV_direct * 100:.1f} %)")
+
 
 
 elapsed_time = time.perf_counter() - start_time
