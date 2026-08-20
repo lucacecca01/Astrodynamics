@@ -30,19 +30,20 @@ mu_earth = G * m1
 
 PLOT = True
 MASK = False
-SAVE = True
+SAVE = False
+PRINT = True
 
 
 
 # Define integration function
-def integrate_one(x0, T_min, T_max, dt, events=None):
+def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 
     sol = Integrator.Integrator(
         masses, G, x0, T_min, T_max, dt,
         model='CR3BP',
         integrator='scipy',
         method='DOP853',
-        rtol=1e-9,
+        rtol=rtol,
         events=events,
     )
 
@@ -109,7 +110,7 @@ def lambert_objective(design):
     tof_fraction = design[2]
     direction = bool(int(design[3]))
 
-    target_time_candidate = (far_times[trajectory_id][target_id_candidate])
+    target_time_candidate = (far_times[target_id_candidate])
 
     direction_candidate = (-1.0 if direction else 1.0)
 
@@ -120,7 +121,7 @@ def lambert_objective(design):
 
     tof_candidate = (tof_min + tof_fraction * (tof_max_candidate - tof_min))
 
-    target_state = (far_points_geocentric[trajectory_id][:, target_id_candidate])
+    target_state = (far_points_geocentric[:, target_id_candidate])
 
     r_target_candidate = target_state[:3]
     v_target_candidate = target_state[3:]
@@ -187,7 +188,7 @@ def homotopy_residual(delta_v, strength):
         x0,
         args=(mu, strength),
         method="DOP853",
-        rtol=1e-9,
+        rtol=1e-10,
         atol=1e-12,
         t_eval=[transfer_duration]
     )
@@ -197,6 +198,324 @@ def homotopy_residual(delta_v, strength):
 
     return sol.y[:3, -1] - x_target_normalized[:3]
 
+
+
+# Define the main function to process each trajectory
+def process_trajectory(current_row):
+
+    global far_times
+    global far_points_geocentric
+    global tof_min
+    global r0
+    global v_circular_magnitude
+    global v_lambert_departure
+    global r_departure
+    global earth_departure_inertial
+    global departure_time
+    global transfer_duration
+    global x_target_normalized
+    global T, X
+    global far_points_rotating, far_points_inertial
+    global X_transfer, X_transfer_inertial
+    global X_transfer_refined, X_transfer_inertial_refined
+
+
+    if current_row[columns["h_min_moon"]] < 0 or current_row[columns["h_last_earth"]] < 0:
+        return None
+
+
+    result = integrate_one(
+        current_row[:6],
+        T_min,
+        T_max,
+        dt,
+        earth_SOI_exit,
+        rtol=1e-9
+    )
+
+    t = result[0]
+    traj = result[1]
+
+
+    if MASK:
+    
+        r_moon = traj[:3].T - np.array([1 - mu, 0, 0])
+        r_earth = traj[:3].T - np.array([-mu, 0, 0])
+
+        r_m = np.linalg.norm(r_moon, axis=1)
+        r_e = np.linalg.norm(r_earth, axis=1)
+
+        a_earth = -(1 - mu) * r_earth / r_e[:, None]**3
+        a_moon = -mu * r_moon / r_m[:, None]**3
+
+        a_moon_earth = np.array([mu, 0, 0])
+        a_moon_perturbation = a_moon - a_moon_earth
+
+        perturbation = eta = (np.linalg.norm(a_moon_perturbation, axis=1)/ np.linalg.norm(a_earth, axis=1))
+    
+        mask = np.logical_and(eta <= 0.01, r_e < 1)
+
+    else:
+        mask = np.ones(traj.shape[1], dtype=bool)
+        
+
+    far_times = t[mask] * TU
+
+    earth_inertial = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, far_times)
+
+    far_points_normalized = traj[:, mask]
+    far_points_rotating = Transformations.CR3BP_normalized_units_to_SV(traj[:, mask], d, G, M)
+    far_points_inertial = Transformations.CR3BP_to_inertial(far_points_rotating, n, t[mask] * TU)
+    far_points_geocentric = far_points_inertial - earth_inertial
+
+    
+
+
+    # Lambert's problem and optimization to find the best transfer trajectory
+    number_of_targets = len(far_times)
+
+    if number_of_targets == 0:
+        print("No target points available. Skipping trajectory.")
+        return None
+
+    r0 = R_E + 200
+    tof_min = 0.5 * day
+
+    v_circular_magnitude = np.sqrt(mu_earth / r0)
+
+    optimization_result = differential_evolution(
+        lambert_objective,
+        bounds=[(0, number_of_targets - 1), (0, 2 * np.pi), (0, 1), (0, 1),],
+        integrality=[True, False, False, True,],
+        strategy="rand1bin",
+        popsize=20,
+        maxiter=100,
+        tol=1e-4,
+        polish=True,
+        updating="immediate",
+        workers=1,
+        rng=np.random.default_rng(0),
+    )
+
+
+    if (not np.isfinite(optimization_result.fun) or optimization_result.fun >= 1e12):
+        print("No feasible Lambert transfer. Skipping trajectory.")
+        return None
+
+
+    target_id = int(optimization_result.x[0])
+    theta_0 = (optimization_result.x[1] % (2 * np.pi))
+    tof_fraction = optimization_result.x[2]
+    retrograde = bool(int(optimization_result.x[3]))
+
+    target_time = (far_times[target_id])
+    tof_max = (target_time - T_max * TU)
+    tof = (tof_min + tof_fraction * (tof_max - tof_min))
+    direction = (-1.0 if retrograde else 1.0)
+
+    x_target_normalized = (far_points_normalized[:, target_id])
+    X_target_barycentric = far_points_inertial[:, target_id]
+    x_target_geocentric = (far_points_geocentric[:, target_id])
+
+    r_target = x_target_geocentric[:3]
+    v_target = x_target_geocentric[3:]
+
+    r_departure = r0 * np.array([np.cos(theta_0), np.sin(theta_0), 0])
+    v_circular = (direction * v_circular_magnitude * np.array([-np.sin(theta_0), np.cos(theta_0), 0]))
+
+
+    lambert_champion = pk.lambert_problem(
+        r0=r_departure,
+        r1=r_target,
+        tof=tof,
+        mu=mu_earth,
+        cw=retrograde,
+        multi_revs=0,
+    )
+
+
+    v_lambert_departure = np.asarray(lambert_champion.v0[0])
+    v_lambert_arrival = np.asarray(lambert_champion.v1[0])
+
+    departure_time = target_time - tof
+    earth_departure_inertial = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, departure_time).ravel()
+
+    x_departure_geocentric = np.hstack((r_departure, v_lambert_departure))
+    x_departure_barycentric = (x_departure_geocentric + earth_departure_inertial)
+    x_departure_rotating = Transformations.inertial_to_CR3BP(x_departure_barycentric, n, departure_time).ravel()
+    x_departure_normalized = (Transformations.SV_to_CR3BP_normalized_units(x_departure_rotating, d, G, M))
+
+
+    if PRINT:
+        print("\n=== Lambert optimizer ===")
+        print(f"Success:     {optimization_result.success}")
+        print(f"Direction:   {'Retrograde' if retrograde else 'Prograde'}")
+        print(f"Evaluations: {optimization_result.nfev}")
+        print(f"Target time: {target_time / day:.1f} days")
+        print(f"Theta:       {np.degrees(theta_0):.1f} deg")
+        print(f"ToF:         {tof / day:.1f} days")
+        print(f"DV:          {optimization_result.fun:.3f} km/s")
+
+
+
+
+    # Numerically integrate the transfer in the CR3BP
+    if PRINT or PLOT:
+        transfer_duration = tof / TU
+        dt_transfer = 0.001
+
+        transfer_result = integrate_one(x_departure_normalized, 0, transfer_duration, dt_transfer, events=None)
+
+        T_transfer = transfer_result[0]
+        X_transfer = transfer_result[1]
+
+        transfer_times = (departure_time + T_transfer * TU)
+
+        X_transfer_rotating = (Transformations.CR3BP_normalized_units_to_SV(X_transfer, d, G, M))
+        X_transfer_inertial = Transformations.CR3BP_to_inertial(X_transfer_rotating, n, transfer_times)
+
+        position_error = np.linalg.norm(X_transfer_inertial[:3, -1] - X_target_barycentric[:3])
+
+
+        if PRINT:
+            print("\n=== LAMBERT TRANSFER ===")
+            print(f"Position error: {position_error:.3f} km")
+
+
+
+
+    # Refine the departure velocity using CR3BP integration and a root-finding method
+    initial_correction = np.array([0, 0, 0])
+    transfer_duration = tof / TU
+
+    shooting_result = root(
+        shooting_residual,
+        initial_correction,
+        method="hybr",
+        tol=1e-10
+        )
+
+    residual_error = np.linalg.norm(shooting_result.fun) * d
+
+    converged = (np.isfinite(residual_error) and residual_error < 0.1)
+
+    if not converged:
+
+        if PRINT:
+            print("\nCR3BP root refinement failed: Proceeding with homotopy method.")
+
+        delta_v_refinement = initial_correction
+        refinement_failed = False
+
+        for strength in [0.02, 0.05, 0.1, 0.25, 0.45, 0.65, 0.85, 1.0]:
+
+            shooting_result = root(
+                homotopy_residual,
+                delta_v_refinement,
+                args=(strength,),
+                method="hybr",
+                tol=1e-10,
+                options={"maxfev": 300}
+            )
+
+            residual_error = np.linalg.norm(shooting_result.fun) * d
+
+            if not residual_error < 0.1:
+                print(f"Refinement failed at strength={strength}: "f"residual={residual_error:.3f} km")
+                refinement_failed = True
+                break
+
+            delta_v_refinement = shooting_result.x
+
+        if refinement_failed:
+            return None
+
+    else:
+        delta_v_refinement = shooting_result.x
+
+
+    v_refined_departure = v_lambert_departure + delta_v_refinement
+    x_departure_normalized_refined = corrected_departure_state(delta_v_refinement)
+
+
+
+
+
+    # Numerically integrate the refined transfer in the CR3BP
+    transfer_duration = tof / TU
+    dt_transfer = 0.001
+
+    transfer_result = integrate_one(x_departure_normalized_refined, 0, transfer_duration, dt_transfer, events=None, rtol=1e-10)
+
+    T_transfer_refined = transfer_result[0]
+    X_transfer_refined = transfer_result[1]
+
+    X_transfer_rotating_refined = (Transformations.CR3BP_normalized_units_to_SV(X_transfer_refined, d, G, M))
+    transfer_times = (departure_time + T_transfer_refined * TU)
+
+    X_transfer_inertial_refined = Transformations.CR3BP_to_inertial(X_transfer_rotating_refined, n, transfer_times)
+
+    position_error_refined = np.linalg.norm(X_transfer_inertial_refined[:3, -1] - X_target_barycentric[:3])
+    velocity_error_refined = np.linalg.norm(X_transfer_inertial_refined[3:, -1] - X_target_barycentric[3:])
+
+    if not np.isfinite(position_error_refined) or position_error_refined >= 0.1:
+        print(f"Final refinement error too large: {position_error_refined:.3f} km")
+        return None
+
+
+    if PRINT:
+        print("\n=== REFINED CR3BP TRANSFER ===")
+        print(f"Position error: {position_error_refined:.3f} km")
+
+
+
+
+    # Compute delta-v for departure and arrival
+    delta_v_departure_refined = np.linalg.norm(v_refined_departure - v_circular)
+    delta_v_arrival_refined = velocity_error_refined
+    delta_v_total = delta_v_departure_refined + delta_v_arrival_refined
+
+    x_departure = X_transfer_inertial_refined[:, 0]
+    dx_manovra = np.hstack((np.zeros(3), X_target_barycentric[3:] - X_transfer_inertial_refined[3:, -1]))
+
+
+
+    # Avoiding Collisions
+    r_earth_transfer = np.linalg.norm(X_transfer_refined[:3].T - np.array([-mu, 0, 0]), axis=1)
+    r_moon_transfer = np.linalg.norm(X_transfer_refined[:3].T - np.array([1 - mu, 0, 0]), axis=1)
+
+    h_earth_transfer = r_earth_transfer.min() * d - R_E
+    h_moon_transfer = r_moon_transfer.min() * d - R_L
+
+    if h_earth_transfer < 0 or h_moon_transfer < 0: 
+        print("Transfer collision. "f"h_E={h_earth_transfer:.3f} km, "f"h_M={h_moon_transfer:.3f} km")
+        return None
+
+
+    if PLOT:
+        T.append(t)
+        X.append(traj)
+
+
+    if PRINT:
+            print(f"\nTime of flight:     {tof / day:.1f} days")
+            print(f"DV departure:       {delta_v_departure_refined:.3f} km/s")
+            print(f"DV transfer:        {delta_v_arrival_refined:.3f} km/s")
+            print(f"DV total:           {delta_v_total:.3f} km/s")
+
+
+    return np.r_[
+        departure_time,
+        x_departure,
+        target_time,
+        dx_manovra,
+        tof,
+        delta_v_departure_refined,
+        delta_v_arrival_refined,
+        delta_v_total,
+        current_row[columns["E_SOI"]],
+        current_row[columns["h_min_moon"]]
+    ]
 
 
 
@@ -219,12 +538,7 @@ Integrator = Integration()
 # Initialize lists to store results
 T = []
 X = []
-far_times = [] 
-far_points_normalized = []
-far_points_rotating = []
-far_points_inertial = [] 
-far_points_geocentric = []
-
+output_rows = []
 
 
 # Define masses and integration parameters
@@ -235,6 +549,7 @@ dt = -0.001
 
 
 
+# Define distances and velocities for circular orbit and Lambert
 r_p = (R_E + 200) / d
 r_a_max = E_SOI / d
 mu_E = 1 - mu
@@ -253,263 +568,42 @@ SORT_BY = "E_SOI"
 DESCENDING = True
 
 columns = {"Cj": 6, "E_SOI": 7, "h_min_moon": 8, "h_last_earth": 9}
+print("\n")
 
 
 order = np.argsort(database[:, columns[SORT_BY]], kind="stable")
 selection = database[order[::-1] if DESCENDING else order]
 
 source_ids = np.array([4508, 54212, 35554, 99374, 98436])
-#x0_selection = database[source_ids[1:2], :6]
-x0_selection = selection[2:3, :6]
 
+selected = selection[10000:10001]
+selected = selection[:1]
+selected = database[source_ids[4:5]]
 
-pool = get_context("fork").Pool()
 
-sol = pool.starmap(integrate_one, [(x0, T_min, T_max, dt, earth_SOI_exit) for x0 in x0_selection])
 
-T = [res[0] for res in sol]
-X = [res[1] for res in sol]
 
-X_bar = [Transformations.CR3BP_to_inertial(Transformations.CR3BP_normalized_units_to_SV(traj, d, G, M), n, time * TU) for time, traj in zip(T, X)]
+# Use multiprocessing to integrate multiple trajectories in parallel
+if PLOT:
 
-pool.close()
-pool.join()
-
-
-
-
-# Compute far points for each trajectory
-for t, traj in zip(T, X):
-
-    r_moon = traj[:3].T - np.array([1 - mu, 0, 0])
-    r_earth = traj[:3].T - np.array([-mu, 0, 0])
-
-    r_m = np.linalg.norm(r_moon, axis=1)
-    r_e = np.linalg.norm(r_earth, axis=1)
-
-    a_earth = -(1 - mu) * r_earth / r_e[:, None]**3
-    a_moon = -mu * r_moon / r_m[:, None]**3
-
-    a_moon_earth = np.array([mu, 0, 0])
-    a_moon_perturbation = a_moon - a_moon_earth
-
-    threshold = 0.01
-    perturbation = eta = (np.linalg.norm(a_moon_perturbation, axis=1)/ np.linalg.norm(a_earth, axis=1))
-
-    #mask1 = r_m >= 2 * M_SOI / d
-    #mask2 = r_e <= 1
-
-    if MASK:
-        mask = np.logical_and(eta <= threshold, r_e < 1)
-    else:
-        mask = np.ones_like(r_e, dtype=bool)
-
-    far_points_rotating_i = Transformations.CR3BP_normalized_units_to_SV(traj[:, mask], d, G, M)
-
-    far_times.append(t[mask] * TU)
-    far_points_normalized.append(traj[:, mask])
-    far_points_rotating.append(far_points_rotating_i)
-    far_points_inertial.append(Transformations.CR3BP_to_inertial(far_points_rotating_i, n, t[mask] * TU))
-
-
-for t, x_baricentric in zip(far_times, far_points_inertial):
-
-    earth = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, t)
-
-    x_geocentric = x_baricentric - earth
-
-    far_points_geocentric.append(x_geocentric)
-
-    
-
-
-
-# Lambert's problem and optimization to find the best transfer trajectory
-trajectory_id = 0
-
-number_of_targets = len(far_times[trajectory_id])
-
-r0 = R_E + 200
-tof_min = 0.5 * day
-
-v_circular_magnitude = np.sqrt(mu_earth / r0)
-
-optimization_result = differential_evolution(
-    lambert_objective,
-    bounds=[(0, number_of_targets - 1), (0, 2 * np.pi), (0, 1), (0, 1),],
-    integrality=[True, False, False, True,],
-    strategy="rand1bin",
-    popsize=30,
-    maxiter=150,
-    tol=1e-6,
-    polish=True,
-    updating="immediate",
-    workers=1,
-    rng=np.random.default_rng(0),
-)
-
-
-target_id = int(optimization_result.x[0])
-theta_0 = (optimization_result.x[1] % (2 * np.pi))
-tof_fraction = optimization_result.x[2]
-retrograde = bool(int(optimization_result.x[3]))
-
-target_time = (far_times[trajectory_id][target_id])
-tof_max = (target_time - T_max * TU)
-tof = (tof_min + tof_fraction * (tof_max - tof_min))
-direction = (-1.0 if retrograde else 1.0)
-
-x_target_normalized = (far_points_normalized[trajectory_id][:, target_id])
-x_target_geocentric = (far_points_geocentric[trajectory_id][:, target_id])
-
-r_target = x_target_geocentric[:3]
-v_target = x_target_geocentric[3:]
-
-r_departure = r0 * np.array([np.cos(theta_0), np.sin(theta_0), 0])
-v_circular = (direction * v_circular_magnitude * np.array([-np.sin(theta_0), np.cos(theta_0), 0]))
-
-
-lambert_champion = pk.lambert_problem(
-    r0=r_departure,
-    r1=r_target,
-    tof=tof,
-    mu=mu_earth,
-    cw=retrograde,
-    multi_revs=0,
-)
-
-
-v_lambert_departure = np.asarray(lambert_champion.v0[0])
-v_lambert_arrival = np.asarray(lambert_champion.v1[0])
-
-departure_time = target_time - tof
-earth_departure_inertial = Transformations.CR3BP_to_inertial([-mu*d, 0, 0, 0, 0, 0], n, departure_time).ravel()
-
-x_departure_geocentric = np.hstack((r_departure, v_lambert_departure))
-x_departure_barycentric = (x_departure_geocentric + earth_departure_inertial)
-x_departure_rotating = Transformations.inertial_to_CR3BP(x_departure_barycentric, n, departure_time).ravel()
-x_departure_normalized = (Transformations.SV_to_CR3BP_normalized_units(x_departure_rotating, d, G, M))
-
-
-print("\n=== Lambert optimizer ===")
-print(f"Success:     {optimization_result.success}")
-print(f"Direction:   {'Retrograde' if retrograde else 'Prograde'}")
-print(f"Evaluations: {optimization_result.nfev}")
-print(f"Target time: {target_time / day:.1f} days")
-print(f"Theta:       {np.degrees(theta_0):.1f} deg")
-print(f"ToF:         {tof / day:.1f} days")
-print(f"DV:          {optimization_result.fun:.3f} km/s")
-
-
-
-
-# Numerically integrate the transfer in the CR3BP
-transfer_duration = tof / TU
-dt_transfer = 0.001
-
-transfer_result = integrate_one(x_departure_normalized, 0, transfer_duration, dt_transfer, events=None)
-
-T_transfer = transfer_result[0]
-X_transfer = transfer_result[1]
-
-X_transfer_rotating = (Transformations.CR3BP_normalized_units_to_SV(X_transfer, d, G, M))
-transfer_times = (departure_time + T_transfer * TU)
-
-X_transfer_inertial = Transformations.CR3BP_to_inertial(X_transfer_rotating, n, transfer_times)
-X_target_barycentric = (far_points_inertial[trajectory_id][:, target_id])
-
-position_error = np.linalg.norm(X_transfer_inertial[:3, -1] - X_target_barycentric[:3])
-
-print("\n=== LAMBERT TRANSFER ===")
-print(f"Position error: {position_error:.3f} km")
-
-
-
-
-# Refine the departure velocity using CR3BP integration and a root-finding method
-initial_correction = np.array([0, 0, 0])
-
-shooting_result = root(
-    shooting_residual,
-    initial_correction,
-    method="hybr",
-    tol=1e-12
-    )
-
-if not shooting_result.success:
-    print("\nCR3BP root refinement failed: Proceeding with homotopy method.")
-
-converged = (shooting_result.success and np.linalg.norm(shooting_result.fun) * d < 0.1)
-
-if not converged:
-
-    delta_v_refinement = initial_correction
-
-    for strength in [0.1, 0.25, 0.45, 0.65, 0.85, 1.0]:
-
-        shooting_result = root(
-            homotopy_residual,
-            delta_v_refinement,
-            args=(strength,),
-            method="hybr",
-            tol=1e-10,
-            options={"maxfev": 120}
-        )
-
-        if not shooting_result.success:
-            raise RuntimeError(
-                f"Refinement failed at strength={strength}"
-            )
-
-        delta_v_refinement = shooting_result.x
+    results = [process_trajectory(current_row) for current_row in selected]
 
 else:
-    delta_v_refinement = shooting_result.x
+
+    with get_context("fork").Pool() as pool:
+
+        results = pool.map(
+            process_trajectory,
+            selected,
+            chunksize=1
+        )
 
 
-v_refined_departure = v_lambert_departure + delta_v_refinement
-x_departure_normalized_refined = corrected_departure_state(delta_v_refinement)
+output_rows = [result for result in results if result is not None]
 
-
-
-
-
-# Numerically integrate the refined transfer in the CR3BP
-transfer_duration = tof / TU
-dt_transfer = 0.001
-
-transfer_result = integrate_one(x_departure_normalized_refined, 0, transfer_duration, dt_transfer, events=None)
-
-T_transfer_refined = transfer_result[0]
-X_transfer_refined = transfer_result[1]
-
-X_transfer_rotating_refined = (Transformations.CR3BP_normalized_units_to_SV(X_transfer_refined, d, G, M))
-transfer_times = (departure_time + T_transfer_refined * TU)
-
-X_transfer_inertial_refined = Transformations.CR3BP_to_inertial(X_transfer_rotating_refined, n, transfer_times)
-
-position_error_refined = np.linalg.norm(X_transfer_inertial_refined[:3, -1] - X_target_barycentric[:3])
-velocity_error_refined = np.linalg.norm(X_transfer_inertial_refined[3:, -1] - X_target_barycentric[3:])
-
-print("\n=== REFINED CR3BP TRANSFER ===")
-print(f"Position error: {position_error_refined:.3f} km")
-
-
-
-
-# Compute delta-v for departure and arrival
-delta_v_departure_refined = np.linalg.norm(v_refined_departure - v_circular)
-delta_v_arrival_refined = velocity_error_refined
-delta_v_total = delta_v_departure_refined + delta_v_arrival_refined
-
-x_departure = X_transfer_inertial_refined[:, 0]
-dx_manovra = np.hstack((np.zeros(3), X_target_barycentric[3:] - X_transfer_inertial_refined[3:, -1]))
-
-print(f"\nTime of flight:     {tof / day:.1f} days")
-print(f"DV departure:       {delta_v_departure_refined:.3f} km/s")
-print(f"DV transfer:        {delta_v_arrival_refined:.3f} km/s")
-print(f"DV total:           {delta_v_total:.3f} km/s")
-
+valid_initial_conditions = np.count_nonzero((selected[:, columns["h_min_moon"]] >= 0) & (selected[:, columns["h_last_earth"]] >= 0))
+success_percentage = (100 * len(output_rows) / valid_initial_conditions if valid_initial_conditions > 0 else 0)
+print(f"\nSuccessful transfers: {len(output_rows)}/"f"{valid_initial_conditions} ({success_percentage:.1f}%)")
 
 
 
@@ -522,33 +616,39 @@ print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 # Save the results to a text file
 if SAVE:
-    data = np.r_[
-        departure_time,
-        x_departure,
-        target_time,
-        dx_manovra,
-        tof,
-        delta_v_departure_refined,
-        delta_v_arrival_refined,
-        delta_v_total,
-        selection[trajectory_id, columns["E_SOI"]],
-        selection[trajectory_id, columns["h_min_moon"]]]
 
-    np.savetxt(
-        "Escape_transfers.txt",
-        data[None, :],
-        header=(
-            "t_departure x_departure y_departure z_departure vx_departure vy_departure vz_departure t_manovra dx_manovra dy_manovra dz_manovra tof DV1 DV2 DVtotal ESOI h_moon"))
+    if output_rows:
+    
+        data = np.vstack(output_rows)
 
+        np.savetxt(
+            "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_transfers_database.txt",
+            data,
+            header=(
+                "t_departure_s "
+                "x_departure_km y_departure_km z_departure_km "
+                "vx_departure_km_s vy_departure_km_s vz_departure_km_s "
+                "t_maneuver_s "
+                "dx_maneuver_km dy_maneuver_km dz_maneuver_km "
+                "dvx_maneuver_km_s dvy_maneuver_km_s dvz_maneuver_km_s "
+                "tof_s DV1_km_s DV2_km_s DVtotal_km_s "
+                "E_SOI_km2_s2 h_moon_km"
+            )
+        )
 
+    else:
+        print("No valid transfers to save.")
 
 
 # Plotting the results
 if PLOT:
+
+    X_bar = [Transformations.CR3BP_to_inertial(Transformations.CR3BP_normalized_units_to_SV(traj, d, G, M), n, time * TU) for time, traj in zip(T, X)]
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 10))
 
     # Rotating frame
-    for traj, far_point in zip(X, far_points_rotating):
+    for traj in X:
         ax1.plot(traj[0] * d, traj[1] * d)
         ax1.scatter(traj[0, 0] * d, traj[1, 0] * d)
 
@@ -559,6 +659,8 @@ if PLOT:
 
     ax1.scatter(X_transfer[0, -1] * d, X_transfer[1, -1] * d, color="blue", s=40)
 
+    if MASK:
+        ax1.scatter(far_points_rotating[0], far_points_rotating[1], color="orange", s=2, label="Target points")
 
     ax1.plot(X_transfer_refined[0] * d, X_transfer_refined[1] * d, color="red", linewidth=2, label="Transfer refined")
     
@@ -569,7 +671,6 @@ if PLOT:
 
     ax1.scatter(-mu*d, 0, color="blue", label="Earth")
     ax1.scatter((1-mu)*d, 0, color="darkred", label="Moon")
-    ax1.scatter(far_point[0], far_point[1], color="orange", s=2, label="Target points") if MASK else None
 
     ax1.set_title("Rotating Frame")
     ax1.set_xlabel("X [km]")
@@ -580,7 +681,7 @@ if PLOT:
 
 
     # Barycentric inertial frame
-    for time, traj, far_point in zip(T, X_bar, far_points_inertial):
+    for time, traj in zip(T, X_bar):
 
         earth_I = Transformations.CR3BP_to_inertial(
             [-mu*d, 0, 0, 0, 0, 0],
@@ -595,7 +696,6 @@ if PLOT:
         )
 
         ax2.plot(traj[0], traj[1])
-        ax2.scatter(far_point[0], far_point[1], color="orange", s=2, label="Target points") if MASK else None
         ax2.scatter(traj[0, 0], traj[1, 0])
 
         ax2.plot(earth_I[0], earth_I[1], "--", color="blue")
@@ -615,6 +715,9 @@ if PLOT:
 
     ax2.scatter(-mu*d, 0, color="blue", label="Earth at $t=0$")
     ax2.scatter((1-mu)*d, 0, color="darkred", label="Moon at $t=0$")
+
+    if MASK:
+        ax2.scatter(far_points_inertial[0], far_points_inertial[1], color="orange", s=2, label="Target points")
 
     ax2.set_title("Barycentric Inertial Frame")
     ax2.set_xlabel("X [km]")

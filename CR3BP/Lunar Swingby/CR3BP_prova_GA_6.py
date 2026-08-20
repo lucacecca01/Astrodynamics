@@ -38,7 +38,30 @@ E_SOI = (m1 / ms)**(2/5) * d_E
 
 masses = [m1, m2, 0]
 
-DATA_FILE = ("/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_transfers.txt")
+#DATA_FILE = ("/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_transfers.txt")
+DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_transfers_database.txt"
+database = np.atleast_2d(np.loadtxt(DATA_FILE))
+
+
+SORT_BY = "E_SOI"
+DESCENDING = True
+
+columns = { "tof": 14,
+            "DV1": 15,
+            "DV2": 16,
+            "DVtotal": 17,
+            "E_SOI": 18,
+            "h_moon": 19
+            }
+
+
+performance = (database[:, columns["E_SOI"]] / database[:, columns["DVtotal"]]**2)
+
+
+order = np.argsort(performance, kind="stable")
+selection = database[order[::-1] if DESCENDING else order]
+
+
 
 trajectory_id = 0
 dt = 0.0001 * TU
@@ -50,8 +73,7 @@ Integrator = Integration()
 
 
 # Load selected transfer
-database = np.atleast_2d(np.loadtxt(DATA_FILE))
-row = database[trajectory_id]
+row = selection[trajectory_id]
 
 t_departure = row[0]
 x_departure = row[1:7]
@@ -169,52 +191,43 @@ print(f"\nExecution time: {elapsed_time:.2f} s")
 
 
 if PLOT:
-    # Barycentric inertial plot
     plt.figure(figsize=(10, 10))
 
     plt.plot(
-        earth[:, 0],
-        earth[:, 1],
-        color="blue",
-        linestyle="--",
-        label="Earth"
-    )
-
-    plt.plot(
-        moon[:, 0],
-        moon[:, 1],
+        moon[:, 0] - earth[:, 0],
+        moon[:, 1] - earth[:, 1],
         color="darkred",
         linestyle="--",
         label="Moon"
     )
 
     plt.plot(
-        spacecraft[:maneuver_index + 1, 0],
-        spacecraft[:maneuver_index + 1, 1],
+        spacecraft[:maneuver_index + 1, 0] - earth[:maneuver_index + 1, 0],
+        spacecraft[:maneuver_index + 1, 1] - earth[:maneuver_index + 1, 1],
         color="green",
         linewidth=2,
         label="Transfer"
     )
 
     plt.plot(
-        spacecraft[maneuver_index:ETD_index + 1, 0],
-        spacecraft[maneuver_index:ETD_index + 1, 1],
+        spacecraft[maneuver_index:ETD_index + 1, 0] - earth[maneuver_index:ETD_index + 1, 0],
+        spacecraft[maneuver_index:ETD_index + 1, 1] - earth[maneuver_index:ETD_index + 1, 1],
         color="blue",
         linewidth=2,
         label="ETD"
     )
 
     plt.plot(
-        spacecraft[ETD_index:, 0],
-        spacecraft[ETD_index:, 1],
+        spacecraft[ETD_index:, 0] - earth[ETD_index:, 0],
+        spacecraft[ETD_index:, 1] - earth[ETD_index:, 1],
         color="red",
         linewidth=2,
         label="Escape"
     )
 
     plt.scatter(
-        spacecraft[0, 0],
-        spacecraft[0, 1],
+        spacecraft[0, 0] - earth[0, 0],
+        spacecraft[0, 1] - earth[0, 1],
         color="green",
         s=50,
         zorder=50,
@@ -222,8 +235,8 @@ if PLOT:
     )
 
     plt.scatter(
-        spacecraft[maneuver_index, 0],
-        spacecraft[maneuver_index, 1],
+        spacecraft[maneuver_index, 0] - earth[maneuver_index, 0],
+        spacecraft[maneuver_index, 1] - earth[maneuver_index, 1],
         color="blue",
         s=50,
         zorder=50,
@@ -232,8 +245,8 @@ if PLOT:
 
 
     plt.scatter(
-        spacecraft[ETD_index, 0],
-        spacecraft[ETD_index, 1],
+        spacecraft[ETD_index, 0] - earth[ETD_index, 0],
+        spacecraft[ETD_index, 1] - earth[ETD_index, 1],
         color="red",
         s=50,
         zorder=50,
@@ -242,15 +255,15 @@ if PLOT:
 
 
     plt.scatter(
-        spacecraft[-1, 0],
-        spacecraft[-1, 1],
+        spacecraft[-1, 0] - earth[-1, 0],
+        spacecraft[-1, 1] - earth[-1, 1],
         color="black",
         s=50,
         zorder=50,
         label="Earth SOI"
     )
 
-    plt.scatter(0, 0, color="purple", s=25, label="Barycenter")
+    plt.scatter(0, 0, color="purple", s=25, label="Earth")
 
     barycentric_soi = plt.Circle(
         (0, 0),
@@ -265,7 +278,7 @@ if PLOT:
 
     plt.xlabel("X [km]")
     plt.ylabel("Y [km]")
-    plt.title("Complete trajectory — Barycentric inertial frame")
+    plt.title("Complete trajectory — Earth inertial frame")
     plt.axis("equal")
     plt.legend()
     plt.tight_layout()
