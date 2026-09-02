@@ -5,10 +5,15 @@ import time
 
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.integrate import cumulative_trapezoid
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.cluster import HDBSCAN
+from sklearn.cluster import HDBSCAN, DBSCAN
+from sklearn.neighbors import NearestNeighbors
+
+from scipy.sparse import csr_matrix
+from scipy.sparse.csgraph import connected_components
 
 
 SAVE = False
@@ -38,6 +43,9 @@ def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
     )
 
     return sol
+
+
+
 
 
 
@@ -126,47 +134,221 @@ X = np.stack([result[1] for result in results])
 
 
 
-trajectory_scaler = StandardScaler()
-physical_scaler = StandardScaler()
-pca_scaler = StandardScaler()
-pca = PCA(n_components=0.99)
 
 
-trajectory_features = X.reshape(len(X), -1)
-trajectory_features_scaled = trajectory_scaler.fit_transform(trajectory_features)
-trajectory_features_pca = pca.fit_transform(trajectory_features_scaled)
-trajectory_features_pca_scaled = pca_scaler.fit_transform(trajectory_features_pca)
+# Compute curvature
+state_derivative = Integrator.CR3BP_ODE(0, X.transpose(1, 0, 2), mu,).transpose(1, 0, 2)
 
-physical_features = selection[:, 6:]
-physical_features_scaled = physical_scaler.fit_transform(physical_features)
+velocity = state_derivative[:, :3]
+acceleration = state_derivative[:, 3:]
+speed = np.linalg.norm(velocity, axis=1)
+
+velocity_cross_acceleration = np.cross(velocity, acceleration, axis=1,)
+curvature = (np.linalg.norm(velocity_cross_acceleration, axis=1) / speed**3)
 
 
-trajectory_block = (trajectory_features_pca_scaled / np.sqrt(trajectory_features_pca_scaled.shape[1]))
-physical_block = (physical_features_scaled / np.sqrt(physical_features_scaled.shape[1]))
+curvature_integrand = curvature * speed
 
-#clustering_features = np.hstack((trajectory_block, physical_block,))
-clustering_features = trajectory_features_pca
+cumulative_curvature = cumulative_trapezoid(curvature_integrand, x=-T, axis=1, initial=0)
+curvature_total = cumulative_curvature[:, -1]
 
-print("Original features:", trajectory_features_scaled.shape[1])
-print("PCA components:", trajectory_features_pca.shape[1])
-print(f"Explained variance: {np.sum(pca.explained_variance_ratio_):.2f}")
+h = np.ceil(curvature_total / np.pi).astype(int)
 
 
 
-min_cluster_size = 10
-min_samples = 5
+# Sample trajectories based on curvature
+N_a = 3
+X_curvature = []
 
 
-clusterer = HDBSCAN(min_cluster_size=min_cluster_size, min_samples=min_samples, cluster_selection_method="eom")
+for trajectory, cumulative, total, h_value in zip(X, cumulative_curvature, curvature_total, h):
 
-labels = clusterer.fit_predict(clustering_features)
-probabilities = clusterer.probabilities_
+    if h_value == 0:
+        targets = np.array([0.0])
+
+    else:
+        complete_targets = (np.arange((h_value - 1) * N_a + 1) * np.pi / N_a)
+
+        final_targets = np.linspace((h_value - 1) * np.pi, total, N_a + 1,)[1:]
+
+        targets = np.concatenate((complete_targets, final_targets,))
+
+    sampled_trajectory = np.vstack([np.interp(targets, cumulative, component) for component in trajectory])
+
+    X_curvature.append(sampled_trajectory)
+
+
+
+# Group trajectories with the same h
+trajectory_groups = {}
+
+for h_value in np.unique(h):
+
+    group_ids = np.flatnonzero(h == h_value)
+
+    group_trajectories = np.stack([X_curvature[i] for i in group_ids])
+
+    trajectory_groups[h_value] = (group_ids, group_trajectories)
+
+
+
+
+
+# Shape features from unit tangent vectors
+shape_feature_groups = {}
+
+for h_value, (group_ids, group_trajectories) in trajectory_groups.items():
+
+    sampled_velocity = group_trajectories[:, 3:]
+
+    sampled_speed = np.linalg.norm(sampled_velocity, axis=1, keepdims=True)
+
+    unit_tangent = sampled_velocity / sampled_speed
+
+    shape_features = unit_tangent.transpose(0, 2, 1).reshape(len(group_trajectories), -1)
+
+    shape_feature_groups[h_value] = shape_features
+
+
+
+
+# Position features
+position_feature_groups = {}
+
+for h_value, (group_ids, group_trajectories) in trajectory_groups.items():
+
+    sampled_position = group_trajectories[:, :3]
+
+    position_features = sampled_position.transpose(0, 2, 1).reshape(len(group_trajectories), -1)
+
+    position_feature_groups[h_value] = position_features
+
+
+
+
+# Coarse shape-based clustering
+coarse_cluster_groups = {}
+
+m_clmin = 5
+m_pts = 4
+
+
+for h_value, shape_features in shape_feature_groups.items():
+
+    group_ids = trajectory_groups[h_value][0]
+
+    position_features = (position_feature_groups[h_value])
+
+    shape_scaled = StandardScaler().fit_transform(shape_features)
+    position_scaled = StandardScaler().fit_transform(position_features)
+
+    shape_block = (shape_scaled / np.sqrt(shape_scaled.shape[1]))
+    position_block = (position_scaled / np.sqrt(position_scaled.shape[1]))
+
+    clustering_features = np.hstack((shape_block, position_block))
+
+
+    if len(group_ids) < m_clmin:
+
+        local_labels = np.full(len(group_ids), -1, dtype=int,)
+
+        local_probabilities = np.zeros(len(group_ids))
+
+    else:
+
+        clusterer = HDBSCAN(
+            min_cluster_size=m_clmin,
+            min_samples=m_pts + 1,
+            cluster_selection_method="eom",
+            n_jobs=-1,
+        )
+
+        local_labels = clusterer.fit_predict(clustering_features)
+
+        local_probabilities = clusterer.probabilities_
+
+
+    coarse_cluster_groups[h_value] = (group_ids, local_labels, local_probabilities,)
+
+    n_clusters_h = len(np.unique(local_labels[local_labels >= 0]))
+
+    n_noise_h = np.count_nonzero(local_labels == -1)
+
+
+
+
+
+# Coarse clustering based on shape
+labels = np.full(len(X), -1, dtype=int)
+probabilities = np.zeros(len(X))
+next_cluster_id = 0
+
+for group_ids, local_labels, local_probabilities in coarse_cluster_groups.values():
+
+    clustered = local_labels >= 0
+
+    labels[group_ids[clustered]] = (local_labels[clustered] + next_cluster_id)
+
+    probabilities[group_ids] = (local_probabilities)
+
+    next_cluster_id += len(np.unique(local_labels[clustered]))
+
+
+
+
+
+
+
+
+
+# trajectory_scaler = StandardScaler()
+# physical_scaler = StandardScaler()
+# pca_scaler = StandardScaler()
+# pca = PCA(n_components=0.95)
+
+
+# trajectory_features = X.reshape(len(X), -1)
+# trajectory_features_scaled = trajectory_scaler.fit_transform(trajectory_features)
+# trajectory_features_pca = pca.fit_transform(trajectory_features_scaled)
+# trajectory_features_pca_scaled = pca_scaler.fit_transform(trajectory_features_pca)
+
+# physical_features = selection[:, 6:]
+# physical_features_scaled = physical_scaler.fit_transform(physical_features)
+
+
+# trajectory_block = (trajectory_features_pca_scaled / np.sqrt(trajectory_features_pca_scaled.shape[1]))
+# physical_block = (physical_features_scaled / np.sqrt(physical_features_scaled.shape[1]))
+
+# #clustering_features = np.hstack((trajectory_block, physical_block,))
+# clustering_features = trajectory_features_pca
+
+# print("Original features:", trajectory_features_scaled.shape[1])
+# print("PCA components:", trajectory_features_pca.shape[1])
+# print(f"Explained variance: {np.sum(pca.explained_variance_ratio_):.2f}")
+
+
+
+# min_cluster_size = 20
+# min_samples = 5
+
+
+# clusterer = HDBSCAN(min_cluster_size=min_cluster_size, min_samples=min_samples, cluster_selection_method="eom")
+
+# labels = clusterer.fit_predict(clustering_features)
+# probabilities = clusterer.probabilities_
+
+
+
+
+
+
+
+
 
 
 
 cluster_labels = labels[labels >= 0]
-
-unique_clusters, cluster_sizes = np.unique(cluster_labels, return_counts=True,)
+unique_clusters, cluster_sizes = np.unique(cluster_labels, return_counts=True)
 
 n_clusters = len(unique_clusters)
 n_noise = np.count_nonzero(labels == -1)
@@ -194,47 +376,47 @@ print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 
 if PLOT:
-    fig, ax = plt.subplots(figsize=(12, 8), constrained_layout=True)
+    # fig, ax = plt.subplots(figsize=(12, 8), constrained_layout=True)
 
-    noise_mask = labels == -1
+    # noise_mask = labels == -1
 
-    ax.scatter(
-        trajectory_features_pca[noise_mask, 0],
-        trajectory_features_pca[noise_mask, 1],
-        color="lightgray",
-        s=10,
-        alpha=0.5,
-        label="Noise",
-    )
+    # ax.scatter(
+    #     trajectory_features_pca[noise_mask, 0],
+    #     trajectory_features_pca[noise_mask, 1],
+    #     color="lightgray",
+    #     s=10,
+    #     alpha=0.5,
+    #     label="Noise",
+    # )
 
     cmap = plt.get_cmap("turbo", max(n_clusters, 1),)
 
     cluster_colors = {cluster_id: cmap(color_id) for color_id, cluster_id in enumerate(unique_clusters)}
 
 
-    for cluster_id in unique_clusters:
+    # for cluster_id in unique_clusters:
 
-        cluster_mask = labels == cluster_id
+    #     cluster_mask = labels == cluster_id
 
-        ax.scatter(
-            trajectory_features_pca[cluster_mask, 0],
-            trajectory_features_pca[cluster_mask, 1],
-            color=cluster_colors[cluster_id],
-            s=15,
-            alpha=0.7,
-            label=f"Cluster {cluster_id}",
-        )
+    #     ax.scatter(
+    #         trajectory_features_pca[cluster_mask, 0],
+    #         trajectory_features_pca[cluster_mask, 1],
+    #         color=cluster_colors[cluster_id],
+    #         s=15,
+    #         alpha=0.7,
+    #         label=f"Cluster {cluster_id}",
+    #     )
 
-    ax.set_xlabel("PCA component 1")
-    ax.set_ylabel("PCA component 2")
-    ax.set_title("HDBSCAN clusters — PCA projection")
-    ax.legend()
-    plt.show()
+    # ax.set_xlabel("PCA component 1")
+    # ax.set_ylabel("PCA component 2")
+    # ax.set_title("HDBSCAN clusters — PCA projection")
+    # ax.legend()
+    # plt.show()
 
 
 
-    variance_2D = np.sum(pca.explained_variance_ratio_[:2])
-    print(f"Variance represented in PCA plot: "f"{100 * variance_2D:.1f} %")
+    # variance_2D = np.sum(pca.explained_variance_ratio_[:2])
+    # print(f"Variance represented in PCA plot: "f"{100 * variance_2D:.1f} %")
 
 
 

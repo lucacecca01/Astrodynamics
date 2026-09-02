@@ -330,7 +330,7 @@ class Integration:
 
     def CR3BP_ODE(self, t, x, mu):
 
-        F = np.zeros(len(x))
+        F = np.zeros_like(x, dtype=float)
             
         F[0] = x[3]
         F[1] = x[4]
