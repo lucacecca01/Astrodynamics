@@ -372,7 +372,7 @@ class Integration:
 
 
 
-    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None, stop_condition=None):
+    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None, stop_condition=None, dense_output=False):
          
         if model == 'NBP':
             m = np.atleast_1d(m)
@@ -396,9 +396,12 @@ class Integration:
             else:
                 x0 = x0_list
 
-            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events)
+            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events, dense_output=dense_output)
 
-            return sol.t, sol.y, sol.t_events, sol.y_events
+            if dense_output:
+                return sol
+            else:
+                return sol.t, sol.y, sol.t_events, sol.y_events
         
 
         if integrator == 'rebound':

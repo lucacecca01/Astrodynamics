@@ -9,6 +9,14 @@ from scipy.integrate import cumulative_trapezoid
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import AgglomerativeClustering
+from sklearn.feature_selection import VarianceThreshold
+from sklearn.decomposition import PCA
+
+import pandas as pd
+
+from tsfresh import extract_features
+from tsfresh.feature_extraction import EfficientFCParameters
+from tsfresh.utilities.dataframe_functions import impute
 
 
 SAVE = False
@@ -185,7 +193,6 @@ for trajectory, cumulative, total in zip(X, cumulative_curvature, curvature_tota
     X_curvature.append(sampled_trajectory)
 
 
-
 X_curvature = np.stack(X_curvature)
 
 sampled_position = X_curvature[:, :3]
@@ -194,15 +201,82 @@ sampled_velocity = X_curvature[:, 3:]
 sampled_speed = np.linalg.norm(sampled_velocity, axis=1, keepdims=True)
 unit_tangent = sampled_velocity / sampled_speed
 
-shape_features = unit_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
-position_features = sampled_position.transpose(0, 2, 1).reshape(len(X_curvature), -1,)
 
-shape_scaled = StandardScaler().fit_transform(shape_features)
-position_scaled = StandardScaler().fit_transform(position_features)
 
-n_features = shape_scaled.shape[1]
+# Create a DataFrame for tsfresh feature extraction
+N_trajectories, _, N_samples = X_curvature.shape
 
-clustering_features = np.hstack((shape_scaled, position_scaled)) / np.sqrt(n_features)
+trajectory_table = pd.DataFrame({
+    "trajectory_id": np.repeat(np.arange(N_trajectories), N_samples),
+    "sample_index": np.tile(np.arange(N_samples), N_trajectories),
+    "x": sampled_position[:, 0, :].ravel(),
+    "y": sampled_position[:, 1, :].ravel(),
+    "tx": unit_tangent[:, 0, :].ravel(),
+    "ty": unit_tangent[:, 1, :].ravel(),
+})
+
+print(trajectory_table.head())
+print("Tsfresh input shape:", trajectory_table.shape)
+
+
+
+# Extract tsfresh features
+fc_parameters = EfficientFCParameters()
+
+fc_parameters["fft_coefficient"] = [parameters
+    for parameters in fc_parameters["fft_coefficient"]
+        if parameters["coeff"] <= N_samples // 2]
+
+fc_parameters.pop("query_similarity_count", None)
+
+
+tsfresh_features = extract_features(
+    trajectory_table,
+    column_id="trajectory_id",
+    column_sort="sample_index",
+    default_fc_parameters=fc_parameters,
+    n_jobs=6,
+)
+
+impute(tsfresh_features)
+tsfresh_features = tsfresh_features.sort_index()
+
+print("Tsfresh feature matrix shape:", tsfresh_features.shape)
+print(tsfresh_features.head())
+
+
+
+
+# Apply variance thresholding to remove low-variance features
+variance_filter = VarianceThreshold()
+
+tsfresh_matrix = variance_filter.fit_transform(tsfresh_features)
+
+tsfresh_matrix_scaled = StandardScaler().fit_transform(tsfresh_matrix)
+
+pca = PCA(n_components=0.95)
+
+clustering_features = pca.fit_transform(tsfresh_matrix_scaled)
+clustering_features /= np.sqrt(tsfresh_matrix.shape[1])
+
+print("Features after variance filter:", tsfresh_matrix.shape[1])
+print("PCA components:", clustering_features.shape[1])
+
+
+
+
+
+# shape_features = unit_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
+# position_features = sampled_position.transpose(0, 2, 1).reshape(len(X_curvature), -1,)
+
+# shape_scaled = StandardScaler().fit_transform(shape_features)
+# position_scaled = StandardScaler().fit_transform(position_features)
+
+# n_features = shape_scaled.shape[1]
+
+# clustering_features = np.hstack((shape_scaled, position_scaled)) / np.sqrt(n_features)
+
+
 
 
 
@@ -227,9 +301,6 @@ else:
 
 
 
-
-
-
 unique_clusters, cluster_sizes = np.unique(labels, return_counts=True)
 
 n_clusters = len(unique_clusters)
@@ -241,6 +312,7 @@ mean_variance = np.average(cluster_variances, weights=cluster_sizes)
 
 print(f"\nNumber of clusters: {n_clusters}")
 print(f"Mean within-cluster standard deviation: {np.sqrt(mean_variance):.6f}\n")
+
 
 
 
