@@ -11,8 +11,9 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 
 
-SAVE = False
-PLOT = True
+SAVE = True
+PLOT_CLUSTERS = True
+PLOT_MEDOIDS = True
 
 
 
@@ -180,7 +181,7 @@ mu_earth = G * m1
 
 
 # Input
-DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_initial_conditions_CR3BP.txt"
+DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Generation/Escape_initial_conditions_CR3BP.txt"
 
 database = np.atleast_2d(np.loadtxt(DATA_FILE, skiprows=1))
 
@@ -194,7 +195,7 @@ columns = {
 valid_mask = (database[:, columns["h_min_moon"]] >= 0) & (database[:, columns["h_perigee"]] >= 0)
 valid_ids = np.where(valid_mask)[0]
 
-source_ids = valid_ids[::100]
+source_ids = valid_ids[::1]
 selection = database[source_ids, :]
 x0_selection = selection[:, :6]
 
@@ -282,7 +283,7 @@ clustering_features = np.hstack((backward_position, backward_tangent, forward_po
 
 
 # Perform farthest point selection
-max_representatives = 50
+max_representatives = 1000
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -401,56 +402,17 @@ print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 
 
-if PLOT:
-    # fig, ax = plt.subplots(figsize=(12, 8), constrained_layout=True)
-
-    # noise_mask = labels == -1
-
-    # ax.scatter(
-    #     trajectory_features_pca[noise_mask, 0],
-    #     trajectory_features_pca[noise_mask, 1],
-    #     color="lightgray",
-    #     s=10,
-    #     alpha=0.5,
-    #     label="Noise",
-    # )
+# Plot clusters and representative trajectories
+if PLOT_CLUSTERS:
 
     cmap = plt.get_cmap("turbo", max(n_clusters, 1),)
 
     cluster_colors = {cluster_id: cmap(color_id) for color_id, cluster_id in enumerate(unique_clusters)}
 
-
-    # for cluster_id in unique_clusters:
-
-    #     cluster_mask = labels == cluster_id
-
-    #     ax.scatter(
-    #         trajectory_features_pca[cluster_mask, 0],
-    #         trajectory_features_pca[cluster_mask, 1],
-    #         color=cluster_colors[cluster_id],
-    #         s=15,
-    #         alpha=0.7,
-    #         label=f"Cluster {cluster_id}",
-    #     )
-
-    # ax.set_xlabel("PCA component 1")
-    # ax.set_ylabel("PCA component 2")
-    # ax.set_title("HDBSCAN clusters — PCA projection")
-    # ax.legend()
-    # plt.show()
-
-
-
-    # variance_2D = np.sum(pca.explained_variance_ratio_[:2])
-    # print(f"Variance represented in PCA plot: "f"{100 * variance_2D:.1f} %")
-
-
-
     groups = []
 
     for cluster_id in unique_clusters:
         groups.append((cluster_id, f"Cluster {cluster_id}"))
-
 
 
     max_panels = 24
@@ -459,37 +421,21 @@ if PLOT:
 
     for start in range(0, len(groups), max_panels):
 
-        plot_groups = groups[
-            start:start + max_panels
-        ]
+        plot_groups = groups[start:start + max_panels]
 
         n_panels = len(plot_groups)
 
-        ncols = min(
-            max_columns,
-            n_panels,
-        )
+        ncols = min(max_columns, n_panels)
 
-        nrows = int(
-            np.ceil(n_panels / ncols)
-        )
+        nrows = int(np.ceil(n_panels / ncols))
 
 
-        fig, axes = plt.subplots(
-            nrows,
-            ncols,
-            figsize=(18, 9),
-            constrained_layout=True,
-            squeeze=False,
-        )
+        fig, axes = plt.subplots(nrows, ncols, figsize=(18, 9), constrained_layout=True, squeeze=False)
 
         axes = axes.ravel()
 
 
-        for ax, (group_id, title) in zip(
-            axes,
-            plot_groups,
-        ):
+        for ax, (group_id, title) in zip(axes, plot_groups):
 
             group_mask = labels == group_id
             color = cluster_colors[group_id]
@@ -498,36 +444,12 @@ if PLOT:
 
                 trajectory = X_curvature[trajectory_id]
 
-                ax.plot(
-                    trajectory[0],
-                    trajectory[1],
-                    color=color,
-                    alpha=0.12,
-                    linewidth=0.7,
-                )
+                ax.plot(trajectory[0], trajectory[1], color=color, alpha=0.12, linewidth=0.7)
 
-            ax.scatter(
-                -mu,
-                0,
-                color="blue",
-                s=30,
-                label="Earth",
-                zorder=3,
-            )
+            ax.scatter(-mu, 0, color="blue", s=30, label="Earth", zorder=3,)
+            ax.scatter(1 - mu, 0, color="darkred", s=30, label="Moon", zorder=3,)
 
-            ax.scatter(
-                1 - mu,
-                0,
-                color="darkred",
-                s=30,
-                label="Moon",
-                zorder=3,
-            )
-
-            ax.set_title(
-                f"{title} || "
-                f"{np.count_nonzero(group_mask)} trajectories"
-            )
+            ax.set_title(f"{title} || {np.count_nonzero(group_mask)} trajectories")
 
             ax.set_xlabel("X [LU]")
             ax.set_ylabel("Y [LU]")
@@ -539,35 +461,62 @@ if PLOT:
             ax.axis("off")
 
 
-        figure_number = (
-            start // max_panels
-            + 1
-        )
+        figure_number = (start // max_panels + 1)
 
-        fig.suptitle(
-            f"Cluster groups — Figure {figure_number}"
-        )
+        fig.suptitle(f"Cluster groups — Figure {figure_number}")
 
 
 
+# Plot representative trajectories
+if PLOT_MEDOIDS:
 
-        if SAVE:
+    representative_numbers = np.arange(1, len(radius_history) + 1)
 
-            plot_directory = (Path(__file__).resolve().parent / f"Clusters/GA_10_plots_K{len(representative_ids)}")
+    fig, ax = plt.subplots(figsize=(10, 8))
 
-            plot_directory.mkdir(
-                parents=True,
-                exist_ok=True,
-            )
+    ax.plot(representative_numbers, radius_history, color="blue")
 
-            for figure_id in plt.get_fignums():
-
-                figure = plt.figure(figure_id)
-
-                figure.savefig(
-                    plot_directory / f"figure_{figure_id:03d}.png",
-                    dpi=200,
-                )
+    ax.set_xlabel("Number of representatives")
+    ax.set_ylabel("Maximum normalized distance")
+    ax.set_title("Database covering radius")
+    ax.grid(True)
 
 
+    fig_representatives, ax_representatives = plt.subplots(figsize=(10, 8), constrained_layout=True)
+
+    for cluster_id, representative_id in enumerate(representative_ids):
+
+        trajectory = X_curvature[representative_id]
+
+        ax_representatives.plot(trajectory[0], trajectory[1], color="navy", alpha=0.045, linewidth=0.35, rasterized=True)
+
+    ax_representatives.scatter(-mu, 0, color="blue", s=50, label="Earth", zorder=3)
+    ax_representatives.scatter(1 - mu, 0, color="darkred", s=50, label="Moon", zorder=3)
+
+    ax_representatives.set_xlabel("X [LU]")
+    ax_representatives.set_ylabel("Y [LU]")
+    ax_representatives.set_title(f"Final representative trajectories — {len(representative_ids)} medoids")
+    ax_representatives.set_aspect("equal")
+    ax_representatives.set_box_aspect(1)
+    ax_representatives.grid(True, alpha=0.25)
+    ax_representatives.legend()
+
+
+
+# Save figures
+if SAVE:
+    plot_directory = (Path(__file__).resolve().parent / f"Clusters/GA_10_plots_K{len(representative_ids)}")
+    
+    plot_directory.mkdir(parents=True, exist_ok=True)
+    
+    for figure_id in plt.get_fignums():
+    
+        figure = plt.figure(figure_id)
+    
+        figure.savefig(plot_directory / f"figure_{figure_id:03d}.png", dpi=200)
+
+
+
+
+if PLOT_CLUSTERS or PLOT_MEDOIDS:
     plt.show()

@@ -181,7 +181,7 @@ mu_earth = G * m1
 
 
 # Input
-DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Escape_initial_conditions_CR3BP.txt"
+DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Generation/Escape_initial_conditions_CR3BP.txt"
 
 database = np.atleast_2d(np.loadtxt(DATA_FILE, skiprows=1))
 
