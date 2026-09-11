@@ -16,6 +16,7 @@ from scipy.optimize import brentq
 SAVE = True
 PLOT_CLUSTERS = True
 PLOT_MEDOIDS = True
+ZOOM = False
 
 
 
@@ -45,12 +46,12 @@ masses = [m1, m2, 0]
 T_min = 0
 
 T_max_f = 2 * np.pi
-dt_f = 0.001
+dt_f = 0.0001
 
-T_max_b = -2 * np.pi
-dt_b = -0.001
+T_max_b = -1 * np.pi
+dt_b = -0.0001
 
-N_branch = 1000
+N_branch = 500
 
 
 
@@ -67,11 +68,13 @@ def build_x0_database(filename, mu, collisions = "all"):
     data["GAMMA"] = np.broadcast_to(data["GAMMA"], data["x20"].shape)
     indices = np.arange(len(data["x20"]))
 
+    collision_tau = 2 * np.pi * data["Coll"]
+
     if collisions == "exclude":
-        indices = indices[(data["Coll"] < 0) | (data["Coll"] > T_max_f)]
+        indices = indices[(data["Coll"] < 0) | (collision_tau > T_max_f)]
 
     elif collisions == "only":
-        indices = indices[(data["Coll"] > 0) & (data["Coll"] <= T_max_f)]
+        indices = indices[(data["Coll"] > 0) & (collision_tau <= T_max_f)]
 
     elif collisions != "all":
         raise ValueError("collisions: 'all', 'exclude' oppure 'only'.")
@@ -257,13 +260,13 @@ def farthest_point_selection(features, max_representatives):
 
 
 # Input
-DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Ballistic Captures/Clustering/Database_Lorenzo/strsys8Gamma20V16.dat"
+DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Ballistic Captures/Clustering/Database_Lorenzo/strsysT8Gamma20V16.dat"
 
 database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
 
 
-x0_selection = database[::10]
-source_ids = data["column_indices"][::10]
+x0_selection = database[::1]
+source_ids = data["column_indices"][::1]
 
 
 print(f"\nDatabase trajectories: {len(database)}")
@@ -403,22 +406,20 @@ if SAVE:
 
     wanted_ids = set(representative_source_ids)
 
-    with open(DATA_FILE, "rb") as stream:
-        header = stream.readline()
-        data_lines = (line for line in stream if line.split(b"#", 1)[0].strip())
-        medoid_rows = {i: line 
-                for i, line in enumerate(data_lines)
-                    if i in wanted_ids
-        }
+    with open(DATA_FILE, encoding="utf-8-sig") as src, \
+        output_file.open("w", encoding="utf-8") as dst:
 
-    with output_file.open("wb") as stream:
-        stream.write(header)
+        for line in src:
+            values = line.split()
 
-        for source_id in representative_source_ids:
-            row = medoid_rows[source_id]
-            stream.write(row if row.endswith(b"\n") else row + b"\n")
+            if not values:
+                continue
 
-    del medoid_rows, wanted_ids
+            selected = (values if len(values) == 1
+                        
+                else [values[i] for i in representative_source_ids])
+            
+            dst.write(" ".join(selected) + "\n")
     
     print(f"Medoidi salvati in: {output_file}")
 
@@ -543,6 +544,11 @@ if PLOT_CLUSTERS:
             ax.set_xlabel("X [LU]")
             ax.set_ylabel("Y [LU]")
             ax.set_aspect("equal")
+
+            if ZOOM:
+                ax.set_xlim(-0.25 + (1 - mu), 0.25 + (1 - mu))
+                ax.set_ylim(-0.25, 0.25)
+
             ax.set_box_aspect(1)
 
 
@@ -594,7 +600,10 @@ if PLOT_MEDOIDS:
 
 # Save figures
 if SAVE:
-    plot_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}")
+    if ZOOM:
+        plot_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}_zoomed")
+    else:
+        plot_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}")
     
     plot_directory.mkdir(parents=True, exist_ok=True)
     
