@@ -347,6 +347,42 @@ class Integration:
 
 
 
+    def BCR4BP_ODE(self, t, x, mu, mu_s, r_s, omega_s, theta_s_0):
+
+            F = np.zeros_like(x, dtype=float)
+                
+            F[0] = x[3]
+            F[1] = x[4]
+            F[2] = x[5]
+
+            r1_cubed = ((x[0] + mu)**2 + x[1]**2 + x[2]**2) ** 1.5
+            r2_cubed = (((x[0] - (1 - mu)))**2 + x[1]**2 + x[2]**2) ** 1.5
+
+            theta_s = omega_s * t + theta_s_0
+
+            x_s = r_s * np.cos(theta_s)
+            y_s = r_s * np.sin(theta_s)
+            z_s = 0
+
+            dx_s = x_s - x[0]
+            dy_s = y_s - x[1]
+            dz_s = z_s - x[2]
+
+            rho_s_cubed = (dx_s**2 + dy_s**2 + dz_s**2)**1.5
+            r_s_cubed = (x_s**2 + y_s**2 + z_s**2)**1.5
+
+            a_sun_x = mu_s * (dx_s / rho_s_cubed - x_s / r_s_cubed)
+            a_sun_y = mu_s * (dy_s / rho_s_cubed - y_s / r_s_cubed)
+            a_sun_z = mu_s * (dz_s / rho_s_cubed - z_s / r_s_cubed)
+
+            F[3] = 2 * x[4]  +  x[0]  -  (1 - mu) * (x[0] + mu) / r1_cubed  -  mu * (x[0] - (1 - mu)) / r2_cubed + a_sun_x
+            F[4] = -2 * x[3]  +  x[1]  -  (1 - mu) * x[1] / r1_cubed - mu * x[1] / r2_cubed + a_sun_y
+            F[5] = - (1 - mu) * x[2] / r1_cubed - mu * x[2] / r2_cubed + a_sun_z
+
+            return F
+
+
+
     def CR3BP_Cj_from_v(self, x, mu):
 
         v_2 = x[3]**2 + x[4]**2 + x[5]**2
@@ -372,15 +408,24 @@ class Integration:
 
 
 
-    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None, stop_condition=None, dense_output=False):
+    def Integrator(self, m, G, x0_list, t0, tf, dt, model='NBP', integrator='scipy', method='RK45', rtol=1e-9, atol=1e-12, events=None, stop_condition=None, dense_output=False, r_s=None, theta_s_0=0):
          
         if model == 'NBP':
             m = np.atleast_1d(m)
             mu = G * m
+            args = (mu,)
 
         elif model == 'CR3BP':
             M = np.sum(m)
             mu = m[1] / M
+            args = (mu,)
+
+        elif model == 'BCR4BP':
+            M = m[0] + m[1]
+            mu = m[1] / M
+            mu_s = m[2] / M
+            omega_s = np.sqrt((1 + mu_s) / r_s**3) - 1
+            args = (mu, mu_s, r_s, omega_s, theta_s_0)
 
         else:
             raise ValueError(f"Model not found: {model}")
@@ -396,7 +441,7 @@ class Integration:
             else:
                 x0 = x0_list
 
-            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=(mu, ), t_eval=T, method=method, rtol=rtol, atol=atol, events=events, dense_output=dense_output)
+            sol = scipy.integrate.solve_ivp(getattr(self, f"{model}_ODE"), [t0, tf], x0, args=args, t_eval=T, method=method, rtol=rtol, atol=atol, events=events, dense_output=dense_output)
 
             if dense_output:
                 return sol

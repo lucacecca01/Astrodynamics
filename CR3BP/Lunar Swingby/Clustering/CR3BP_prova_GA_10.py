@@ -11,7 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 
 
-SAVE = True
+SAVE = False
 PLOT_CLUSTERS = True
 PLOT_MEDOIDS = True
 
@@ -221,7 +221,7 @@ dt_f = 0.001
 T_max_b = -4 * np.pi
 dt_b = -0.001
 
-N_branch = 1000
+N_branch = 500
 
 
 
@@ -233,16 +233,19 @@ earth_SOI_exit.direction = -1
 
 
 # Parallel integration backward and forward
+X_curvature = np.empty((len(x0_selection), 6, 2 * N_branch - 1), dtype=np.float64)
+
 with get_context("fork").Pool() as pool:
+    for i, trajectory in enumerate(
+        pool.imap(
+            integrate_and_sample_one,
+            x0_selection,
+            chunksize=10,
+        )
+    ):
+        X_curvature[i] = trajectory
 
-    X_curvature = pool.map(
-        integrate_and_sample_one,
-        x0_selection,
-        chunksize=10,
-    )
-
-X_curvature = np.stack(X_curvature)
-
+del trajectory
 assert np.allclose(X_curvature[:, :, N_branch - 1], x0_selection)
 
 
@@ -256,6 +259,8 @@ sampled_velocity = X_curvature[:, 3:5]
 sampled_speed = np.linalg.norm(sampled_velocity, axis=1, keepdims=True)
 unit_tangent = np.divide(sampled_velocity, sampled_speed, out=np.zeros_like(sampled_velocity), where=sampled_speed > 1e-14)
 
+del sampled_speed
+
 backward_position = sampled_position[:, :, :N_branch]
 forward_position = sampled_position[:, :, N_branch - 1:]
 
@@ -268,6 +273,8 @@ forward_position = forward_position.transpose(0, 2, 1).reshape(len(X_curvature),
 backward_tangent = backward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
 forward_tangent = forward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
 
+del sampled_position, sampled_velocity, unit_tangent
+
 backward_position = normalize_block(backward_position)
 forward_position = normalize_block(forward_position)
 
@@ -276,7 +283,8 @@ forward_tangent = normalize_block(forward_tangent)
 
 clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
 
-
+del backward_position, forward_position
+del backward_tangent, forward_tangent
 
 
 
@@ -334,6 +342,36 @@ for cluster_id, cluster_center in enumerate(kmeans.cluster_centers_):
 labels, minimum_distances = pairwise_distances_argmin_min(clustering_features, clustering_features[representative_ids])
 
 representative_source_ids = source_ids[representative_ids]
+
+
+if SAVE:
+    output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_10_plots_K{len(representative_ids)}")
+    output_directory.mkdir(parents=True, exist_ok=True)
+
+    output_file = (output_directory / f"{Path(DATA_FILE).stem}_medoids.txt")
+
+    wanted_ids = set(representative_source_ids)
+
+    with open(DATA_FILE, "rb") as stream:
+        header = stream.readline()
+        data_lines = (line for line in stream if line.split(b"#", 1)[0].strip())
+        medoid_rows = {i: line 
+                for i, line in enumerate(data_lines)
+                    if i in wanted_ids
+        }
+
+    with output_file.open("wb") as stream:
+        stream.write(header)
+
+        for source_id in representative_source_ids:
+            row = medoid_rows[source_id]
+            stream.write(row if row.endswith(b"\n") else row + b"\n")
+
+    del medoid_rows, wanted_ids
+    
+    print(f"Medoidi salvati in: {output_file}")
+
+
 
 
 print("\n=== KMEANS + MEDOIDS ===")
