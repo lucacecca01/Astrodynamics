@@ -145,6 +145,10 @@ class Transformations:
             w = np.arccos(np.dot(N, E) / n / e)
             if E[2] < 0:
                 w = 2 * np.pi - w
+        elif e > eps:
+            w = np.arctan2(E[1], E[0]) % (2 * np.pi)
+            if H[2] < 0:
+                w = (-w) % (2 * np.pi)
         else:
             w = 0
 

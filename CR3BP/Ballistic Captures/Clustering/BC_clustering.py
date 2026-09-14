@@ -1,23 +1,31 @@
-from Celestial_Mechanics import Integration
+from Celestial_Mechanics import Integration, Transformations
 from pathlib import Path
 from multiprocessing import get_context
 import time
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
+
 from scipy.integrate import cumulative_trapezoid
+from scipy.stats import skew
 
 from sklearn.cluster import KMeans
 from sklearn.metrics import pairwise_distances_argmin_min
 
 from scipy.optimize import brentq
+import csv
 
 
 SAVE = True
-PLOT_CLUSTERS = True
-PLOT_MEDOIDS = True
-ZOOM = False
+PLOT_CLUSTERS = False
+PLOT_MEDOIDS = False
+ZOOM = True
 
+
+
+if not PLOT_CLUSTERS:
+    plt.ioff()
 
 
 
@@ -125,6 +133,73 @@ def earth_SOI_exit(t, x, mu):
 
 
 
+# Define perigee events
+def earth_perigee_b(t, x, mu):
+
+    return (x[0] + mu)*x[3] + x[1]*x[4] + x[2]*x[5]
+
+
+
+# Define perigee events
+def earth_perigee_f(t, x, mu):
+
+    return (x[0] + mu)*x[3] + x[1]*x[4] + x[2]*x[5]
+
+
+
+# Define collision events
+def collision(t, x, mu):
+
+    r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
+    r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
+
+    return min(r_earth - R_E / d, r_moon - R_L / d)
+
+
+
+# Compute geocentric osculating parameters
+def orbital_parameters(t, x):
+
+    x_earth = np.asarray(x, dtype=float).copy()
+    x_earth[0] += mu
+    x_inertial = Transformations.CR3BP_to_inertial(x_earth, 1, t)[:, 0]
+
+    r = x_inertial[:3] * d
+    v = x_inertial[3:] * d / TU
+
+    with np.errstate(divide="ignore", invalid="ignore"):
+        _, a, e, _, _, w, _ = Transformations.coe_from_sv(r, v, mu_earth)
+
+    parameters = np.array([a, e, w])
+    parameters[~np.isfinite(parameters)] = np.nan
+
+    return parameters
+
+
+
+# Select the first eligible perigee
+def first_perigee_parameters(sol):
+
+    collision_time = abs(sol.t_events[2][0] - T_min) if len(sol.t_events[2]) else np.inf
+
+    if collision(T_min, sol.y[:, 0], mu) <= 0:
+        return np.full(3, np.nan), np.nan
+
+    for t, x in zip(sol.t_events[1], sol.y_events[1]):
+
+        if abs(t - T_min) >= collision_time:
+            break
+
+        r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
+        r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
+
+        if abs(t - T_min) > 1e-10 and r_earth > R_E / d and r_moon > 2 * M_SOI / d:
+            return orbital_parameters(t, x), t
+
+    return np.full(3, np.nan), np.nan
+
+
+
 # Define integration function
 def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 
@@ -145,23 +220,28 @@ def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 # Define integration and sampling function
 def integrate_and_sample_one(x0):
 
-    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, earth_SOI_exit)
+    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, (earth_SOI_exit, earth_perigee_b, collision))
 
     sampled_b = sample_branch(solution_b)
+    oe_b, t_perigee_b = first_perigee_parameters(solution_b)
 
     del solution_b
 
 
-    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, earth_SOI_exit)
+    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, earth_perigee_f, collision))
 
     sampled_f = sample_branch(solution_f)
+    oe_f, t_perigee_f = first_perigee_parameters(solution_f)
 
     del solution_f
 
 
     assert np.allclose(sampled_b[:, 0], sampled_f[:, 0])
 
-    return np.concatenate((sampled_b[:, ::-1], sampled_f[:, 1:]), axis=1)
+    trajectory = np.concatenate((sampled_b[:, ::-1], sampled_f[:, 1:]), axis=1)
+    elements = np.array([orbital_parameters(T_min, x0), oe_b, oe_f])
+
+    return trajectory, elements, np.array([t_perigee_b, t_perigee_f])
 
 
 
@@ -215,7 +295,9 @@ def normalize_block(features):
     if scale <= 1e-14:
         raise ValueError("Feature block has zero variance.")
 
-    return centered / scale
+    centered /= scale
+
+    return centered
 
 
 
@@ -257,6 +339,134 @@ def farthest_point_selection(features, max_representatives):
 
 
 
+# Compute statistics
+def parameter_statistics(values, representative, circular=False):
+
+    valid = np.asarray(values, dtype=float)
+    valid = valid[np.isfinite(valid)]
+    
+    result = np.full(15, np.nan)
+    result[:2] = len(valid), len(values) - len(valid)
+
+    if len(valid) == 0:
+        return result
+
+    if np.isfinite(representative):
+        errors = valid - representative
+
+        if circular:
+            errors = (errors + 180) % 360 - 180
+
+        result[11:13] = np.percentile(np.abs(errors), 95), np.max(np.abs(errors))
+
+    if circular:
+
+        center = np.mean(np.exp(1j * np.radians(valid)))
+        result[14] = abs(center)
+
+        if abs(center) < 1e-8:
+            return result
+        
+        result[13] = np.degrees(np.angle(center)) % 360
+        valid = (valid - result[13] + 180) % 360 - 180
+
+    p05, median, p95 = np.percentile(valid, [5, 50, 95])
+    std = np.std(valid)
+    asymmetry = np.nan
+
+    if len(valid) >= 3 and std > 1e-12 * max(1, abs(np.mean(valid))):
+        asymmetry = skew(valid, bias=False)
+
+    result[2:11] = (median, std, p05, p95, p95 - p05, np.min(valid), np.max(valid), np.max(valid) - np.min(valid), asymmetry)
+
+    return result
+
+
+
+# Save figure function
+def save_figure(fig, name):
+
+    if SAVE:
+        fig.savefig(output_directory / name, dpi=200)
+    if not PLOT_CLUSTERS:
+        plt.close(fig)
+
+
+
+
+# Save per-cluster statistics
+def save_orbital_report(k, labels, representative_ids):
+
+    physical_stds = np.full((len(phase_names), len(parameter_names)), np.nan)
+
+    if not SAVE:
+        return physical_stds
+
+    cluster_ids = np.unique(labels)
+    groups = [np.flatnonzero(labels == c) for c in cluster_ids]
+
+    with (output_directory / "orbital_statistics.csv").open("a", newline="", encoding="utf-8") as table, \
+         (output_directory / "analysis.log").open("a", encoding="utf-8") as log, \
+         PdfPages(output_directory / f"orbital_parameters_K{k:04d}.pdf") as pdf:
+
+        writer = csv.writer(table)
+
+        for phase_id, phase in enumerate(phase_names):
+            for parameter_id, (parameter, unit) in enumerate(zip(parameter_names, parameter_units)):
+
+                statistics = np.array([
+                    parameter_statistics(
+                        orbital_elements[ids, phase_id, parameter_id],
+                        orbital_elements[representative_ids[c], phase_id, parameter_id],
+                        circular=(parameter == "w"))             
+                    for c, ids in zip(cluster_ids, groups)])
+
+                valid = np.isfinite(statistics[:, 3])
+                if np.any(valid):
+                    physical_stds[phase_id, parameter_id] = np.sqrt(np.average(statistics[valid, 3]**2, weights=statistics[valid, 0]))
+
+                log.write(f"\nK={k}, phase={phase}, parameter={parameter} [{unit}]\n")
+                log.write("cluster representative_source n_cluster " + " ".join(statistic_names) + "\n")
+
+                for c, ids, values in zip(cluster_ids, groups, statistics):
+                    source_id = source_ids[representative_ids[c]]
+                    writer.writerow([k, c, source_id, phase, parameter, unit, len(ids), *values])
+                    log.write(f"{c} {source_id} {len(ids)} " + " ".join(f"{value:.10g}" for value in values) + "\n")
+
+                fig, axes = plt.subplots(3, 1, figsize=(13, 10), sharex=True, constrained_layout=True)
+
+                axes[0].vlines(cluster_ids, statistics[:, 7], statistics[:, 8], color="lightgray", label="Min-max")
+                axes[0].vlines(cluster_ids, statistics[:, 4], statistics[:, 5], color="blue", label="P5-P95")
+                axes[0].plot(cluster_ids, statistics[:, 2], ".", color="black", label="Median")
+                axes[0].set_ylabel(f"{parameter} [{unit}]")
+
+                axes[1].plot(cluster_ids, statistics[:, 3], ".", label="STD")
+                axes[1].plot(cluster_ids, statistics[:, 11], ".", label="P95 absolute error from representative")
+                axes[1].set_ylabel(f"Dispersion [{unit}]")
+
+                axes[2].plot(cluster_ids, statistics[:, 10], ".", color="darkred", label="Skewness")
+                axes[2].axhline(0, color="black", linewidth=0.7)
+                axes[2].set_ylabel("Skewness [-]")
+                axes[2].set_xlabel("Cluster ID")
+
+                for ax in axes:
+                    ax.grid(True, alpha=0.3)
+                    ax.legend()
+
+                title = (f"K={k} | {phase} | {parameter} | valid={int(np.sum(statistics[:, 0]))}/{len(labels)}")
+
+                if parameter == "w":
+                    title += " | offsets from each cluster circular mean"
+
+                fig.suptitle(title)
+                pdf.savefig(fig)
+                plt.close(fig)
+
+    return physical_stds
+
+
+
+
 
 
 # Input
@@ -279,18 +489,62 @@ Integrator = Integration()
 
 
 
+
+# Define orbital report fields and output directory
+phase_names = ("initial", "backward", "forward")
+
+parameter_names = ("a", "e", "w")
+
+parameter_units = ("km", "-", "deg")
+
+statistic_names = ("n_valid", "n_missing", "median", "std", "p05", "p95", "width90", "minimum", "maximum", "range", "skewness", "error95", "error_max", "angle_origin_deg", "angle_resultant")
+
+output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y%m%d_%H%M%S')}")
+
+if SAVE:
+    output_directory.mkdir(parents=True, exist_ok=True)
+
+    with (output_directory / "analysis.log").open("w", encoding="utf-8") as log:
+        log.write(f"Database: {DATA_FILE}\nmu={mu:.17g}\nGAMMA={np.unique(data['GAMMA'])}\n")
+        log.write(f"N={len(x0_selection)}, N_branch={N_branch}, dt_b={dt_b}, dt_f={dt_f}, rtol=1e-9\n")
+        log.write(f"T_min={T_min}, T_max_b={T_max_b}, T_max_f={T_max_f}, ZOOM={ZOOM}\n")
+        log.write("Features: normalized position and unit tangent blocks.\n")
+        log.write("Perigee: first noninitial geocentric minimum outside lunar SOI within each interval, before any detected surface entry.\n")
+        log.write("Frame: geocentric inertial axes coincident with synodic axes at t=0.\n")
+        log.write("STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).\n")
+        log.write("angle_resultant: 1=concentrated directions; 0=no defined mean direction. Broad angular clouds require caution with linearized moments.\n")
+        log.write("NaN: missing event, undefined parameter/statistic, or missing representative parameter.\n")
+
+    with (output_directory / "orbital_statistics.csv").open("w", newline="", encoding="utf-8") as table:
+        csv.writer(table).writerow(["K", "cluster", "representative_source", "phase", "parameter", "unit", "n_cluster", *statistic_names])
+
+
+
+
+
 # Define events
 earth_SOI_exit.terminal = True
 earth_SOI_exit.direction = -1
+
+earth_perigee_b.terminal = False
+earth_perigee_b.direction = -1
+
+earth_perigee_f.terminal = False
+earth_perigee_f.direction = 1
+
+collision.terminal = False
+collision.direction = -1
 
 
 
 
 # Parallel integration backward and forward
-X_curvature = np.empty((len(x0_selection), 6, 2 * N_branch - 1), dtype=np.float64)
+X_curvature = np.empty((len(x0_selection), 6, 2 * N_branch - 1), dtype=np.float32)
+orbital_elements = np.full((len(x0_selection), 3, len(parameter_names)), np.nan)
+perigee_times = np.full((len(x0_selection), 2), np.nan)
 
 with get_context("fork").Pool() as pool:
-    for i, trajectory in enumerate(
+    for i, (trajectory, elements, event_times) in enumerate(
         pool.imap(
             integrate_and_sample_one,
             x0_selection,
@@ -298,10 +552,26 @@ with get_context("fork").Pool() as pool:
         )
     ):
         X_curvature[i] = trajectory
+        orbital_elements[i] = elements
+        perigee_times[i] = event_times
 
-del trajectory
+del trajectory, elements, event_times
 assert np.allclose(X_curvature[:, :, N_branch - 1], x0_selection)
 
+
+
+
+# Save orbital parameters to file
+if SAVE:
+    np.savez(
+        output_directory / "orbital_parameters.npz",
+        source_ids=source_ids,
+        parameters=orbital_elements,
+        perigee_times_tau=perigee_times,
+        phase_names=phase_names,
+        parameter_names=parameter_names,
+        parameter_units=parameter_units
+    )
 
 
 
@@ -345,7 +615,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = len(x0_selection) // 100
+max_representatives = 1000
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -368,39 +638,118 @@ print(f"Final maximum distance: {np.max(minimum_distances):.6f}")
 
 
 
+# Define K values for KMeans clustering
+k_values = np.unique(np.linspace(100, len(farthest_representative_ids), 10, dtype=int))
+
+cluster_counts = []
+mean_stds = []
+small_cluster_counts = []
+small_trajectory_fractions = []
+orbital_std_history = []
+
 
 
 # Refine farthest-point clusters with KMeans
-kmeans = KMeans(
-    n_clusters=len(farthest_representative_ids),
-    init=clustering_features[farthest_representative_ids],
-    n_init=1,
-    max_iter=300,
-    tol=1e-4,
-    algorithm="lloyd",
-)
+for k in k_values:
+    
+    kmeans = KMeans(
+        n_clusters=int(k),
+        init=clustering_features[farthest_representative_ids[:k]],
+        n_init=1,
+        max_iter=300,
+        tol=1e-4,
+        algorithm="lloyd",
+    )
 
-kmeans_labels = kmeans.fit_predict(clustering_features)
+    kmeans_labels = kmeans.fit_predict(clustering_features)
 
-representative_ids = np.empty(len(kmeans.cluster_centers_), dtype=int)
+    representative_ids = np.empty(len(kmeans.cluster_centers_), dtype=int)
 
-for cluster_id, cluster_center in enumerate(kmeans.cluster_centers_):
+    for cluster_id, cluster_center in enumerate(kmeans.cluster_centers_):
 
-    cluster_ids = np.flatnonzero(kmeans_labels == cluster_id)
+        cluster_ids = np.flatnonzero(kmeans_labels == cluster_id)
 
-    distances_squared = np.sum((clustering_features[cluster_ids] - cluster_center)**2, axis=1)
+        distances_squared = np.sum((clustering_features[cluster_ids] - cluster_center)**2, axis=1)
 
-    representative_ids[cluster_id] = cluster_ids[np.argmin(distances_squared)]
-
-
-labels, minimum_distances = pairwise_distances_argmin_min(clustering_features, clustering_features[representative_ids])
-
-representative_source_ids = source_ids[representative_ids]
+        representative_ids[cluster_id] = cluster_ids[np.argmin(distances_squared)]
 
 
+    labels, minimum_distances = pairwise_distances_argmin_min(clustering_features, clustering_features[representative_ids])
+
+    representative_source_ids = source_ids[representative_ids]
+
+    cluster_ids, sizes = np.unique(labels, return_counts=True)
+
+    variances = [np.mean(np.var(clustering_features[labels == c], axis=0)) for c in cluster_ids]
+
+    mean_std = np.sqrt(np.average(variances, weights=sizes))
+
+    cluster_counts.append(len(cluster_ids))
+    mean_stds.append(mean_std)
+
+    print(f"K = {len(cluster_ids)}, STD = {mean_std:.6f}", flush=True)
+
+
+
+    masks = (sizes == 1, sizes < 10, sizes < 100)
+
+    small_cluster_counts.append([np.count_nonzero(mask) for mask in masks])
+    small_trajectory_fractions.append([np.sum(sizes[mask]) / len(labels) for mask in masks])
+
+
+    if SAVE:
+        np.savez(
+            output_directory / f"labels_K{k:04d}.npz",
+            labels=labels,
+            representative_ids=representative_ids,
+            source_ids=source_ids
+        )
+
+        summary = np.column_stack((cluster_counts, mean_stds, small_cluster_counts, small_trajectory_fractions))
+
+        np.savetxt(
+            output_directory / "clustering_summary.csv",
+            summary,
+            delimiter=",",
+            comments="",
+            header="K,mean_std,n1,n_lt10,n_lt100,fraction1,fraction_lt10,fraction_lt100"
+        )
+
+        with (output_directory / "analysis.log").open("a", encoding="utf-8") as log:
+            log.write(
+                f"\nK={k}, STD={mean_std:.10g}, "
+                f"small_counts={small_cluster_counts[-1]}, "
+                f"fractions={small_trajectory_fractions[-1]}\n"
+            )
+
+        fig, ax = plt.subplots(figsize=(10, 8))
+        ax.plot(cluster_counts, mean_stds, "o-", color="blue")
+        ax.set_xlabel("Number of clusters")
+        ax.set_ylabel("Within-cluster STD")
+        ax.set_title("Cluster dispersion vs number of clusters")
+
+        fig.savefig(output_directory / "STD_vs_K.png", dpi=200)
+        plt.close(fig)
+
+    orbital_std_history.append(save_orbital_report(int(k), labels, representative_ids))
+
+    if SAVE:
+        physical_summary = np.column_stack((cluster_counts, np.asarray(orbital_std_history).reshape(len(cluster_counts), -1)))
+
+        physical_header = [f"{phase}_{parameter}" for phase in phase_names for parameter in parameter_names]
+
+        np.savetxt(
+            output_directory / "orbital_STD_vs_K.csv",
+            physical_summary,
+            delimiter=",",
+            comments="",
+            header="K," + ",".join(physical_header)
+        )
+
+
+
+# Save representative trajectories to file
 if SAVE:
-    output_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}")
-    output_directory.mkdir(parents=True, exist_ok=True)
 
     output_file = (output_directory / f"{Path(DATA_FILE).stem}_medoids.txt")
 
@@ -438,46 +787,66 @@ print(f"Final maximum distance: {np.max(minimum_distances):.6f}")
 
 
 
-
-
-
-
-
-representative_numbers = np.arange(1, len(radius_history) + 1)
-
+# Plot cluster STD versus number of clusters
 fig, ax = plt.subplots(figsize=(10, 8))
 
-ax.plot(representative_numbers, radius_history, color="blue")
+ax.plot(cluster_counts, mean_stds, "o-", color="blue")
 
-ax.set_xlabel("Number of representatives")
-ax.set_ylabel("Maximum normalized distance")
-ax.set_title("Database covering radius")
-ax.grid(True)
-
-
+ax.set_xlabel("Number of clusters")
+ax.set_ylabel("Within-cluster STD (normalized features)")
+ax.set_title("Cluster dispersion vs number of clusters")
+save_figure(fig, "STD_vs_K.png")
 
 
 
+# Plot small clusters and their population
+fig, axes = plt.subplots(2, 1, figsize=(10, 9), sharex=True, constrained_layout=True)
+
+for j, name in enumerate(("n = 1", "n < 10", "n < 100")):
+    axes[0].plot(cluster_counts, np.asarray(small_cluster_counts)[:, j], "o-", label=name)
+    axes[1].plot(cluster_counts, 100 * np.asarray(small_trajectory_fractions)[:, j], "o-", label=name)
+
+axes[0].set_ylabel("Number of clusters")
+axes[1].set_ylabel("Trajectories in these clusters [%]")
+axes[1].set_xlabel("Number of clusters K")
+
+for ax in axes:
+    ax.grid(True)
+    ax.legend()
+
+save_figure(fig, "small_clusters_vs_K.png")
+
+
+
+# Plot pooled physical STD versus K, separately for each parameter
+if SAVE:
+    fig, axes = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
+    history = np.asarray(orbital_std_history)
+
+    for j, ax in enumerate(axes.ravel()):
+        if j >= len(parameter_names):
+            ax.axis("off")
+            continue
+
+        for phase_id, phase in enumerate(phase_names):
+            ax.plot(cluster_counts, history[:, phase_id, j], "o-", label=phase)
+
+        ax.set_xlabel("Number of clusters K")
+        ax.set_ylabel(f"STD {parameter_names[j]} [{parameter_units[j]}]")
+        ax.grid(True)
+        ax.legend()
+
+    save_figure(fig, "orbital_STD_vs_K.png")
 
 
 
 
-
-
-
-
-
-
-
-
-
+# Compute cluster statistics
 unique_clusters, cluster_sizes = np.unique(labels, return_counts=True)
-
 n_clusters = len(unique_clusters)
+mean_variance = mean_std**2
 
-cluster_variances = [np.mean(np.var(clustering_features[labels == cluster_id], axis=0)) for cluster_id in unique_clusters]
-
-mean_variance = np.average(cluster_variances, weights=cluster_sizes)
+del clustering_features
 
 
 print(f"\nNumber of clusters: {n_clusters}")
@@ -493,7 +862,7 @@ print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 
 # Plot clusters and representative trajectories
-if PLOT_CLUSTERS:
+if PLOT_CLUSTERS or SAVE:
 
     cmap = plt.get_cmap("turbo", max(n_clusters, 1),)
 
@@ -559,23 +928,12 @@ if PLOT_CLUSTERS:
         figure_number = (start // max_panels + 1)
 
         fig.suptitle(f"Cluster groups — Figure {figure_number}")
+        save_figure(fig, f"clusters_{figure_number:03d}.png")
 
 
 
 # Plot representative trajectories
-if PLOT_MEDOIDS:
-
-    representative_numbers = np.arange(1, len(radius_history) + 1)
-
-    fig, ax = plt.subplots(figsize=(10, 8))
-
-    ax.plot(representative_numbers, radius_history, color="blue")
-
-    ax.set_xlabel("Number of representatives")
-    ax.set_ylabel("Maximum normalized distance")
-    ax.set_title("Database covering radius")
-    ax.grid(True)
-
+if PLOT_MEDOIDS or SAVE:
 
     fig_representatives, ax_representatives = plt.subplots(figsize=(10, 8), constrained_layout=True)
 
@@ -595,26 +953,12 @@ if PLOT_MEDOIDS:
     ax_representatives.set_box_aspect(1)
     ax_representatives.grid(True, alpha=0.25)
     ax_representatives.legend()
+    save_figure(fig_representatives, "representatives.png")
 
 
 
-# Save figures
-if SAVE:
-    if ZOOM:
-        plot_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}_zoomed")
-    else:
-        plot_directory = (Path(__file__).resolve().parent / f"Clusters/BC_10_plots_K{len(representative_ids)}")
-    
-    plot_directory.mkdir(parents=True, exist_ok=True)
-    
-    for figure_id in plt.get_fignums():
-    
-        figure = plt.figure(figure_id)
-    
-        figure.savefig(plot_directory / f"figure_{figure_id:03d}.png", dpi=200)
-
-
-
-
-if PLOT_CLUSTERS or PLOT_MEDOIDS:
+# Show or close figures
+if PLOT_CLUSTERS:
     plt.show()
+else:
+    plt.close("all")
