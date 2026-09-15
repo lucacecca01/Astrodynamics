@@ -321,6 +321,8 @@ clustering_features = np.column_stack((
     normalize_block(event_features[:, 3:6]),   # v_SOI
 ))
 
+clustering_features[:, :4] /= np.sqrt(3)
+
 
 
 # Perform farthest point selection
@@ -357,6 +359,8 @@ small_trajectory_fractions = []
 output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_12_plots_K{len(representative_ids)}")
 output_directory.mkdir(parents=True, exist_ok=True)
 
+physical_std_history = []
+outlier_cluster_percent = []
 
 
 # Refine farthest-point clusters with KMeans
@@ -394,17 +398,83 @@ for k in k_values:
 
     mean_std = np.sqrt(np.average(variances, weights=sizes))
 
+    variances = []
+    physical_stds = []
+    outlier_clusters = 0
+
+    for c in cluster_ids:
+        mask = labels == c
+        features_c = clustering_features[mask]
+
+        variance_c = np.var(features_c, axis=0)
+        variances.append(np.mean(variance_c))
+
+        delta = features_c - np.mean(features_c, axis=0)
+        distance_squared = np.sum(delta**2, axis=1)
+        sigma_total_squared = np.sum(variance_c)
+
+        outlier_clusters += int(np.any(distance_squared > 9 * sigma_total_squared))
+
+        physical_c = event_features[mask, :5]
+
+        angle_mean = np.mean(np.exp(1j * np.deg2rad(physical_c[:, 2])))
+
+        if abs(angle_mean) < 1e-8:
+            physical_c[:, 2] = np.nan
+        else:
+            origin = np.rad2deg(np.angle(angle_mean))
+            physical_c[:, 2] = (physical_c[:, 2] - origin + 180) % 360 - 180
+
+        physical_stds.append(np.std(physical_c, axis=0))
+
+    physical_stds = np.asarray(physical_stds)
+    valid_counts = np.sum(np.isfinite(physical_stds), axis=0)
+
+    physical_std_history.append(np.divide(
+        np.nansum(physical_stds, axis=0),
+        valid_counts,
+        out=np.full(5, np.nan),
+        where=valid_counts > 0,
+    ))
+
+    outlier_cluster_percent.append(100 * outlier_clusters / len(cluster_ids))
+
     cluster_counts.append(len(cluster_ids))
     mean_stds.append(mean_std)
 
     print(f"K = {len(cluster_ids)}, STD = {mean_std:.6f}", flush=True)
 
 
-
     masks = (sizes == 1, sizes < 10, sizes < 100)
 
     small_cluster_counts.append([np.count_nonzero(mask) for mask in masks])
     small_trajectory_fractions.append([np.sum(sizes[mask]) / len(labels) for mask in masks])
+
+
+
+# Plot mean within-cluster physical STD vs number of clusters
+if SAVE or PLOT_CLUSTERS:
+    history = np.asarray(physical_std_history)
+
+    fig, axes = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
+    axes = axes.ravel()
+
+    names = ["a [km]", "e [-]", "w [deg]", "vx SOI [km/s]", "vy SOI [km/s]"]
+
+    for j, name in enumerate(names):
+        axes[j].plot(cluster_counts, history[:, j], "o-")
+        axes[j].set_xlabel("Number of clusters")
+        axes[j].set_ylabel(f"Mean STD — {name}")
+        axes[j].grid(alpha=0.3)
+
+    axes[5].plot(cluster_counts, outlier_cluster_percent, "o-", color="darkred",)
+    axes[5].set_xlabel("Number of clusters")
+    axes[5].set_ylabel("Clusters with at least one outlier [%]")
+    axes[5].set_title("Distance > 3 sigma total")
+    axes[5].set_ylim(0, 100)
+    axes[5].grid(alpha=0.3)
+
+    save_figure(fig, "physical_STD_and_3sigma_vs_K.png")
 
 
 
