@@ -361,6 +361,7 @@ output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
 outlier_cluster_percent = []
+outlier_cluster_percent_2sigma = []
 
 
 # Refine farthest-point clusters with KMeans
@@ -401,6 +402,7 @@ for k in k_values:
     variances = []
     physical_stds = []
     outlier_clusters = 0
+    outlier_clusters_2sigma = 0
 
     for c in cluster_ids:
         mask = labels == c
@@ -414,6 +416,7 @@ for k in k_values:
         sigma_total_squared = np.sum(variance_c)
 
         outlier_clusters += int(np.any(distance_squared > 9 * sigma_total_squared))
+        outlier_clusters_2sigma += int(np.any(distance_squared > 4 * sigma_total_squared))
 
         physical_c = event_features[mask, :5]
 
@@ -438,6 +441,7 @@ for k in k_values:
     ))
 
     outlier_cluster_percent.append(100 * outlier_clusters / len(cluster_ids))
+    outlier_cluster_percent_2sigma.append(100 * outlier_clusters_2sigma / len(cluster_ids))
 
     cluster_counts.append(len(cluster_ids))
     mean_stds.append(mean_std)
@@ -467,12 +471,19 @@ if SAVE or PLOT_CLUSTERS:
         axes[j].set_ylabel(f"Mean STD — {name}")
         axes[j].grid(alpha=0.3)
 
-    axes[5].plot(cluster_counts, outlier_cluster_percent, "o-", color="darkred",)
+    small_percent = (100 * np.asarray(small_cluster_counts) / np.asarray(cluster_counts)[:, None])
+
+    axes[5].plot(cluster_counts, outlier_cluster_percent_2sigma, "o-", color="darkorange", label="At least one outlier > 2σ")
+    axes[5].plot(cluster_counts, outlier_cluster_percent, "o-", color="darkred", label="At least one outlier > 3σ")
+    axes[5].plot(cluster_counts, small_percent[:, 1], "s--", color="blue", label="< 10 trajectories")
+    axes[5].plot(cluster_counts, small_percent[:, 2], "s--", color="green", label="< 100 trajectories")
+
     axes[5].set_xlabel("Number of clusters")
-    axes[5].set_ylabel("Clusters with at least one outlier [%]")
-    axes[5].set_title("Distance > 3 sigma total")
+    axes[5].set_ylabel("Clusters [%]")
+    axes[5].set_title("Outliers and cluster sizes")
     axes[5].set_ylim(0, 100)
     axes[5].grid(alpha=0.3)
+    axes[5].legend(fontsize=8)
 
     save_figure(fig, "physical_STD_and_3sigma_vs_K.png")
 

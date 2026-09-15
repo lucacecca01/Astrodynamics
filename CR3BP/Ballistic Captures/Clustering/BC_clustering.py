@@ -477,7 +477,12 @@ database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
 
 x0_selection = database[:1:1]
 source_ids = data["column_indices"][:1:1]
+x0_selection = np.array([[
+    0.76024941573006, -0.156, 0,
+    0.131722065373311, 0.154896263544357, 0
+]])
 
+source_ids = np.array([-1])  # Caso manuale, esterno al dataset
 
 print(f"\nDatabase trajectories: {len(database)}")
 print(f"Selected trajectories: {len(x0_selection)}")
