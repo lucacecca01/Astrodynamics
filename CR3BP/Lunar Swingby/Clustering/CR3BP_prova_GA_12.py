@@ -356,7 +356,7 @@ mean_stds = []
 small_cluster_counts = []
 small_trajectory_fractions = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_12_plots_K{len(representative_ids)}")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_12_plots_K{len(representative_ids)}_2")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
