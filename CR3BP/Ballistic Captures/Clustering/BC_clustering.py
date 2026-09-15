@@ -17,10 +17,10 @@ from scipy.optimize import brentq
 import csv
 
 
-SAVE = True
-PLOT_CLUSTERS = False
-PLOT_MEDOIDS = False
-ZOOM = True
+SAVE = False
+PLOT_CLUSTERS = True
+PLOT_MEDOIDS = True
+ZOOM = False
 
 
 
@@ -53,10 +53,10 @@ mu_earth = G * m1
 masses = [m1, m2, 0]
 T_min = 0
 
-T_max_f = 2 * np.pi
+T_max_f = 4 * np.pi
 dt_f = 0.0001
 
-T_max_b = -1 * np.pi
+T_max_b = -4 * np.pi
 dt_b = -0.0001
 
 N_branch = 500
@@ -239,7 +239,7 @@ def integrate_and_sample_one(x0):
     assert np.allclose(sampled_b[:, 0], sampled_f[:, 0])
 
     trajectory = np.concatenate((sampled_b[:, ::-1], sampled_f[:, 1:]), axis=1)
-    elements = np.array([orbital_parameters(T_min, x0), oe_b, oe_f])
+    elements = np.array([oe_b, oe_f])
 
     return trajectory, elements, np.array([t_perigee_b, t_perigee_f])
 
@@ -475,8 +475,8 @@ DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Ballistic Captures/Clustering/D
 database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
 
 
-x0_selection = database[::1]
-source_ids = data["column_indices"][::1]
+x0_selection = database[:1:1]
+source_ids = data["column_indices"][:1:1]
 
 
 print(f"\nDatabase trajectories: {len(database)}")
@@ -491,7 +491,7 @@ Integrator = Integration()
 
 
 # Define orbital report fields and output directory
-phase_names = ("initial", "backward", "forward")
+phase_names = ("backward", "forward")
 
 parameter_names = ("a", "e", "w")
 
@@ -505,7 +505,6 @@ if SAVE:
     output_directory.mkdir(parents=True, exist_ok=True)
 
     with (output_directory / "analysis.log").open("w", encoding="utf-8") as log:
-        log.write(f"Database: {DATA_FILE}\nmu={mu:.17g}\nGAMMA={np.unique(data['GAMMA'])}\n")
         log.write(f"N={len(x0_selection)}, N_branch={N_branch}, dt_b={dt_b}, dt_f={dt_f}, rtol=1e-9\n")
         log.write(f"T_min={T_min}, T_max_b={T_max_b}, T_max_f={T_max_f}, ZOOM={ZOOM}\n")
         log.write("Features: normalized position and unit tangent blocks.\n")
@@ -540,7 +539,7 @@ collision.direction = -1
 
 # Parallel integration backward and forward
 X_curvature = np.empty((len(x0_selection), 6, 2 * N_branch - 1), dtype=np.float32)
-orbital_elements = np.full((len(x0_selection), 3, len(parameter_names)), np.nan)
+orbital_elements = np.full((len(x0_selection), len(phase_names), len(parameter_names)), np.nan)
 perigee_times = np.full((len(x0_selection), 2), np.nan)
 
 with get_context("fork").Pool() as pool:
@@ -599,11 +598,11 @@ forward_tangent = forward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -
 
 del sampled_position, sampled_velocity, unit_tangent
 
-backward_position = normalize_block(backward_position)
-forward_position = normalize_block(forward_position)
+# backward_position = normalize_block(backward_position)
+# forward_position = normalize_block(forward_position)
 
-backward_tangent = normalize_block(backward_tangent)
-forward_tangent = normalize_block(forward_tangent)
+# backward_tangent = normalize_block(backward_tangent)
+# forward_tangent = normalize_block(forward_tangent)
 
 clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
 
@@ -615,7 +614,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 1000
+max_representatives = 1
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -639,7 +638,7 @@ print(f"Final maximum distance: {np.max(minimum_distances):.6f}")
 
 
 # Define K values for KMeans clustering
-k_values = np.unique(np.linspace(100, len(farthest_representative_ids), 10, dtype=int))
+k_values = [1]
 
 cluster_counts = []
 mean_stds = []
@@ -712,15 +711,23 @@ for k in k_values:
             summary,
             delimiter=",",
             comments="",
-            header="K,mean_std,n1,n_lt10,n_lt100,fraction1,fraction_lt10,fraction_lt100"
+            header="K,mean_std,n_clusters_eq1,n_clusters_lt10,n_clusters_lt100,traj_fraction_eq1,traj_fraction_lt10,traj_fraction_lt100"
         )
 
         with (output_directory / "analysis.log").open("a", encoding="utf-8") as log:
-            log.write(
-                f"\nK={k}, STD={mean_std:.10g}, "
-                f"small_counts={small_cluster_counts[-1]}, "
-                f"fractions={small_trajectory_fractions[-1]}\n"
-            )
+            log.write(f"\nK={len(cluster_ids)}, STD={mean_std:.10g}\n")
+            log.write("n = trajectories per cluster; conditions overlap.\n")
+
+            for name, mask in zip(("n = 1", "n < 10", "n < 100"), masks):
+                n_clusters_small = np.count_nonzero(mask)
+                n_trajectories_small = np.sum(sizes[mask])
+
+                log.write(
+                    f"{name}: clusters={n_clusters_small}/{len(cluster_ids)} "
+                    f"({100 * n_clusters_small / len(cluster_ids):.2f}%); "
+                    f"trajectories={n_trajectories_small}/{len(labels)} "
+                    f"({100 * n_trajectories_small / len(labels):.2f}%)\n"
+                )
 
         fig, ax = plt.subplots(figsize=(10, 8))
         ax.plot(cluster_counts, mean_stds, "o-", color="blue")
@@ -800,15 +807,25 @@ save_figure(fig, "STD_vs_K.png")
 
 
 # Plot small clusters and their population
-fig, axes = plt.subplots(2, 1, figsize=(10, 9), sharex=True, constrained_layout=True)
+fig, axes = plt.subplots(3, 1, figsize=(10, 12), sharex=True, constrained_layout=True)
 
 for j, name in enumerate(("n = 1", "n < 10", "n < 100")):
-    axes[0].plot(cluster_counts, np.asarray(small_cluster_counts)[:, j], "o-", label=name)
-    axes[1].plot(cluster_counts, 100 * np.asarray(small_trajectory_fractions)[:, j], "o-", label=name)
+    counts = np.asarray(small_cluster_counts)[:, j]
+    cluster_percent = 100 * counts / np.asarray(cluster_counts)
+    trajectory_percent = 100 * np.asarray(small_trajectory_fractions)[:, j]
+
+    axes[0].plot(cluster_counts, counts, "o-", label=name)
+    axes[1].plot(cluster_counts, cluster_percent, "o-", label=name)
+    axes[2].plot(cluster_counts, trajectory_percent, "o-", label=name)
 
 axes[0].set_ylabel("Number of clusters")
-axes[1].set_ylabel("Trajectories in these clusters [%]")
-axes[1].set_xlabel("Number of clusters K")
+axes[1].set_ylabel("Clusters [% of K]")
+axes[2].set_ylabel("Trajectories [% of total N]")
+axes[2].set_xlabel("Total number of clusters K")
+
+axes[1].set_title("100 * selected clusters / all clusters")
+axes[2].set_title(f"100 * trajectories in selected clusters / {len(x0_selection)}")
+fig.suptitle("n = trajectories per cluster; conditions overlap")
 
 for ax in axes:
     ax.grid(True)
@@ -822,6 +839,7 @@ save_figure(fig, "small_clusters_vs_K.png")
 if SAVE:
     fig, axes = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
     history = np.asarray(orbital_std_history)
+    fig.suptitle("Geocentric elements at eligible perigees; each phase uses its valid trajectories")
 
     for j, ax in enumerate(axes.ravel()):
         if j >= len(parameter_names):
@@ -829,7 +847,10 @@ if SAVE:
             continue
 
         for phase_id, phase in enumerate(phase_names):
-            ax.plot(cluster_counts, history[:, phase_id, j], "o-", label=phase)
+            values = orbital_elements[:, phase_id, j]
+            n_valid = np.count_nonzero(np.isfinite(values))
+            label = f"{phase}: {n_valid}/{len(values)} valid ({100 * n_valid / len(values):.1f}%)"
+            ax.plot(cluster_counts, history[:, phase_id, j], "o-", label=label)
 
         ax.set_xlabel("Number of clusters K")
         ax.set_ylabel(f"STD {parameter_names[j]} [{parameter_units[j]}]")
