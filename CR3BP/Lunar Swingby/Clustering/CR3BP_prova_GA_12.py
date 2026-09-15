@@ -94,7 +94,7 @@ def first_perigee_parameters(sol):
         r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
         r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
 
-        if abs(t - T_min) > 1e-10 and r_earth > R_E / d and r_moon > 2 * M_SOI / d:
+        if abs(t - T_min) > 1e-10:
             return orbital_parameters(t, x), t
 
     return np.full(3, np.nan), np.nan
@@ -125,10 +125,10 @@ def integrate_and_sample_one(x0):
 
     parameters_b, t_perigee = first_perigee_parameters(solution_b)
 
-    x_b = solution_b.sol(np.linspace(t_perigee, T_min, N_PLOT))[:2].copy()
-
     if not np.isfinite(t_perigee) or not np.all(np.isfinite(parameters_b)):
         raise RuntimeError("Perigeo ammissibile assente o parametri non finiti.")
+
+    x_b = solution_b.sol(np.linspace(t_perigee, T_min, N_PLOT))[:2].copy()
 
     del solution_b
 
@@ -136,13 +136,13 @@ def integrate_and_sample_one(x0):
     solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, collision))
 
     if not solution_f.success or len(solution_f.t_events[0]) == 0:
-            raise RuntimeError("Integrazione forward fallita o SOI non raggiunta.")
-    
-    if len(solution_f.t_events[1]) and solution_f.t_events[1][0] <= t_soi:
-        raise RuntimeError("Collisione precedente all'uscita dalla SOI.")
+        raise RuntimeError("Integrazione forward fallita o SOI non raggiunta.")
 
     t_soi = solution_f.t_events[0][0]
     x_soi = solution_f.y_events[0][0].copy()
+
+    if len(solution_f.t_events[1]) and solution_f.t_events[1][0] <= t_soi:
+        raise RuntimeError("Collisione precedente all'uscita dalla SOI.")
 
     x_f = solution_f.sol(np.linspace(T_min, t_soi, N_PLOT)[1:])[:2].copy()
 
@@ -268,10 +268,10 @@ masses = [m1, m2, 0]
 T_min = 0
 
 T_max_f = 4 * np.pi
-dt_f = 0.0001
+dt_f = 0.001
 
 T_max_b = -4 * np.pi
-dt_b = -0.0001
+dt_b = -0.001
 
 event_features = []
 N_PLOT = 500
