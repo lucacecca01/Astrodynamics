@@ -326,7 +326,7 @@ clustering_features[:, :4] /= np.sqrt(3)
 
 
 # Perform farthest point selection
-max_representatives = 1000
+max_representatives = 300
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -356,7 +356,7 @@ mean_stds = []
 small_cluster_counts = []
 small_trajectory_fractions = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_12_plots_K{len(representative_ids)}_2")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_12_plots_K{len(representative_ids)}_3")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
@@ -463,13 +463,33 @@ if SAVE or PLOT_CLUSTERS:
     fig, axes = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
     axes = axes.ravel()
 
-    names = ["a [km]", "e [-]", "w [deg]", "vx SOI [km/s]", "vy SOI [km/s]"]
+    names = ["a [km]", "e [-]", "w [deg]"]
 
     for j, name in enumerate(names):
         axes[j].plot(cluster_counts, history[:, j], "o-")
         axes[j].set_xlabel("Number of clusters")
         axes[j].set_ylabel(f"Mean STD — {name}")
         axes[j].grid(alpha=0.3)
+
+        k_plot = np.asarray(cluster_counts)
+    small_numbers = np.asarray(small_cluster_counts)
+
+    axes[3].plot(k_plot, history[:, 3], "o-", label="vx")
+    axes[3].plot(k_plot, history[:, 4], "o-", label="vy")
+    axes[3].set_ylabel("Mean STD — v SOI [km/s]")
+
+    axes[4].plot(k_plot, np.rint(np.asarray(outlier_cluster_percent_2sigma) * k_plot / 100), "o-", color="darkorange", label="At least one outlier > 2σ")
+    axes[4].plot(k_plot, np.rint(np.asarray(outlier_cluster_percent) * k_plot / 100), "o-", color="darkred", label="At least one outlier > 3σ")
+    axes[4].plot(k_plot, small_numbers[:, 1], "s--", color="blue", label="< 10 trajectories")
+    axes[4].plot(k_plot, small_numbers[:, 2], "s--", color="green", label="< 100 trajectories")
+    axes[4].set_ylabel("Number of clusters")
+    axes[4].set_title("Outliers and cluster sizes")
+    axes[4].set_ylim(bottom=0)
+
+    for ax in axes[3:5]:
+        ax.set_xlabel("Number of clusters")
+        ax.grid(alpha=0.3)
+        ax.legend(fontsize=8)
 
     small_percent = (100 * np.asarray(small_cluster_counts) / np.asarray(cluster_counts)[:, None])
 

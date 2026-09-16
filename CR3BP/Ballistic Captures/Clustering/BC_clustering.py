@@ -17,9 +17,9 @@ from scipy.optimize import brentq
 import csv
 
 
-SAVE = False
-PLOT_CLUSTERS = True
-PLOT_MEDOIDS = True
+SAVE = True
+PLOT_CLUSTERS = False
+PLOT_MEDOIDS = False
 ZOOM = False
 
 
@@ -56,7 +56,7 @@ T_min = 0
 T_max_f = 4 * np.pi
 dt_f = 0.0001
 
-T_max_b = -4 * np.pi
+T_max_b = -2 * np.pi
 dt_b = -0.0001
 
 N_branch = 500
@@ -475,14 +475,9 @@ DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Ballistic Captures/Clustering/D
 database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
 
 
-x0_selection = database[:1:1]
-source_ids = data["column_indices"][:1:1]
-x0_selection = np.array([[
-    0.76024941573006, -0.156, 0,
-    0.131722065373311, 0.154896263544357, 0
-]])
+x0_selection = database[::1]
+source_ids = data["column_indices"][::1]
 
-source_ids = np.array([-1])  # Caso manuale, esterno al dataset
 
 print(f"\nDatabase trajectories: {len(database)}")
 print(f"Selected trajectories: {len(x0_selection)}")
@@ -603,11 +598,11 @@ forward_tangent = forward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -
 
 del sampled_position, sampled_velocity, unit_tangent
 
-# backward_position = normalize_block(backward_position)
-# forward_position = normalize_block(forward_position)
+backward_position = normalize_block(backward_position)
+forward_position = normalize_block(forward_position)
 
-# backward_tangent = normalize_block(backward_tangent)
-# forward_tangent = normalize_block(forward_tangent)
+backward_tangent = normalize_block(backward_tangent)
+forward_tangent = normalize_block(forward_tangent)
 
 clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
 
@@ -619,7 +614,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 1
+max_representatives = 1000
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -643,7 +638,7 @@ print(f"Final maximum distance: {np.max(minimum_distances):.6f}")
 
 
 # Define K values for KMeans clustering
-k_values = [1]
+k_values = np.unique(np.linspace(100, len(farthest_representative_ids), 10, dtype=int))
 
 cluster_counts = []
 mean_stds = []
