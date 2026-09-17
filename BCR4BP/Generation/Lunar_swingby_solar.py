@@ -44,6 +44,7 @@ SOI = ((m1 + m2)/ms)**(2/5) * (d_E + mu * d)
 dim = '2D'
 BYPASS_I = False
 BYPASS_F = False
+BYPASS_RETRO = True  
 RETROGRADE = True
 SAVE = True
 PLOT = True
@@ -489,6 +490,15 @@ def accept_final_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, r
 # Define the retrograde conditions filters
 def accept_retro_condition(pos, v, mu, filters, sol=None, SOI_exit_index=None, rev_n=1):
 
+    if len(sol[3][2]) == 0:
+        return False
+
+    if filters["no_collision"] and len(sol[2][0]) > 0:
+        return False
+
+    if BYPASS_RETRO:
+        return True
+
     conditions = []
 
     if filters["escape"]:
@@ -726,7 +736,7 @@ flyby_tol = 0.1
 
 # Define integration time and step size
 if filters["escape"]:
-    T_max = 2 * np.pi
+    T_max = 4 * np.pi
     T_retro = -4 * np.pi
     dt = 0.1
     dt_retro = -0.1
@@ -889,7 +899,7 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.1):
         
         sol_r, traj_r, bar_r, moon_r, earth_r, e_r, m_r, b_r, Cj_r = retro
 
-        moon_apsides = np.vstack((*sol_r[3][5],*sol_f[3][4]))
+        moon_apsides = np.vstack((sol_r[1].T, sol_f[1].T, *sol_r[3][5], *sol_f[3][4]))
 
         rp_m.append(np.min(np.linalg.norm(moon_apsides[:, :3] - np.array([1 - mu, 0, 0]), axis=1)) * d / R_L)
 
@@ -991,8 +1001,13 @@ if False:
     data = np.column_stack((r0, v0, t0, Cj_cicle, delta_E*G*M/d, delta_v, final_energy*G*M/d, perigee*d-R_E, (rp_m-1)*R_L))
     np.savetxt(f"{trajectory_type}_trajectories_2.txt", data, header="r0x r0y r0z v0x v0y v0z t0_days Cj DE DV Emax h_perigeo h_min_periluneo")
 elif SAVE:
-    data = np.column_stack((x0, Cj_cicle, final_energy*G*M/d, (rp_m-1)*R_L, perigee*d-R_E))
-    np.savetxt(f"{trajectory_type}_initial_conditions_CR3BP_solar.txt", data, header="x0 y0 z0 v0x v0y v0z Cj E_SOI h_min_periluneo h_perigeo")
+    h_min_moon = [np.min(np.linalg.norm(x[:3], axis=0)) - R_L for x in moon_inertial]
+    h_min_earth = [np.min(np.linalg.norm(x[:3], axis=0)) - R_E for x in earth_inertial]
+    E_final = final_energy*G*M/d
+    E_min = np.array([np.min(e) for e in earth_energy]) * G * M / d
+
+    data = np.column_stack((x0, Cj_cicle, E_final, h_min_moon, h_min_earth, flyby_counts, E_min))
+    np.savetxt(f"{trajectory_type}_initial_conditions_CR3BP_solar_2.txt", data, header="x0 y0 z0 v0x v0y v0z Cj E_SOI h_min_moon h_min_earth N_flybys E_earth_min")
 
 
 
