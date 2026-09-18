@@ -1,0 +1,8 @@
+N=194124, N_branch=500, dt_b=-0.0001, dt_f=0.0001, rtol=1e-9
+T_min=0, T_max_b=-6.283185307179586, T_max_f=12.566370614359172, ZOOM=False
+Features: normalized position and unit tangent blocks.
+Perigee: first noninitial geocentric minimum outside lunar SOI within each interval, before any detected surface entry.
+Frame: geocentric inertial axes coincident with synodic axes at t=0.
+STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).
+angle_resultant: 1=concentrated directions; 0=no defined mean direction. Broad angular clouds require caution with linearized moments.
+NaN: missing event, undefined parameter/statistic, or missing representative parameter.

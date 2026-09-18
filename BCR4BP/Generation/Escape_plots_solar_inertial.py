@@ -2,7 +2,22 @@ from Celestial_Mechanics import Integration, Transformations
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
+from matplotlib.colors import BoundaryNorm, ListedColormap
 import time
+
+
+flyby_colors = [
+    "#6A00A8",  # 1: viola
+    "#00B4D8",  # 2: ciano
+    "#FF8C00",  # 3: arancione
+    "#2DC653",  # 4: verde
+    "#FF006E",  # 5: magenta
+    "#FFD60A",  # 6: giallo
+    "#FF1FFF",  # 7: fucsia
+    "#000DFF",  # 8: blu
+    "#5F2106",  # 9: marrone
+    "#000000",  # 10: nero
+]
 
 
 PLOT = True
@@ -68,6 +83,9 @@ columns = {
 }
 
 order = np.argsort(database[:, columns[SORT_BY]], kind="stable")
+#order = np.argsort(database[:, columns["E_SOI"]] - database[:, columns["E_min"]], kind="stable")
+
+selection = database[order[::-1] if DESCENDING else order]
 selection = database[order[::-1] if DESCENDING else order]
 
 
@@ -89,7 +107,7 @@ print(f"Accepted initial filters:  {len(x0_selection)}\n")
 
 
 
-trajectory_ids = np.arange(0, 1000, 1) 
+trajectory_ids = np.arange(0, 100, 1) 
 dt = 0.001
 
 COLOR_BY = "E_SOI"
@@ -121,9 +139,20 @@ lunar_perilune.direction = -1
 
 
 if PLOT:
-    plt.figure(figsize=(10, 10))
+    fig_traj, axes_traj = plt.subplots(2, 3, figsize=(18, 11), constrained_layout=True)
 
-for trajectory_id in trajectory_ids:
+    axes_traj = axes_traj.ravel()
+
+    titles = ("1 flyby", "2 flyby", "3 flyby", "4 flyby", "5 flyby", "> 5 flyby")
+
+    for ax, title in zip(axes_traj, titles):
+        ax.set_title(title)
+        ax.set_xlabel("X [km]")
+        ax.set_ylabel("Y [km]")
+
+tof_days = np.full(len(trajectory_ids), np.nan)
+
+for i, trajectory_id in enumerate(trajectory_ids):
     row = x0_selection[trajectory_id]
 
     if PRINT:
@@ -217,6 +246,9 @@ for trajectory_id in trajectory_ids:
     X_complete = np.column_stack((X_ETD[:, ::-1], X_escape[:, 1:]))
     ETD_index = len(T_ETD) - 1
 
+    if escaped:
+        tof_days[i] = (T_complete[-1] - T_complete[0]) * TU / 86400
+
     X_geo = X_complete.copy()
     X_geo[0] += mu
 
@@ -246,6 +278,11 @@ for trajectory_id in trajectory_ids:
 
 
     if PLOT:
+
+        n_fb = int(row[columns["n_flybys"]])
+        group = min(n_fb - 1, 5)
+        ax = axes_traj[group]
+        plt.sca(ax)
 
         plt.plot(
             moon[:, 0] - earth[:, 0],
@@ -310,13 +347,11 @@ for trajectory_id in trajectory_ids:
 
         plt.xlabel("X [km]")
         plt.ylabel("Y [km]")
-        plt.title("Complete trajectory — Earth inertial frame")
         plt.axis("equal")
 
-        if trajectory_id == trajectory_ids[0]:
+        if ax.get_legend() is None:
             plt.legend()
 
-        plt.tight_layout()
 
 print('Max E_SOI:', np.max(x0_selection[trajectory_ids, columns["E_SOI"]]))
 print('Min E_SOI:', np.min(x0_selection[trajectory_ids, columns["E_SOI"]]))
@@ -326,12 +361,62 @@ print(f"\nExecution time: {elapsed_time:.2f} s")
 
 
 if PLOT:
-    plt.colorbar(
+    data = x0_selection[trajectory_ids]
+    n_fb = data[:, columns["n_flybys"]].astype(int)
+
+
+    ticks_fb = np.arange(n_fb.min(), n_fb.max() + 1)
+    bounds_fb = np.r_[ticks_fb - 0.5, ticks_fb[-1] + 0.5]
+
+    cmap_fb = ListedColormap([flyby_colors[k - 1] for k in ticks_fb])
+    norm_fb = BoundaryNorm(bounds_fb, cmap_fb.N)
+
+    fig, axes = plt.subplots(
+        2, 3, figsize=(16, 9),
+        sharey=True, constrained_layout=True
+    )
+    axes = axes.ravel()
+
+    parameters = [
+        (n_fb, "Numero di flyby"),
+        (data[:, columns["E_min"]], "Energia terrestre minima [km²/s²]"),
+        (data[:, columns["h_min_earth"]], "Altezza terrestre minima [km]"),
+        (data[:, columns["h_min_moon"]], "Altezza lunare minima [km]"),
+        (data[:, columns["Cj"]], "Cj"),
+        (tof_days, "TOF flyby/ETD → SOI terrestre [giorni]")
+    ]
+
+    for ax, (x_values, label) in zip(axes, parameters):
+        ax.scatter(
+            x_values,
+            data[:, columns["E_SOI"]],
+            c=n_fb,
+            cmap=cmap_fb,
+            norm=norm_fb,
+            s=12,
+            alpha=0.7
+        )
+        ax.set_xlabel(label)
+        ax.grid(alpha=0.3)
+
+    axes[0].set_xticks(ticks_fb)
+    axes[0].set_ylabel("E_SOI [km²/s²]")
+    axes[3].set_ylabel("E_SOI [km²/s²]")
+
+    fig.colorbar(
+        plt.cm.ScalarMappable(norm=norm_fb, cmap=cmap_fb),
+        ax=axes.tolist(),
+        ticks=ticks_fb,
+        label="Numero di flyby"
+    )
+
+    # Colorbar della figura delle traiettorie.
+    fig_traj.colorbar(
         plt.cm.ScalarMappable(norm=norm, cmap=cmap),
-        ax=plt.gca(),
+        ax=axes_traj.tolist(),
         label=COLOR_BY
     )
-    plt.tight_layout()
+
     plt.show()
 
 

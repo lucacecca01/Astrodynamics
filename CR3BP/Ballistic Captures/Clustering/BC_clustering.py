@@ -193,7 +193,7 @@ def first_perigee_parameters(sol):
         r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
         r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
 
-        if abs(t - T_min) > 1e-10 and r_earth > R_E / d and r_moon > 2 * M_SOI / d:
+        if abs(t - T_min) > 1e-10 and r_earth > R_E / d and r_moon > R_L / d:
             return orbital_parameters(t, x), t
 
     return np.full(3, np.nan), np.nan
@@ -614,7 +614,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 1000
+max_representatives = 200
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -638,7 +638,7 @@ print(f"Final maximum distance: {np.max(minimum_distances):.6f}")
 
 
 # Define K values for KMeans clustering
-k_values = np.unique(np.linspace(100, len(farthest_representative_ids), 10, dtype=int))
+k_values = np.unique(np.linspace(10, len(farthest_representative_ids), 10, dtype=int))
 
 cluster_counts = []
 mean_stds = []
