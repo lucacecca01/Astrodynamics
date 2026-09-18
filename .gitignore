@@ -9,3 +9,5 @@ dist/
 *.egg-info/
 
 .vscode/
+
+/BCR4BP/Generation/Escape_initial_conditions_CR3BP_solar_2.txt
