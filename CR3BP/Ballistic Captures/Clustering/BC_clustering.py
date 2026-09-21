@@ -614,7 +614,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 200
+max_representatives = 50
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
