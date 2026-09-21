@@ -181,7 +181,8 @@ def orbital_parameters(t, x):
     with np.errstate(divide="ignore", invalid="ignore"):
         _, a, e, _, _, w, _ = Transformations.coe_from_sv(r, v, mu_earth)
 
-    parameters = np.array([a, e, w])
+    eps = 0.5 * np.dot(v, v) - mu_earth / np.linalg.norm(r)
+    parameters = np.array([eps, e, w])
     parameters[~np.isfinite(parameters)] = np.nan
 
     return parameters
@@ -436,6 +437,7 @@ def save_orbital_report(k, labels, representative_ids):
 
     cluster_ids = np.unique(labels)
     groups = [np.flatnonzero(labels == c) for c in cluster_ids]
+    cluster_stds = np.full((len(phase_names), len(parameter_names), len(cluster_ids)), np.nan)
 
     with (output_directory / "orbital_statistics.csv").open("a", newline="", encoding="utf-8") as table, \
          (output_directory / "analysis.log").open("a", encoding="utf-8") as log, \
@@ -453,6 +455,7 @@ def save_orbital_report(k, labels, representative_ids):
                         circular=(parameter == "w"))             
                     for c, ids in zip(cluster_ids, groups)])
 
+                cluster_stds[phase_id, parameter_id] = statistics[:, 3]
                 valid = np.isfinite(statistics[:, 3])
                 if np.any(valid):
                     physical_stds[phase_id, parameter_id] = np.sqrt(np.average(statistics[valid, 3]**2, weights=statistics[valid, 0]))
@@ -494,6 +497,50 @@ def save_orbital_report(k, labels, representative_ids):
                 pdf.savefig(fig)
                 plt.close(fig)
 
+    # Save histograms of the within-cluster standard deviations
+    fig, axes = plt.subplots(1, len(parameter_names), figsize=(16, 5), constrained_layout=True)
+
+    for j, (ax, parameter, unit) in enumerate(zip(np.atleast_1d(axes), parameter_names, parameter_units)):
+
+        values = cluster_stds[:, j, :]
+        finite = values[np.isfinite(values)]
+
+        if len(finite) == 0:
+            ax.set_visible(False)
+            continue
+
+        bins = np.histogram_bin_edges(finite, bins=12)
+
+        if parameter == "eps" and np.all(finite > 0) and np.ptp(finite) > 0:
+            bins = np.geomspace(finite.min() * 0.99, finite.max() * 1.01, 13)
+            ax.set_xscale("log")
+
+        for phase_id, phase in enumerate(phase_names):
+
+            stds = values[phase_id]
+            stds = stds[np.isfinite(stds)]
+
+            if len(stds) == 0:
+                continue
+
+            color = f"C{phase_id}"
+            ax.hist(stds, bins=bins, histtype="step", linewidth=2, color=color,
+                    label=f"{phase}: {len(stds)} clusters")
+            ax.axvline(np.median(stds), color=color, linestyle=":",
+                       label=f"Median {phase}: {np.median(stds):.3g}")
+
+        ax.set_xlabel(f"STD {parameter} [{unit}]")
+        ax.set_ylabel("Number of clusters")
+        ax.yaxis.get_major_locator().set_params(integer=True)
+        ax.grid(axis="y", alpha=0.3)
+        ax.legend(fontsize=8)
+
+    fig.suptitle(f"K={k} | Within-cluster STD distributions | Each cluster counts once")
+    fig.savefig(output_directory / f"STD_histograms_K{k:04d}.png", dpi=200)
+    fig.savefig(output_directory / f"STD_histograms_K{k:04d}.pdf")
+    plt.close(fig)
+
+
     return physical_stds
 
 
@@ -525,7 +572,7 @@ Integrator = Integration()
 # Define orbital report fields and output directory
 phase_names = ("backward", "forward")
 
-parameter_names = ("a", "e", "w")
+parameter_names = ("eps", "e", "w")
 
 parameter_units = ("km", "-", "deg")
 
