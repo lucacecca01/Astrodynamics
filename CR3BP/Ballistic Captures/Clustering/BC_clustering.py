@@ -147,6 +147,17 @@ def earth_perigee_f(t, x, mu):
 
 
 
+
+# Define lunar distance event
+def moon_SOI_crossing(t, x, mu):
+
+    r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
+
+    return r_moon - 2.5 * M_SOI / d
+
+
+
+
 # Define collision events
 def collision(t, x, mu):
 
@@ -200,6 +211,27 @@ def first_perigee_parameters(sol):
 
 
 
+# Select the first lunar distance crossing before a collision
+def first_section_parameters(sol):
+
+    collision_time = abs(sol.t_events[2][0] - T_min) if len(sol.t_events[2]) else np.inf
+
+    if collision(T_min, sol.y[:, 0], mu) <= 0:
+        return np.full(3, np.nan), np.nan
+
+    for t, x in zip(sol.t_events[1], sol.y_events[1]):
+
+        if abs(t - T_min) >= collision_time:
+            break
+
+        if abs(t - T_min) > 1e-10:
+            return orbital_parameters(t, x), t
+
+    return np.full(3, np.nan), np.nan
+
+
+
+
 # Define integration function
 def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 
@@ -220,18 +252,18 @@ def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 # Define integration and sampling function
 def integrate_and_sample_one(x0):
 
-    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, (earth_SOI_exit, earth_perigee_b, collision))
+    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, (earth_SOI_exit, moon_SOI_crossing, collision))
 
     sampled_b = sample_branch(solution_b)
-    oe_b, t_perigee_b = first_perigee_parameters(solution_b)
+    oe_b, t_b = first_section_parameters(solution_b)
 
     del solution_b
 
 
-    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, earth_perigee_f, collision))
+    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, moon_SOI_crossing, collision))
 
     sampled_f = sample_branch(solution_f)
-    oe_f, t_perigee_f = first_perigee_parameters(solution_f)
+    oe_f, t_f = first_section_parameters(solution_f)
 
     del solution_f
 
@@ -241,7 +273,7 @@ def integrate_and_sample_one(x0):
     trajectory = np.concatenate((sampled_b[:, ::-1], sampled_f[:, 1:]), axis=1)
     elements = np.array([oe_b, oe_f])
 
-    return trajectory, elements, np.array([t_perigee_b, t_perigee_f])
+    return trajectory, elements, np.array([t_b, t_f])
 
 
 
@@ -508,7 +540,7 @@ if SAVE:
         log.write(f"N={len(x0_selection)}, N_branch={N_branch}, dt_b={dt_b}, dt_f={dt_f}, rtol=1e-9\n")
         log.write(f"T_min={T_min}, T_max_b={T_max_b}, T_max_f={T_max_f}, ZOOM={ZOOM}\n")
         log.write("Features: normalized position and unit tangent blocks.\n")
-        log.write("Perigee: first noninitial geocentric minimum outside lunar SOI within each interval, before any detected surface entry.\n")
+        log.write("OE event: first outward crossing of 2.5 lunar SOI along each integration direction, before any detected collision.\n")
         log.write("Frame: geocentric inertial axes coincident with synodic axes at t=0.\n")
         log.write("STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).\n")
         log.write("angle_resultant: 1=concentrated directions; 0=no defined mean direction. Broad angular clouds require caution with linearized moments.\n")
@@ -534,7 +566,8 @@ earth_perigee_f.direction = 1
 collision.terminal = False
 collision.direction = -1
 
-
+moon_SOI_crossing.terminal = False
+moon_SOI_crossing.direction = 1
 
 
 # Parallel integration backward and forward
@@ -839,8 +872,7 @@ save_figure(fig, "small_clusters_vs_K.png")
 if SAVE:
     fig, axes = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
     history = np.asarray(orbital_std_history)
-    fig.suptitle("Geocentric elements at eligible perigees; each phase uses its valid trajectories")
-
+    fig.suptitle("Geocentric elements at 2.5 lunar SOI; each phase uses its valid trajectories")
     for j, ax in enumerate(axes.ravel()):
         if j >= len(parameter_names):
             ax.axis("off")
