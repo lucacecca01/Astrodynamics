@@ -335,11 +335,12 @@ def normalize_block(features):
 
 
 # Define farthest point selection function
-def farthest_point_selection(features, max_representatives):
+def farthest_point_selection(features, max_representatives, valid):
 
     feature_center = np.mean(features, axis=0)
 
-    first_id = np.argmin(np.sum((features - feature_center)**2, axis=1))
+    distances_squared = np.sum((features - feature_center)**2, axis=1)
+    first_id = np.argmin(np.where(valid, distances_squared, np.inf))
 
     representative_ids = [first_id]
 
@@ -347,11 +348,11 @@ def farthest_point_selection(features, max_representatives):
 
     labels = np.zeros(len(features), dtype=int)
 
-    radius_history = [np.sqrt(np.max(minimum_distances_squared))]
+    radius_history = [np.sqrt(np.max(minimum_distances_squared[valid]))]
 
     for cluster_id in range(1, max_representatives):
 
-        next_id = np.argmax(minimum_distances_squared)
+        next_id = np.argmax(np.where(valid, minimum_distances_squared, -np.inf))
 
         if minimum_distances_squared[next_id] <= 1e-14:
             break
@@ -366,7 +367,7 @@ def farthest_point_selection(features, max_representatives):
 
         labels[closer] = cluster_id
 
-        radius_history.append(np.sqrt(np.max(minimum_distances_squared)))
+        radius_history.append(np.sqrt(np.max(minimum_distances_squared[valid])))
 
     return (np.asarray(representative_ids), labels, np.asarray(radius_history), np.sqrt(minimum_distances_squared))
 
@@ -578,7 +579,7 @@ parameter_units = ("km^2/s^2", "-", "deg")
 
 statistic_names = ("n_valid", "n_missing", "median", "std", "p05", "p95", "width90", "minimum", "maximum", "range", "skewness", "error95", "error_max", "angle_origin_deg", "angle_resultant")
 
-output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y%m%d_%H%M%S')}")
+output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y_%m_%d__%H_%M_%S')}")
 
 if SAVE:
     output_directory.mkdir(parents=True, exist_ok=True)
@@ -586,7 +587,7 @@ if SAVE:
     with (output_directory / "analysis.log").open("w", encoding="utf-8") as log:
         log.write(f"N={len(x0_selection)}, N_branch={N_branch}, dt_b={dt_b}, dt_f={dt_f}, rtol=1e-9\n")
         log.write(f"T_min={T_min}, T_max_b={T_max_b}, T_max_f={T_max_f}, ZOOM={ZOOM}\n")
-        log.write("Features: normalized position and unit tangent blocks.\n")
+        log.write(f"Features: normalized position, unit tangent and residence time blocks.\n")
         log.write("OE event: first outward crossing of 2.5 lunar SOI along each integration direction, before any detected collision.\n")
         log.write("Frame: geocentric inertial axes coincident with synodic axes at t=0.\n")
         log.write("STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).\n")
@@ -684,8 +685,18 @@ forward_position = normalize_block(forward_position)
 backward_tangent = normalize_block(backward_tangent)
 forward_tangent = normalize_block(forward_tangent)
 
-clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
+#clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
 
+tof = perigee_times[:, 1] - perigee_times[:, 0]
+tof_valid = np.isfinite(tof) & (tof > 0)
+sample_weights = tof_valid.astype(np.float32)
+
+tof_features = np.zeros((len(tof), 1), dtype=np.float32)
+tof_features[tof_valid] = normalize_block(tof[tof_valid, None].astype(np.float32))
+
+clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent, tof_features))
+
+del tof_features
 del backward_position, forward_position
 del backward_tangent, forward_tangent
 
@@ -700,11 +711,13 @@ representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
         clustering_features,
         max_representatives,
+        tof_valid,
     )
 )
 
 representative_source_ids = source_ids[representative_ids]
 
+minimum_distances = minimum_distances[tof_valid]
 farthest_distances = minimum_distances.copy()
 farthest_representative_ids = representative_ids.copy()
 
@@ -740,13 +753,13 @@ for k in k_values:
         algorithm="lloyd",
     )
 
-    kmeans_labels = kmeans.fit_predict(clustering_features)
+    kmeans_labels = kmeans.fit_predict(clustering_features, sample_weight=sample_weights)
 
     representative_ids = np.empty(len(kmeans.cluster_centers_), dtype=int)
 
     for cluster_id, cluster_center in enumerate(kmeans.cluster_centers_):
 
-        cluster_ids = np.flatnonzero(kmeans_labels == cluster_id)
+        cluster_ids = np.flatnonzero((kmeans_labels == cluster_id) & tof_valid)
 
         distances_squared = np.sum((clustering_features[cluster_ids] - cluster_center)**2, axis=1)
 
@@ -755,11 +768,19 @@ for k in k_values:
 
     labels, minimum_distances = pairwise_distances_argmin_min(clustering_features, clustering_features[representative_ids])
 
+
+    if np.any(~tof_valid):
+        labels[~tof_valid], minimum_distances[~tof_valid] = pairwise_distances_argmin_min(
+            clustering_features[~tof_valid, :-1],
+            clustering_features[representative_ids, :-1]
+        )
+
+
     representative_source_ids = source_ids[representative_ids]
 
     cluster_ids, sizes = np.unique(labels, return_counts=True)
 
-    variances = [np.mean(np.var(clustering_features[labels == c], axis=0)) for c in cluster_ids]
+    variances = [np.mean(np.var(clustering_features[labels == c, :-1], axis=0)) for c in cluster_ids]
 
     mean_std = np.sqrt(np.average(variances, weights=sizes))
 
@@ -880,7 +901,7 @@ fig, ax = plt.subplots(figsize=(10, 8))
 ax.plot(cluster_counts, mean_stds, "o-", color="blue")
 
 ax.set_xlabel("Number of clusters")
-ax.set_ylabel("Within-cluster STD (normalized features)")
+ax.set_ylabel("Within-cluster STD (normalized geometric features)")
 ax.set_title("Cluster dispersion vs number of clusters")
 save_figure(fig, "STD_vs_K.png")
 
