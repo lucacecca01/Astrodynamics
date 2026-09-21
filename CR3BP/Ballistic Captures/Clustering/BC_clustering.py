@@ -558,6 +558,12 @@ database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
 x0_selection = database[::1]
 source_ids = data["column_indices"][::1]
 
+with np.load(Path(__file__).resolve().parent / "Clusters/strsysT8Gamma20V16_20260922_004745/orbital_parameters.npz") as previous:
+    excluded_ids = previous["source_ids"][~np.isfinite(previous["perigee_times_tau"]).all(axis=1)]
+
+keep = ~np.isin(source_ids, excluded_ids)
+x0_selection, source_ids = x0_selection[keep], source_ids[keep]
+
 
 print(f"\nDatabase trajectories: {len(database)}")
 print(f"Selected trajectories: {len(x0_selection)}")
