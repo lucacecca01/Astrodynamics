@@ -20,7 +20,7 @@ import csv
 SAVE = True
 PLOT_CLUSTERS = False
 PLOT_MEDOIDS = False
-ZOOM = False
+ZOOM = True
 
 
 
