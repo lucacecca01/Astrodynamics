@@ -574,7 +574,7 @@ phase_names = ("backward", "forward")
 
 parameter_names = ("eps", "e", "w")
 
-parameter_units = ("km", "-", "deg")
+parameter_units = ("km^2/s^2", "-", "deg")
 
 statistic_names = ("n_valid", "n_missing", "median", "std", "p05", "p95", "width90", "minimum", "maximum", "range", "skewness", "error95", "error_max", "angle_origin_deg", "angle_resultant")
 
