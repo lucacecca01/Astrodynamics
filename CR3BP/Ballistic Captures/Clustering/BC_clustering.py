@@ -20,7 +20,7 @@ import csv
 SAVE = True
 PLOT_CLUSTERS = False
 PLOT_MEDOIDS = False
-ZOOM = True
+ZOOM = False
 
 
 
@@ -585,7 +585,7 @@ parameter_units = ("km^2/s^2", "-", "deg")
 
 statistic_names = ("n_valid", "n_missing", "median", "std", "p05", "p95", "width90", "minimum", "maximum", "range", "skewness", "error95", "error_max", "angle_origin_deg", "angle_resultant")
 
-output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y_%m_%d__%H_%M_%S')}")
+output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y%m%d_%H%M%S')}")
 
 if SAVE:
     output_directory.mkdir(parents=True, exist_ok=True)
@@ -711,7 +711,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 50
+max_representatives = 32
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
