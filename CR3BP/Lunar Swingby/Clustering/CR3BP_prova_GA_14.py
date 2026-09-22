@@ -95,7 +95,7 @@ def first_perigee_parameters(sol):
         r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
         r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
 
-        if abs(t - T_min) > 1e-10 and r_moon > 2 *M_SOI / d:
+        if abs(t - T_min) > 1e-10 and r_moon > 2 * M_SOI / d:
             return orbital_parameters(t, x), t
 
     return np.full(3, np.nan), np.nan
@@ -126,8 +126,11 @@ def integrate_and_sample_one(x0):
 
     parameters_b, t_perigee = first_perigee_parameters(solution_b)
 
-    if not np.isfinite(t_perigee) or not np.all(np.isfinite(parameters_b)):
-        raise RuntimeError("Perigeo ammissibile assente o parametri non finiti.")
+    if not np.isfinite(t_perigee):
+        return None
+
+    if not np.all(np.isfinite(parameters_b)):
+        raise RuntimeError("Parametri al perigeo non finiti.")
 
     x_perigee = solution_b.sol(t_perigee)
     rx = x_perigee[0] + mu
@@ -302,19 +305,36 @@ collision.direction = 0
 # Parallel integration backward and forward
 event_features = np.empty((len(x0_selection), 7), dtype=np.float64)
 X_curvature = np.empty((len(x0_selection), 2, 2 * N_PLOT - 1), dtype=np.float64)
+keep = np.zeros(len(x0_selection), dtype=bool)
+n_kept = 0
 
 with get_context("fork").Pool() as pool:
 
-    for i, (features, x) in enumerate(
+    for i, result in enumerate(
         pool.imap(
             integrate_and_sample_one,
             x0_selection,
             chunksize=10,
         )
     ):
-        event_features[i] = features
-        X_curvature[i] = x
+        if result is None:
+            continue
 
+        event_features[n_kept], X_curvature[n_kept] = result
+        keep[i] = True
+        n_kept += 1
+
+
+if n_kept == 0:
+    raise RuntimeError("Nessuna traiettoria con perigeo ammissibile.")
+
+event_features = event_features[:n_kept]
+X_curvature = X_curvature[:n_kept]
+source_ids = source_ids[keep]
+selection = database[source_ids, :]
+x0_selection = selection[:, :6]
+
+print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 
 
