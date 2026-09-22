@@ -707,13 +707,11 @@ representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
         clustering_features,
         max_representatives,
-        tof_valid,
     )
 )
 
 representative_source_ids = source_ids[representative_ids]
 
-minimum_distances = minimum_distances[tof_valid]
 farthest_distances = minimum_distances.copy()
 farthest_representative_ids = representative_ids.copy()
 
@@ -749,13 +747,13 @@ for k in k_values:
         algorithm="lloyd",
     )
 
-    kmeans_labels = kmeans.fit_predict(clustering_features, sample_weight=sample_weights)
+    kmeans_labels = kmeans.fit_predict(clustering_features)
 
     representative_ids = np.empty(len(kmeans.cluster_centers_), dtype=int)
 
     for cluster_id, cluster_center in enumerate(kmeans.cluster_centers_):
 
-        cluster_ids = np.flatnonzero((kmeans_labels == cluster_id) & tof_valid)
+        cluster_ids = np.flatnonzero((kmeans_labels == cluster_id))
 
         distances_squared = np.sum((clustering_features[cluster_ids] - cluster_center)**2, axis=1)
 
@@ -763,14 +761,6 @@ for k in k_values:
 
 
     labels, minimum_distances = pairwise_distances_argmin_min(clustering_features, clustering_features[representative_ids])
-
-
-    if np.any(~tof_valid):
-        labels[~tof_valid], minimum_distances[~tof_valid] = pairwise_distances_argmin_min(
-            clustering_features[~tof_valid, :-1],
-            clustering_features[representative_ids, :-1]
-        )
-
 
     representative_source_ids = source_ids[representative_ids]
 

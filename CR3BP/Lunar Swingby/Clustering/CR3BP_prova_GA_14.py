@@ -71,7 +71,8 @@ def orbital_parameters(t, x):
     with np.errstate(divide="ignore", invalid="ignore"):
         _, a, e, _, _, w, _ = Transformations.coe_from_sv(r, v, mu_earth)
 
-    parameters = np.array([a, e, w])
+    eps = 0.5 * np.dot(v, v) - mu_earth / np.linalg.norm(r)
+    parameters = np.array([eps, e, w])
     parameters[~np.isfinite(parameters)] = np.nan
 
     return parameters
@@ -322,7 +323,7 @@ w = np.deg2rad(event_features[:, 2])
 angular_features = np.column_stack((np.cos(w), np.sin(w)))
 
 clustering_features = np.column_stack((
-    normalize_block(event_features[:, 0:1]),   # a
+    normalize_block(event_features[:, 0:1]),   # eps
     normalize_block(event_features[:, 1:2]),   # e
     normalize_block(angular_features),         # w
     5 * normalize_block(event_features[:, 6:7]),                      # verso al perigeo
@@ -485,7 +486,7 @@ if SAVE or PLOT_CLUSTERS:
     fig, axes = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
     axes = axes.ravel()
 
-    names = ["a [km]", "e [-]", "w [deg]"]
+    names = ["eps [km^2/s^2]", "e [-]", "w [deg]"]
 
     for j, name in enumerate(names):
         axes[j].plot(cluster_counts, history[:, j], "o-")
@@ -534,7 +535,7 @@ if SAVE or PLOT_CLUSTERS:
     diagnostics = np.column_stack((physical_stds[:, :3], np.asarray(escape_stats), sizes))
 
     names = [
-        "STD a [km]",
+        "STD eps [km^2/s^2]",
         "STD e [-]",
         "STD w [deg]",
         "STD |v SOI| [km/s]",
