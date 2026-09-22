@@ -326,7 +326,7 @@ clustering_features = np.column_stack((
     normalize_block(event_features[:, 0:1]),   # eps
     normalize_block(event_features[:, 1:2]),   # e
     normalize_block(angular_features),         # w
-    normalize_block(event_features[:, 6:7]),                      # verso al perigeo
+    100 *normalize_block(event_features[:, 6:7]),                      # verso al perigeo
  #  normalize_block(event_features[:, 3:6]),   # v_SOI
 ))
 
@@ -335,7 +335,7 @@ clustering_features = np.column_stack((
 
 
 # Perform farthest point selection
-max_representatives = 22
+max_representatives = 19
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
