@@ -326,7 +326,7 @@ clustering_features = np.column_stack((
     normalize_block(event_features[:, 0:1]),   # eps
     normalize_block(event_features[:, 1:2]),   # e
     normalize_block(angular_features),         # w
-    5 * normalize_block(event_features[:, 6:7]),                      # verso al perigeo
+    10 * normalize_block(event_features[:, 6:7]),                      # verso al perigeo
  #  normalize_block(event_features[:, 3:6]),   # v_SOI
 ))
 
@@ -366,7 +366,7 @@ small_cluster_counts = []
 small_trajectory_fractions = []
 escape_stats = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}_2")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
