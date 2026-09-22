@@ -95,7 +95,7 @@ def first_perigee_parameters(sol):
         r_earth = np.linalg.norm(x[:3] - np.array([-mu, 0, 0]))
         r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
 
-        if abs(t - T_min) > 1e-10:
+        if abs(t - T_min) > 1e-10 and r_moon > 2 *M_SOI / d:
             return orbital_parameters(t, x), t
 
     return np.full(3, np.nan), np.nan
@@ -326,7 +326,7 @@ clustering_features = np.column_stack((
     normalize_block(event_features[:, 0:1]),   # eps
     normalize_block(event_features[:, 1:2]),   # e
     normalize_block(angular_features),         # w
-    normalize_block(event_features[:, 6:7]),                      # verso al perigeo
+    100 *normalize_block(event_features[:, 6:7]),                      # verso al perigeo
  #  normalize_block(event_features[:, 3:6]),   # v_SOI
 ))
 
@@ -335,7 +335,7 @@ clustering_features = np.column_stack((
 
 
 # Perform farthest point selection
-max_representatives = 19
+max_representatives = 40
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -381,8 +381,8 @@ for k in k_values:
         n_clusters=int(k),
         init=clustering_features[farthest_representative_ids[:k]],
         n_init=1,
-        max_iter=300,
-        tol=1e-4,
+        max_iter=500,
+        tol=1e-9,
         algorithm="lloyd",
     )
 
