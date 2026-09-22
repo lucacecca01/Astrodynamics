@@ -325,7 +325,7 @@ clustering_features = np.column_stack((
     normalize_block(event_features[:, 0:1]),   # a
     normalize_block(event_features[:, 1:2]),   # e
     normalize_block(angular_features),         # w
-    event_features[:, 6],                      # verso al perigeo
+    5 * normalize_block(event_features[:, 6:7]),                      # verso al perigeo
  #  normalize_block(event_features[:, 3:6]),   # v_SOI
 ))
 
@@ -334,7 +334,7 @@ clustering_features = np.column_stack((
 
 
 # Perform farthest point selection
-max_representatives = 200
+max_representatives = 50
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
@@ -365,7 +365,7 @@ small_cluster_counts = []
 small_trajectory_fractions = []
 escape_stats = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}_3")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
