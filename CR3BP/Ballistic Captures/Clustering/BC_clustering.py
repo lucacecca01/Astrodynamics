@@ -698,7 +698,7 @@ tof_valid = np.isfinite(tof) & (tof > 0)
 sample_weights = tof_valid.astype(np.float32)
 
 tof_features = np.zeros((len(tof), 1), dtype=np.float32)
-tof_features[tof_valid] = normalize_block(tof[tof_valid, None].astype(np.float32))
+tof_features[tof_valid] = 10 * normalize_block(tof[tof_valid, None].astype(np.float32))
 
 clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent, tof_features))
 
@@ -711,7 +711,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 32
+max_representatives = 50
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
