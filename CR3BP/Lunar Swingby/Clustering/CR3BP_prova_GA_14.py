@@ -355,7 +355,7 @@ clustering_features = np.column_stack((
 
 
 # Perform farthest point selection
-max_representatives = 40
+max_representatives = 33
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
