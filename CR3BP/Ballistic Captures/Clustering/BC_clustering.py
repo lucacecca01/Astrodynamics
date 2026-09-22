@@ -691,18 +691,8 @@ forward_position = normalize_block(forward_position)
 backward_tangent = normalize_block(backward_tangent)
 forward_tangent = normalize_block(forward_tangent)
 
-#clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
+clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
 
-tof = perigee_times[:, 1] - perigee_times[:, 0]
-tof_valid = np.isfinite(tof) & (tof > 0)
-sample_weights = tof_valid.astype(np.float32)
-
-tof_features = np.zeros((len(tof), 1), dtype=np.float32)
-tof_features[tof_valid] = 10 * normalize_block(tof[tof_valid, None].astype(np.float32))
-
-clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent, tof_features))
-
-del tof_features
 del backward_position, forward_position
 del backward_tangent, forward_tangent
 
@@ -711,7 +701,7 @@ del backward_tangent, forward_tangent
 
 
 # Perform farthest point selection
-max_representatives = 50
+max_representatives = 32
 
 representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
