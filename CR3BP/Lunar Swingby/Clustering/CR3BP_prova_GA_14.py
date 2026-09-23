@@ -386,7 +386,7 @@ small_cluster_counts = []
 small_trajectory_fractions = []
 escape_stats = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}_2")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
@@ -691,6 +691,32 @@ if PLOT_CLUSTERS or SAVE:
     cmap = plt.get_cmap("turbo", max(n_clusters, 1),)
 
     cluster_colors = {cluster_id: cmap(color_id) for color_id, cluster_id in enumerate(unique_clusters)}
+
+
+    fig, axes = plt.subplots(1, 2, figsize=(13, 6), subplot_kw={"projection": "3d"}, constrained_layout=True)
+
+    for ax, sign, title in zip(axes, (1, -1), ("Prograde", "Retrograde")):
+        mask = event_features[:, 6] == sign
+
+        ax.scatter(
+            *event_features[mask, :3].T,
+            c=[cluster_colors[c] for c in labels[mask]],
+            s=3, alpha=0.4, depthshade=False,
+        )
+
+        ids = representative_ids[event_features[representative_ids, 6] == sign]
+        ax.scatter(*event_features[ids, :3].T, c="black", marker="*", s=70)
+
+        ax.set(
+            xlabel=r"$\varepsilon$ [km²/s²]",
+            ylabel="e [-]",
+            zlabel=r"$\omega$ [deg]",
+            title=title,
+        )
+
+    plt.show(block=True)
+    save_figure(fig, "clusters_eps_e_w_3D.png")
+
 
     groups = []
 
