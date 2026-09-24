@@ -595,19 +595,22 @@ clustering_features = np.column_stack((
 
 
 
-# Build a feasible partition, then refine it with a finer KMeans base.
-MIN_CLUSTER_SIZE = 1000
-MAX_SIGMA = 2.0
-BASE_CLUSTER_COUNTS = (99,)  # Initial groups, not the final number of clusters.
+# Complete partition: 34 retrograde + 56 prograde groups, at most 16 small groups.
+MIN_CLUSTER_SIZE = 100
+LARGE_CLUSTER_SIZE = 1000
+MAX_SMALL_CLUSTERS = 16
+CLUSTERS_BY_DIRECTION = {-1: 34, 1: 56}
+# Physical reference from the original 30 compact groups: eps [km^2/s^2], e, w [deg].
+REFERENCE_STD = np.array([0.0414161604846158, 0.05002355203163239, 7.209742019743541])
+MAX_PHYSICAL_STD = 1.65 * REFERENCE_STD
+MAX_OUTLIER_FRACTION = 0.01  # Fraction of points, not clusters, beyond radial 2 sigma.
 
-partitions = []
-labels = None
-for n_base in BASE_CLUSTER_COUNTS:
-    labels = constrained_clustering(
-        clustering_features, event_features[:, 6], n_base,
-        min_size=MIN_CLUSTER_SIZE, sigma_limit=MAX_SIGMA, previous_labels=labels,
-    )
-    partitions.append(labels)
+labels = constrained_clustering(
+    event_features[:, :3], event_features[:, 6], REFERENCE_STD, MAX_PHYSICAL_STD,
+    CLUSTERS_BY_DIRECTION, min_size=MIN_CLUSTER_SIZE, large_size=LARGE_CLUSTER_SIZE,
+    max_small=MAX_SMALL_CLUSTERS, max_outlier_fraction=MAX_OUTLIER_FRACTION,
+)
+partitions = [labels]
 
 cluster_counts = []
 mean_stds = []
