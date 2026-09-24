@@ -1,14 +1,16 @@
 from Celestial_Mechanics import Integration, Transformations
 from pathlib import Path
 from multiprocessing import get_context
-from itertools import combinations
 import time
+import warnings
 
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.integrate import cumulative_trapezoid
-from scipy.optimize import Bounds, LinearConstraint, milp
-from scipy.sparse import coo_matrix
+from scipy.optimize import Bounds, LinearConstraint, linprog, milp
+from scipy.sparse import coo_matrix, csr_matrix, diags, hstack, vstack
+from scipy.spatial import cKDTree
+from scipy.spatial.distance import cdist
 
 from sklearn.cluster import KMeans
 from threadpoolctl import threadpool_limits
@@ -186,137 +188,278 @@ def normalize_block(features):
 
 
 
-# Select valid unions of standard KMeans groups, minimizing normalized SSE.
-def constrained_clustering(features, directions, n_base, min_size=1000,
-                           sigma_limit=2.0, previous_labels=None):
+def physical_cluster_stds(physical, labels):
+    """Population STD of eps, e and omega, with omega wrapped per cluster."""
+    rows = []
+    for cluster_id in np.unique(labels):
+        values = physical[labels == cluster_id, :3].copy()
+        angular_mean = np.mean(np.exp(1j * np.deg2rad(values[:, 2])))
+        if abs(angular_mean) < 1e-8:
+            raise RuntimeError("Orientamento medio del cluster non definito.")
+        origin = np.rad2deg(np.angle(angular_mean))
+        values[:, 2] = (values[:, 2] - origin + 180) % 360 - 180
+        rows.append(np.std(values, axis=0, ddof=0))
+    return np.asarray(rows)
 
-    if not np.all(np.isfinite(features)) or not np.all(np.isin(directions, [-1, 1])):
-        raise ValueError("Feature non finite o verso del perigeo non definito.")
 
-    # Within a single direction, its feature is constant: fit only the OE.
-    base_labels = np.empty(len(features), dtype=int)
+def constrained_clustering(physical, directions, reference_std, final_std_limits,
+                           clusters_by_direction, min_size=100, large_size=1000,
+                           max_small=16, max_outlier_fraction=0.01):
+    """Standard KMeans centres followed by constrained, integer assignments.
+
+    The density filter trains centres only. Every input row is assigned.
+    Moment bounds use physical units; 2-sigma diagnostics retain the original
+    globally normalized eps/e/(cos omega, sin omega) metric.
+    """
+    physical = np.asarray(physical, dtype=np.float64)
+    directions = np.asarray(directions)
+    reference_std = np.asarray(reference_std, dtype=np.float64)
+    final_std_limits = np.asarray(final_std_limits, dtype=np.float64)
+    if (physical.ndim != 2 or physical.shape[1] != 3 or
+            directions.shape != (len(physical),) or
+            not np.all(np.isfinite(physical)) or
+            not np.all(np.isin(directions, [-1, 1]))):
+        raise ValueError("Feature non finite, forma errata o verso non definito.")
+    if (reference_std.shape != (3,) or final_std_limits.shape != (3,) or
+            not np.all(np.isfinite(reference_std)) or
+            not np.all(np.isfinite(final_std_limits)) or
+            np.any(reference_std <= 0) or np.any(final_std_limits <= 0) or
+            not 0 < min_size < large_size):
+        raise ValueError("Limiti di dispersione o numerosita non validi.")
+    if set(np.unique(directions)) != set(clusters_by_direction):
+        raise ValueError("I versi presenti non corrispondono ai conteggi richiesti.")
+
+    angle = np.deg2rad(physical[:, 2])
+    angular = np.column_stack((np.cos(angle), np.sin(angle)))
+    metric = np.column_stack((physical[:, :2] / reference_std[:2],
+                              angular / np.deg2rad(reference_std[2])))
+
+    def solve_lp(cost, eq, ub, rhs):
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="Unrecognized options detected")
+            return linprog(
+                cost, A_eq=eq, b_eq=np.ones(eq.shape[0]), A_ub=ub, b_ub=rhs,
+                bounds=(0, 1), method="highs-ds",
+                options={"time_limit": 60, "threads": 2},
+            )
+
+    def initial_assignment(z, centres, lower):
+        distances = cdist(z, centres, metric="sqeuclidean")
+        ordered = np.argsort(distances, axis=1)
+        n, k = distances.shape
+        for neighbours in sorted({min(k, value) for value in (4, 8, 16, k)}):
+            nearest = ordered[:, :neighbours]
+            rows = np.repeat(np.arange(n), neighbours)
+            edges = np.arange(len(rows))
+            eq = coo_matrix((np.ones(len(rows)), (rows, edges)),
+                            shape=(n, len(rows))).tocsr()
+            ub = coo_matrix((-np.ones(len(rows)), (nearest.ravel(), edges)),
+                            shape=(k, len(rows))).tocsr()
+            result = solve_lp(distances[rows, nearest.ravel()], eq, ub, -lower)
+            if not result.success:
+                continue
+            # Pure transportation is integral; never silently round a relaxation.
+            if np.max(np.abs(result.x - np.rint(result.x))) > 1e-6:
+                raise RuntimeError("Assegnazione iniziale non intera.")
+            chosen = np.flatnonzero(result.x > 0.5)
+            if len(chosen) != n or np.unique(rows[chosen]).size != n:
+                raise RuntimeError("Copertura iniziale non valida.")
+            labels = np.empty(n, dtype=int)
+            labels[rows[chosen]] = nearest.ravel()[chosen]
+            if np.all(np.bincount(labels, minlength=k) >= lower):
+                return labels
+        raise RuntimeError("Assegnazione iniziale non trovata: " + result.message)
+
+    def moment_problem(p, z, assigned, lower, factor, neighbours, angle_limit):
+        n, k = len(p), len(lower)
+        centres = np.empty((k, 3))
+        metric_centres = np.empty((k, 4))
+        for j in range(k):
+            members = assigned == j
+            centres[j, :2] = p[members, :2].mean(axis=0)
+            centres[j, 2] = np.rad2deg(np.angle(
+                np.mean(np.exp(1j * np.deg2rad(p[members, 2])))))
+            metric_centres[j] = z[members].mean(axis=0)
+        distances = cdist(z, metric_centres, metric="sqeuclidean")
+        angle_delta = (p[:, None, 2] - centres[None, :, 2] + 180) % 360 - 180
+        distances[np.abs(angle_delta) >= angle_limit] = np.inf
+        take = min(neighbours, k)
+        nearest = np.argsort(distances, axis=1)[:, :take]
+        rows = np.repeat(np.arange(n), take)
+        cols = nearest.ravel()
+        costs = distances[rows, cols]
+        finite = np.isfinite(costs)
+        rows, cols, costs = rows[finite], cols[finite], costs[finite]
+        if np.any(np.bincount(rows, minlength=n) == 0):
+            raise RuntimeError("Una traiettoria non ha destinazioni ammissibili.")
+        deviations = np.vstack((
+            ((p[rows, 0] - centres[cols, 0]) / (reference_std[0] * factor))**2 - 1,
+            ((p[rows, 1] - centres[cols, 1]) / (reference_std[1] * factor))**2 - 1,
+            (angle_delta[rows, cols] / (reference_std[2] * factor))**2 - 1,
+        ))
+        edges = np.arange(len(rows))
+        eq = coo_matrix((np.ones(len(rows)), (rows, edges)),
+                        shape=(n, len(rows))).tocsr()
+        # Sum [(deviation / cap)^2 - 1] <= 0 bounds the second moment.
+        ub = coo_matrix(
+            (np.r_[-np.ones(len(rows)), deviations.ravel()],
+             (np.r_[cols, k + cols, 2*k + cols, 3*k + cols], np.tile(edges, 4))),
+            shape=(4*k, len(rows)),
+        ).tocsr()
+        return dict(eq=eq, ub=ub, rows=rows, cols=cols, cost=costs,
+                    lower=lower.copy(), n=n, k=k, factor=factor)
+
+    def select_small_clusters(problem, budget, number):
+        n, k, m = problem["n"], problem["k"], len(problem["rows"])
+        eq = hstack((problem["eq"], csr_matrix((n, k))), format="csr")
+        ypart = vstack((-(large_size - min_size) * diags(np.ones(k)),
+                       csr_matrix((3*k, k))), format="csr")
+        ub = hstack((problem["ub"], ypart), format="csr")
+        budget_row = hstack((csr_matrix((1, m)), csr_matrix(np.ones((1, k)))),
+                            format="csr")
+        ub = vstack((ub, budget_row), format="csr")
+        rhs = np.r_[np.full(k, -large_size), np.zeros(3*k), budget]
+        result = solve_lp(np.r_[problem["cost"], np.zeros(k)], eq, ub, rhs)
+        if not result.success:
+            raise RuntimeError("Selezione dei cluster piccoli fallita: " + result.message)
+        # The continuous y values rank candidates; they are NOT final labels.
+        lower = np.full(k, large_size)
+        lower[np.argsort(-result.x[m:])[:number]] = min_size
+        problem["lower"] = lower
+
+    def repair_assignment(problem, x):
+        """Repair fractional rows with a small MILP, then check every row."""
+        rows, cols = problem["rows"], problem["cols"]
+        n, k = problem["n"], problem["k"]
+        fractional = np.unique(rows[(x > 1e-7) & (x < 1 - 1e-7)])
+        integral = x > 1 - 1e-7
+        # Margins only assist integer repair; actual final STD is checked below.
+        attempts = ((1., 0), (1., 2), (1., 8),
+                    (1.0001, 0), (1.001, 0), (1.005, 0),
+                    (1.001, 2), (1.005, 8), (1.01, 8))
+        for margin, release in attempts:
+            ub = problem["ub"].copy()
+            start = ub.indptr[k]
+            ub.data[start:] = (ub.data[start:] + 1) / margin**2 - 1
+            rhs = np.r_[-problem["lower"], np.zeros(3*k)]
+            free = np.zeros(n, dtype=bool)
+            free[fractional] = True
+            if release:
+                alternative = np.full(n, np.inf)
+                fixed_cost = np.zeros(n)
+                fixed_cost[rows[integral]] = problem["cost"][integral]
+                np.minimum.at(alternative, rows[~integral], problem["cost"][~integral])
+                for j in range(k):
+                    points = rows[integral & (cols == j)]
+                    points = points[~free[points]]
+                    chosen = np.argsort(alternative[points] - fixed_cost[points])[:release]
+                    free[points[chosen]] = True
+            fixed = integral & ~free[rows]
+            active = np.flatnonzero(free[rows])
+            free_ids = np.flatnonzero(free)
+            chosen = np.flatnonzero(fixed)
+            if len(active):
+                remap = np.full(n, -1, dtype=int)
+                remap[free_ids] = np.arange(len(free_ids))
+                eq = coo_matrix((np.ones(len(active)),
+                                 (remap[rows[active]], np.arange(len(active)))),
+                                shape=(len(free_ids), len(active))).tocsr()
+                remaining = rhs - np.asarray(ub[:, fixed].sum(axis=1)).ravel()
+                with warnings.catch_warnings():
+                    warnings.filterwarnings("ignore", message="Unrecognized options detected")
+                    result = milp(
+                        problem["cost"][active], integrality=np.ones(len(active), dtype=int),
+                        bounds=Bounds(0, 1),
+                        constraints=[
+                            LinearConstraint(eq, np.ones(len(free_ids)), np.ones(len(free_ids))),
+                            LinearConstraint(ub[:, active], np.full(4*k, -np.inf), remaining),
+                        ],
+                        options={"time_limit": 60, "mip_rel_gap": 1e-7, "threads": 2},
+                    )
+                # A time-limited incumbent is usable only after these checks.
+                if (result.x is None or not np.all(np.isfinite(result.x)) or
+                        np.max(np.abs(result.x - np.rint(result.x))) > 1e-6):
+                    continue
+                chosen = np.r_[chosen, active[result.x > 0.5]]
+            if len(chosen) != n or np.unique(rows[chosen]).size != n:
+                continue
+            assigned = np.empty(n, dtype=int)
+            assigned[rows[chosen]] = cols[chosen]
+            violation = np.asarray(ub[:, chosen].sum(axis=1)).ravel() - rhs
+            if (np.all(np.bincount(assigned, minlength=k) >= problem["lower"]) and
+                    np.max(violation) <= 1e-5):
+                return assigned
+        raise RuntimeError("Nessuna assegnazione intera rispetta i vincoli dello stadio.")
+
+    # (STD factor, relaxed small-cluster budget, final small slots,
+    #  candidate neighbours, angular arc). Recompute anchors after each stage.
+    stages = {
+        -1: ((2., 3, 7, 12, 90), (1.75, 6, 8, 12, 90),
+             (1.65, None, 8, 16, 181)),
+         1: ((2., 6, 6, 12, 90), (1.5, 7, 8, 12, 90)),
+    }
+    initial_small = {-1: 3, 1: 6}
+    labels = np.full(len(physical), -1, dtype=int)
     offset = 0
     with threadpool_limits(limits=2):
-        for sign in np.unique(directions):
+        for sign in sorted(clusters_by_direction):
             ids = np.flatnonzero(directions == sign)
-            if len(ids) < min_size:
-                raise ValueError(f"Verso {sign:+g}: meno di {min_size} traiettorie.")
-            k = min(len(ids), max(1, round(n_base * len(ids) / len(features))))
-            model = KMeans(n_clusters=k, n_init=5, random_state=42,
+            p, z = physical[ids], metric[ids]
+            k = clusters_by_direction[sign]
+            if k < 8 or len(ids) < (k - initial_small[sign]) * large_size + initial_small[sign] * min_size:
+                raise ValueError(f"Numerosita insufficiente per il verso {sign:+g} e K={k}.")
+            density_radius = cKDTree(z).query(z, k=30, workers=2)[0][:, -1]
+            core = density_radius <= np.quantile(density_radius, 0.99)
+            model = KMeans(n_clusters=k, n_init=10, random_state=42,
                            max_iter=500, tol=1e-9, algorithm="lloyd")
-            base_labels[ids] = model.fit_predict(features[ids, :4]) + offset
+            model.fit(z[core])
+            counts = np.bincount(model.predict(z), minlength=k)
+            lower = np.full(k, large_size)
+            lower[np.argsort(counts)[:initial_small[sign]]] = min_size
+            assigned = initial_assignment(z, model.cluster_centers_, lower)
+            print(f"Verso {sign:+g}: K={k}, assegnazione iniziale completa.", flush=True)
+            for factor, budget, slots, neighbours, arc in stages[sign]:
+                problem = moment_problem(p, z, assigned, lower, factor, neighbours, arc)
+                if budget is not None:
+                    select_small_clusters(problem, budget, slots)
+                lower = problem["lower"]
+                rhs = np.r_[-lower, np.zeros(3*k)]
+                result = solve_lp(problem["cost"], problem["eq"], problem["ub"], rhs)
+                if not result.success:
+                    raise RuntimeError(f"Vincoli STD non risolti per verso {sign:+g}: " + result.message)
+                assigned = repair_assignment(problem, result.x)
+                print(f"Verso {sign:+g}: stadio STD x{factor:g} completato.", flush=True)
+            labels[ids] = assigned + offset
             offset += k
 
-    # Intersections let us refine the preceding solution without losing it.
-    if previous_labels is not None:
-        _, base_labels = np.unique(
-            np.column_stack((base_labels, previous_labels)), axis=0, return_inverse=True,
-        )
-
-    blocks = [np.flatnonzero(base_labels == c) for c in np.unique(base_labels)]
-    counts = np.array([len(ids) for ids in blocks])
-    means = np.array([features[ids, :4].mean(axis=0) for ids in blocks])
-    residuals = [np.sum((features[ids, :4] - center)**2, axis=1)
-                 for ids, center in zip(blocks, means)]
-    sse = np.array([values.sum() for values in residuals])
-    radii = np.array([np.sqrt(values.max()) for values in residuals])
-    block_signs = np.array([directions[ids[0]] for ids in blocks])
-
-    def valid_group(ids):
-        data = features[ids]
-        distance_squared = np.sum((data - data.mean(axis=0))**2, axis=1)
-        return (len(ids) >= min_size
-                and np.all(directions[ids] == directions[ids[0]])
-                and np.all(distance_squared <= sigma_limit**2 * np.var(data, axis=0).sum()))
-
-    # Local unions: at most 5 blocks from each anchor's 12 nearest blocks.
-    specs = set()
-    for sign in np.unique(directions):
-        ids = np.flatnonzero(block_signs == sign)
-        for anchor in ids:
-            distance_squared = np.sum((means[ids] - means[anchor])**2, axis=1)
-            neighbors = ids[np.argsort(distance_squared)[:12]]
-            others = [int(j) for j in neighbors if j != anchor]
-            for size in range(1, min(5, len(neighbors)) + 1):
-                for rest in combinations(others, size - 1):
-                    specs.add(tuple(sorted((int(anchor),) + rest)))
-
-    print(f"Base KMeans: {offset}; blocchi: {len(blocks)}; unioni da verificare: {len(specs)}", flush=True)
-    feasible = []
-    for spec in sorted(specs, key=lambda item: (len(item), item)):
-        ids = np.asarray(spec)
-        n = counts[ids].sum()
-        if n < min_size:
-            continue
-        center = np.average(means[ids], axis=0, weights=counts[ids])
-        shifts = np.linalg.norm(means[ids] - center, axis=1)
-        cost = np.sum(sse[ids] + counts[ids] * shifts**2)
-        # Cheap lower bound; every surviving union is checked point by point.
-        if np.any(np.maximum(radii[ids] - shifts, 0)**2 > sigma_limit**2 * cost / n * (1 + 1e-10)):
-            continue
-        members = np.concatenate([blocks[j] for j in spec])
-        if valid_group(members):
-            feasible.append((spec, float(cost)))
-
-    previous_cost = 0.0
-    if previous_labels is not None:
-        existing = {spec for spec, _ in feasible}
-        for c in np.unique(previous_labels):
-            members = np.flatnonzero(previous_labels == c)
-            if not valid_group(members):
-                raise RuntimeError("La partizione precedente non rispetta i vincoli.")
-            spec = tuple(j for j, ids in enumerate(blocks) if previous_labels[ids[0]] == c)
-            data = features[members, :4]
-            cost = float(np.sum((data - data.mean(axis=0))**2))
-            previous_cost += cost
-            if spec not in existing:
-                feasible.append((spec, cost))
-
-    covered = {j for spec, _ in feasible for j in spec}
-    if len(covered) != len(blocks):
-        raise RuntimeError("Unioni ammissibili insufficienti: provare un'altra base KMeans.")
-
-    rows, cols = [], []
-    for j, (spec, _) in enumerate(feasible):
-        rows.extend(spec)
-        cols.extend([j] * len(spec))
-    incidence = coo_matrix(
-        (np.ones(len(rows)), (np.asarray(rows, dtype=np.int32), np.asarray(cols, dtype=np.int32))),
-        shape=(len(blocks), len(feasible)),
-    ).tocsc()
-    print(f"Unioni ammissibili: {len(feasible)}; ottimizzazione...", flush=True)
-    result = milp(
-        c=np.array([cost for _, cost in feasible]),
-        integrality=np.ones(len(feasible), dtype=np.int32), bounds=Bounds(0, 1),
-        constraints=LinearConstraint(incidence, 1, 1),
-        options={"time_limit": 60, "mip_rel_gap": 1e-6},
-    )
-    print(f"MILP: {result.message}; gap={getattr(result, 'mip_gap', None)}", flush=True)
-    if result.x is None:
-        if previous_labels is not None:
-            print("Mantengo la precedente partizione ammissibile.", flush=True)
-            return previous_labels.copy()
-        raise RuntimeError("Nessuna partizione ammissibile trovata entro il limite MILP.")
-
-    chosen = np.flatnonzero(result.x > 0.5)
-    if not np.all(np.asarray(incidence[:, chosen].sum(axis=1)).ravel() == 1):
-        raise RuntimeError("La soluzione MILP non copre ogni blocco esattamente una volta.")
-
-    labels = np.full(len(features), -1, dtype=int)
-    total_cost = 0.0
-    for c, j in enumerate(chosen):
-        members = np.concatenate([blocks[b] for b in feasible[j][0]])
-        if not valid_group(members):
-            raise RuntimeError("Cluster finale non ammissibile.")
-        labels[members] = c
-        data = features[members, :4]
-        total_cost += np.sum((data - data.mean(axis=0))**2)
-
-    if previous_labels is not None and total_cost >= previous_cost:
-        print("Mantengo la precedente partizione: SSE non migliorata.", flush=True)
-        return previous_labels.copy()
+    # Validate the actual members, including wrapped angles and every outlier.
+    cluster_ids, sizes = np.unique(labels, return_counts=True)
+    if (not np.array_equal(cluster_ids, np.arange(sum(clusters_by_direction.values()))) or
+            sizes.sum() != len(physical) or sizes.min() < min_size or
+            np.count_nonzero(sizes < large_size) > max_small):
+        raise RuntimeError("Partizione finale non conforme a copertura/numerosita.")
+    stds = physical_cluster_stds(physical, labels)
+    if np.any(stds > final_std_limits + 1e-8):
+        raise RuntimeError(f"STD finali oltre i limiti: {stds.max(axis=0)}.")
+    normalized = np.column_stack((normalize_block(physical[:, 0:1]),
+                                  normalize_block(physical[:, 1:2]),
+                                  normalize_block(angular)))
+    outlier_points = 0
+    for cluster_id in cluster_ids:
+        members = labels == cluster_id
+        if np.unique(directions[members]).size != 1:
+            raise RuntimeError("Cluster con versi misti.")
+        values = normalized[members]
+        distance_squared = np.sum((values - values.mean(axis=0))**2, axis=1)
+        outlier_points += np.count_nonzero(distance_squared > 4 * np.var(values, axis=0).sum())
+    if outlier_points / len(labels) > max_outlier_fraction:
+        raise RuntimeError(f"Punti oltre 2sigma: {100 * outlier_points / len(labels):.3f}% "
+                           f"(limite {100 * max_outlier_fraction:g}%).")
+    print(f"Copertura: {len(labels)}/{len(physical)}; K={len(sizes)}; "
+          f"min={sizes.min()}; cluster <{large_size}: {np.count_nonzero(sizes < large_size)}; "
+          f"punti >2sigma: {outlier_points} ({100 * outlier_points / len(labels):.3f}%); "
+          f"STD massime eps/e/w: {stds.max(axis=0)}", flush=True)
     return labels
-
 
 
 
@@ -452,19 +595,22 @@ clustering_features = np.column_stack((
 
 
 
-# Build a feasible partition, then refine it with a finer KMeans base.
-MIN_CLUSTER_SIZE = 1000
-MAX_SIGMA = 2.0
-BASE_CLUSTER_COUNTS = (99,)  # Initial groups, not the final number of clusters.
+# Complete partition: 34 retrograde + 56 prograde groups, at most 16 small groups.
+MIN_CLUSTER_SIZE = 100
+LARGE_CLUSTER_SIZE = 1000
+MAX_SMALL_CLUSTERS = 16
+CLUSTERS_BY_DIRECTION = {-1: 34, 1: 56}
+# Physical reference from the original 30 compact groups: eps [km^2/s^2], e, w [deg].
+REFERENCE_STD = np.array([0.0414161604846158, 0.05002355203163239, 7.209742019743541])
+MAX_PHYSICAL_STD = 1.65 * REFERENCE_STD
+MAX_OUTLIER_FRACTION = 0.01  # Fraction of points, not clusters, beyond radial 2 sigma.
 
-partitions = []
-labels = None
-for n_base in BASE_CLUSTER_COUNTS:
-    labels = constrained_clustering(
-        clustering_features, event_features[:, 6], n_base,
-        min_size=MIN_CLUSTER_SIZE, sigma_limit=MAX_SIGMA, previous_labels=labels,
-    )
-    partitions.append(labels)
+labels = constrained_clustering(
+    event_features[:, :3], event_features[:, 6], REFERENCE_STD, MAX_PHYSICAL_STD,
+    CLUSTERS_BY_DIRECTION, min_size=MIN_CLUSTER_SIZE, large_size=LARGE_CLUSTER_SIZE,
+    max_small=MAX_SMALL_CLUSTERS, max_outlier_fraction=MAX_OUTLIER_FRACTION,
+)
+partitions = [labels]
 
 cluster_counts = []
 mean_stds = []
@@ -511,8 +657,10 @@ for stage, labels in enumerate(partitions):
     physical_stds = []
     outlier_clusters = 0
     outlier_clusters_2sigma = 0
+    outlier_points_2sigma = 0
+    initial_stds = physical_cluster_stds(event_features[:, :3], labels)
 
-    for c in cluster_ids:
+    for cluster_position, c in enumerate(cluster_ids):
         mask = labels == c
         features_c = clustering_features[mask]
 
@@ -525,18 +673,10 @@ for stage, labels in enumerate(partitions):
 
         outlier_clusters += int(np.any(distance_squared > 9 * sigma_total_squared))
         outlier_clusters_2sigma += int(np.any(distance_squared > 4 * sigma_total_squared))
+        outlier_points_2sigma += np.count_nonzero(distance_squared > 4 * sigma_total_squared)
 
-        physical_c = event_features[mask, :5]
-
-        angle_mean = np.mean(np.exp(1j * np.deg2rad(physical_c[:, 2])))
-
-        if abs(angle_mean) < 1e-8:
-            physical_c[:, 2] = np.nan
-        else:
-            origin = np.rad2deg(np.angle(angle_mean))
-            physical_c[:, 2] = (physical_c[:, 2] - origin + 180) % 360 - 180
-
-        physical_stds.append(np.std(physical_c, axis=0))
+        physical_stds.append(np.r_[initial_stds[cluster_position],
+                                   np.std(event_features[mask, 3:5], axis=0)])
 
         if stage == len(partitions) - 1:
             v_c = event_features[mask, 3:6]
@@ -568,10 +708,13 @@ for stage, labels in enumerate(partitions):
     mean_stds.append(mean_std)
 
     print(f"K = {len(cluster_ids)}, STD = {mean_std:.6f}, min size = {sizes.min()}, "
-          f"clusters > 2sigma = {outlier_clusters_2sigma}", flush=True)
+          f"clusters > 2sigma = {outlier_clusters_2sigma}/{len(cluster_ids)}, "
+          f"points > 2sigma = {outlier_points_2sigma}/{len(labels)} "
+          f"({100 * outlier_points_2sigma / len(labels):.3f}%), "
+          f"max STD eps/e/w = {initial_stds.max(axis=0)}", flush=True)
 
 
-    masks = (sizes == 1, sizes < 10, sizes < 100)
+    masks = (sizes == 1, sizes < MIN_CLUSTER_SIZE, sizes < LARGE_CLUSTER_SIZE)
 
     small_cluster_counts.append([np.count_nonzero(mask) for mask in masks])
     small_trajectory_fractions.append([np.sum(sizes[mask]) / len(labels) for mask in masks])
@@ -602,8 +745,8 @@ if SAVE or PLOT_CLUSTERS:
 
     axes[4].plot(k_plot, np.rint(np.asarray(outlier_cluster_percent_2sigma) * k_plot / 100), "o-", color="darkorange", label="At least one outlier > 2σ")
     axes[4].plot(k_plot, np.rint(np.asarray(outlier_cluster_percent) * k_plot / 100), "o-", color="darkred", label="At least one outlier > 3σ")
-    axes[4].plot(k_plot, small_numbers[:, 1], "s--", color="blue", label="< 10 trajectories")
-    axes[4].plot(k_plot, small_numbers[:, 2], "s--", color="green", label="< 100 trajectories")
+    axes[4].plot(k_plot, small_numbers[:, 1], "s--", color="blue", label=f"< {MIN_CLUSTER_SIZE} trajectories")
+    axes[4].plot(k_plot, small_numbers[:, 2], "s--", color="green", label=f"< {LARGE_CLUSTER_SIZE} trajectories")
     axes[4].set_ylabel("Number of clusters")
     axes[4].set_title("Initial-state outliers and cluster sizes")
     axes[4].set_ylim(bottom=0)
@@ -617,8 +760,8 @@ if SAVE or PLOT_CLUSTERS:
 
     axes[5].plot(cluster_counts, outlier_cluster_percent_2sigma, "o-", color="darkorange", label="At least one outlier > 2σ")
     axes[5].plot(cluster_counts, outlier_cluster_percent, "o-", color="darkred", label="At least one outlier > 3σ")
-    axes[5].plot(cluster_counts, small_percent[:, 1], "s--", color="blue", label="< 10 trajectories")
-    axes[5].plot(cluster_counts, small_percent[:, 2], "s--", color="green", label="< 100 trajectories")
+    axes[5].plot(cluster_counts, small_percent[:, 1], "s--", color="blue", label=f"< {MIN_CLUSTER_SIZE} trajectories")
+    axes[5].plot(cluster_counts, small_percent[:, 2], "s--", color="green", label=f"< {LARGE_CLUSTER_SIZE} trajectories")
 
     axes[5].set_xlabel("Number of clusters")
     axes[5].set_ylabel("Clusters [%]")
@@ -673,7 +816,7 @@ if SAVE:
     plt.close(fig)
 
 
-print("\n=== KMEANS + UNIONI VINCOLATE + RAPPRESENTANTI ===")
+print("\n=== KMEANS + ASSEGNAZIONE VINCOLATA + RAPPRESENTANTI ===")
 print(f"Representatives: {len(representative_ids)}")
 print(f"Final mean distance: {np.mean(minimum_distances):.6f}")
 print(f"Final 95th percentile: {np.percentile(minimum_distances, 95):.6f}")
