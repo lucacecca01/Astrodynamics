@@ -455,7 +455,7 @@ clustering_features = np.column_stack((
 # Build a feasible partition, then refine it with a finer KMeans base.
 MIN_CLUSTER_SIZE = 1000
 MAX_SIGMA = 2.0
-BASE_CLUSTER_COUNTS = (99, 180, 300, 500, 700)  # Initial groups, not the final number of clusters.
+BASE_CLUSTER_COUNTS = (99, 180, 300, 500, 700, 1000)  # Initial groups, not the final number of clusters.
 
 partitions = []
 labels = None
