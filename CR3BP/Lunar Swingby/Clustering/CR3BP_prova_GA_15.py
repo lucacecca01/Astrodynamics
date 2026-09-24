@@ -455,7 +455,7 @@ clustering_features = np.column_stack((
 # Build a feasible partition, then refine it with a finer KMeans base.
 MIN_CLUSTER_SIZE = 1000
 MAX_SIGMA = 2.0
-BASE_CLUSTER_COUNTS = (99,)  # Initial groups, not the final number of clusters.
+BASE_CLUSTER_COUNTS = (99, 180, 300, 500, 700)  # Initial groups, not the final number of clusters.
 
 partitions = []
 labels = None
@@ -852,6 +852,114 @@ if PLOT_MEDOIDS or SAVE:
     ax_representatives.grid(True, alpha=0.25)
     ax_representatives.legend()
     save_figure(fig_representatives, "representatives.png")
+
+
+
+# Plot clustering in physical feature space
+if SAVE or PLOT_CLUSTERS:
+
+    features_plot = event_features[:, :3].copy()
+    features_plot[:, 2] %= 360
+
+    names = [r"$\varepsilon$ [km$^2$/s$^2$]", "e [-]", r"$\omega$ [deg]"]
+    pairs = [(0, 1), (0, 2), (1, 2)]
+
+    id_style = dict(
+        fontsize=8,
+        color="black",
+        bbox=dict(facecolor="white", edgecolor="none", alpha=0.8, pad=1),
+    )
+
+    fig2, axes2 = plt.subplots(
+        1, 3, figsize=(18, 5), constrained_layout=True
+    )
+
+    fig3 = plt.figure(figsize=(10, 8), constrained_layout=True)
+    ax3 = fig3.add_subplot(111, projection="3d")
+
+    for cid in unique_clusters:
+
+        values = features_plot[labels == cid]
+        color = cluster_colors[cid]
+        representative = features_plot[representative_ids[cid]]
+
+        for ax, (i, j) in zip(axes2, pairs):
+            ax.scatter(
+                values[:, i], values[:, j],
+                s=3, alpha=0.3, color=color, rasterized=True,
+            )
+            ax.annotate(
+                str(cid),
+                representative[[i, j]],
+                xytext=(4, 4),
+                textcoords="offset points",
+                **id_style,
+            )
+
+        ax3.scatter(
+            values[:, 0], values[:, 1], values[:, 2],
+            s=3, alpha=0.3, color=color, depthshade=False,
+        )
+        ax3.text(*representative, str(cid), **id_style)
+
+    for ax, (i, j) in zip(axes2, pairs):
+        ax.set_xlabel(names[i])
+        ax.set_ylabel(names[j])
+        ax.grid(alpha=0.3)
+
+    ax3.set_xlabel(names[0])
+    ax3.set_ylabel(names[1])
+    ax3.set_zlabel(names[2])
+
+    fig2.suptitle(f"Feature projections — K={n_clusters}")
+    ax3.set_title(f"Feature space — K={n_clusters}")
+
+    save_figure(fig2, f"features_2D_K{n_clusters}.png")
+    save_figure(fig3, f"features_3D_K{n_clusters}.png")
+
+    # One additional feature-dispersion figure per cluster
+    for cid in unique_clusters:
+
+        values = features_plot[labels == cid].copy()
+        color = cluster_colors[cid]
+        local_names = names.copy()
+
+        # Recenter omega to avoid artificial spreading across 0/360 degrees.
+        angular_mean = np.mean(np.exp(1j * np.deg2rad(values[:, 2])))
+        angle_defined = abs(angular_mean) > 1e-8
+
+        if angle_defined:
+            origin = np.rad2deg(np.angle(angular_mean))
+            values[:, 2] = (values[:, 2] - origin + 180) % 360 - 180
+            local_names[2] = r"$\Delta\omega$ [deg]"
+
+        stds = np.std(values, axis=0)
+
+        if not angle_defined:
+            stds[2] = np.nan
+
+        fig, axes = plt.subplots(
+            2, 3, figsize=(15, 8), constrained_layout=True
+        )
+
+        for ax, (i, j) in zip(axes[0], pairs):
+            ax.scatter(
+                values[:, i], values[:, j],
+                s=5, alpha=0.35, color=color, rasterized=True,
+            )
+            ax.set_xlabel(local_names[i])
+            ax.set_ylabel(local_names[j])
+            ax.grid(alpha=0.3)
+
+        for j, ax in enumerate(axes[1]):
+            ax.hist(values[:, j], bins=30, color=color, alpha=0.8)
+            ax.set_xlabel(local_names[j])
+            ax.set_ylabel("Number of trajectories")
+            ax.set_title(f"STD = {stds[j]:.5g}")
+            ax.grid(alpha=0.3)
+
+        fig.suptitle(f"Cluster {cid} — {len(values)} trajectories")
+        save_figure(fig, f"cluster_{cid:03d}_features.png")
 
 
 
