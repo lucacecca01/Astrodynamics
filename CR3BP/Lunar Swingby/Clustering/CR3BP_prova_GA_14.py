@@ -386,7 +386,7 @@ small_cluster_counts = []
 small_trajectory_fractions = []
 escape_stats = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_14_plots_K{len(representative_ids)}_3")
 output_directory.mkdir(parents=True, exist_ok=True)
 
 physical_std_history = []
