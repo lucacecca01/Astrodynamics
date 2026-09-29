@@ -170,7 +170,34 @@ def integrate_and_sample_one(x0):
 
     features = np.concatenate((parameters_b, velocity_f, [direction]))
 
-    return features, np.hstack((x_b, x_f))
+    return features, np.hstack((x_b, x_f)), (t_perigee, t_soi)
+
+
+def geocentric_inertial_trajectory(trajectory, time_bounds):
+
+    # Reconstruct the original sampling times, with T_min stored only once.
+    times = np.concatenate((
+        np.linspace(time_bounds[0], T_min, N_PLOT),
+        np.linspace(T_min, time_bounds[1], N_PLOT)[1:],
+    ))
+    state = np.zeros((6, trajectory.shape[1]))
+    state[:2] = trajectory
+    state[0] += mu
+    return Transformations.CR3BP_to_inertial(state, 1, times)[:2]
+
+
+def plot_frame_bodies(ax, inertial=False, size=30):
+
+    if inertial:
+        theta = np.linspace(0, 2*np.pi, 200)
+        ax.plot(np.cos(theta), np.sin(theta), "--", color="gray", alpha=0.4, linewidth=0.7)
+        earth, moon = (0, 0), (np.cos(T_min), np.sin(T_min))
+        moon_label = f"Moon (t = {T_min:g} TU)"
+    else:
+        earth, moon = (-mu, 0), (1-mu, 0)
+        moon_label = "Moon"
+    ax.scatter(*earth, color="blue", s=size, label="Earth", zorder=3)
+    ax.scatter(*moon, color="darkred", s=size, label=moon_label, zorder=3)
 
 
 
@@ -576,6 +603,7 @@ collision.direction = 0
 # Parallel integration backward and forward
 event_features = np.empty((len(x0_selection), 7), dtype=np.float64)
 X_curvature = np.empty((len(x0_selection), 2, 2 * N_PLOT - 1), dtype=np.float64)
+trajectory_time_bounds = np.empty((len(x0_selection), 2), dtype=np.float64)
 keep = np.zeros(len(x0_selection), dtype=bool)
 n_kept = 0
 
@@ -591,7 +619,7 @@ with get_context("fork").Pool() as pool:
         if result is None:
             continue
 
-        event_features[n_kept], X_curvature[n_kept] = result
+        event_features[n_kept], X_curvature[n_kept], trajectory_time_bounds[n_kept] = result
         keep[i] = True
         n_kept += 1
 
@@ -601,6 +629,7 @@ if n_kept == 0:
 
 event_features = event_features[:n_kept]
 X_curvature = X_curvature[:n_kept]
+trajectory_time_bounds = trajectory_time_bounds[:n_kept]
 source_ids = source_ids[keep]
 selection = database[source_ids, :]
 x0_selection = selection[:, :6]
@@ -611,7 +640,7 @@ print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 # Clustering limits are based on all retained trajectories, including unassigned points.
 STD_LIMITS = np.array([0.04, 0.05, 10.0])
-MIN_CLUSTER_SIZE = (n_kept + 999) // 1000  # ceil(0.1% of the total)
+MIN_CLUSTER_SIZE = (n_kept + 999) // 2000  # ceil(0.1% of the total)
 MAX_CLUSTERS = n_kept // 100              # floor(1% of the total)
 BASE_MIN_CLUSTER_SIZE = 200
 MAX_SIGMA = 2.5
@@ -622,10 +651,11 @@ w = np.deg2rad(event_features[:, 2])
 angular_features = np.column_stack((np.cos(w), np.sin(w)))
 
 clustering_features = np.column_stack((
-    normalize_block(event_features[:, 0:1]),
-    normalize_block(event_features[:, 1:2]),
-    normalize_block(angular_features),
-    100 * normalize_block(event_features[:, 6:7]),
+    normalize_block(event_features[:, 0:1]),                          # eps
+    normalize_block(event_features[:, 1:2]),                          # e
+    normalize_block(angular_features),                                # w
+    100 *normalize_block(event_features[:, 6:7]),                     # verso al perigeo
+   # normalize_block(event_features[:, 3:5]),                          # v_SOI
 ))
 
 print(f"Vincoli: STD < {STD_LIMITS}, minimo {MIN_CLUSTER_SIZE} punti, "
@@ -702,6 +732,7 @@ for stage, labels in enumerate(partitions):
     shape_penalties = []
     outlier_clusters = 0
     outlier_clusters_2sigma = 0
+    outlier_clusters_max_sigma = 0
 
     for c in cluster_ids:
         mask = labels == c
@@ -716,6 +747,7 @@ for stage, labels in enumerate(partitions):
 
         outlier_clusters += int(np.any(distance_squared > 9 * sigma_total_squared))
         outlier_clusters_2sigma += int(np.any(distance_squared > 4 * sigma_total_squared))
+        outlier_clusters_max_sigma += int(not within_sigma(features_c, MAX_SIGMA))
 
         physical_c = event_features[mask, :5]
         shape_penalties.append(gaussian_shape_penalty(physical_c[:, :3]) if len(physical_c) >= 2 else np.ones(3))
@@ -762,6 +794,7 @@ for stage, labels in enumerate(partitions):
 
     print(f"K = {len(cluster_ids)}, STD = {mean_std:.6f}, min size = {sizes.min()}, "
           f"clusters > 2sigma (radiale) = {outlier_clusters_2sigma}, "
+          f"clusters > MAX_SIGMA ({MAX_SIGMA:g}) = {outlier_clusters_max_sigma}, "
           f"Gaussian Q-Q [eps, e, w] = {gaussian_shape_history[-1]}", flush=True)
 
 
@@ -879,7 +912,7 @@ if SAVE:
     plt.close(fig)
 
 
-print("\n=== GA_15 + SPLIT STD + RAPPRESENTANTI ===")
+print("\n=== GA_15 + SPLIT STD/MAX_SIGMA + RAPPRESENTANTI ===")
 print(f"Representatives: {len(representative_ids)}")
 print(f"Final mean distance: {np.mean(minimum_distances[assigned]):.6f}")
 print(f"Final 95th percentile: {np.percentile(minimum_distances[assigned], 95):.6f}")
@@ -969,96 +1002,81 @@ print(f"\nExecution time: {elapsed_time:.2f} s\n")
 
 
 
-# Plot clusters and representative trajectories
+# Plot clusters and representative trajectories in both frames.
+plot_frames = (
+    (False, "Rotating frame", ""),
+    (True, f"Geocentric inertial frame (Moon at t = {T_min:g} TU)", "Geocentric_inertial_"),
+)
+
 if PLOT_CLUSTERS or SAVE:
 
     cmap = plt.get_cmap("turbo", max(n_clusters, 1),)
-
     cluster_colors = {cluster_id: cmap(color_id) for color_id, cluster_id in enumerate(unique_clusters)}
-
-    groups = []
-
-    for cluster_id in unique_clusters:
-        groups.append((cluster_id, f"Cluster {cluster_id}"))
-
-
+    groups = [(cluster_id, f"Cluster {cluster_id}") for cluster_id in unique_clusters]
     max_panels = 24
     max_columns = 6
 
+    for inertial, frame_name, suffix in plot_frames:
+        for start in range(0, len(groups), max_panels):
+            plot_groups = groups[start:start + max_panels]
+            n_panels = len(plot_groups)
+            ncols = min(max_columns, n_panels)
+            nrows = int(np.ceil(n_panels / ncols))
 
-    for start in range(0, len(groups), max_panels):
+            fig, axes = plt.subplots(nrows, ncols, figsize=(18, 9), constrained_layout=True, squeeze=False)
+            axes = axes.ravel()
 
-        plot_groups = groups[start:start + max_panels]
+            for ax, (group_id, title) in zip(axes, plot_groups):
+                group_mask = labels == group_id
+                color = cluster_colors[group_id]
 
-        n_panels = len(plot_groups)
+                for trajectory_id in np.flatnonzero(group_mask):
+                    trajectory = X_curvature[trajectory_id]
+                    if inertial:
+                        trajectory = geocentric_inertial_trajectory(
+                            trajectory, trajectory_time_bounds[trajectory_id],
+                        )
+                    ax.plot(trajectory[0], trajectory[1], color=color, alpha=0.12, linewidth=0.7)
 
-        ncols = min(max_columns, n_panels)
+                plot_frame_bodies(ax, inertial)
+                ax.set_title(f"{title} || {np.count_nonzero(group_mask)} trajectories")
+                ax.set_xlabel("X [LU]")
+                ax.set_ylabel("Y [LU]")
+                ax.set_aspect("equal")
+                ax.set_box_aspect(1)
 
-        nrows = int(np.ceil(n_panels / ncols))
+            for ax in axes[n_panels:]:
+                ax.axis("off")
 
-
-        fig, axes = plt.subplots(nrows, ncols, figsize=(18, 9), constrained_layout=True, squeeze=False)
-
-        axes = axes.ravel()
-
-
-        for ax, (group_id, title) in zip(axes, plot_groups):
-
-            group_mask = labels == group_id
-            color = cluster_colors[group_id]
-
-            for trajectory_id in np.flatnonzero(group_mask):
-
-                trajectory = X_curvature[trajectory_id]
-
-                ax.plot(trajectory[0], trajectory[1], color=color, alpha=0.12, linewidth=0.7)
-
-            ax.scatter(-mu, 0, color="blue", s=30, label="Earth", zorder=3,)
-            ax.scatter(1 - mu, 0, color="darkred", s=30, label="Moon", zorder=3,)
-
-            ax.set_title(f"{title} || {np.count_nonzero(group_mask)} trajectories")
-
-            ax.set_xlabel("X [LU]")
-            ax.set_ylabel("Y [LU]")
-            ax.set_aspect("equal")
-
-            ax.set_box_aspect(1)
+            figure_number = start // max_panels + 1
+            fig.suptitle(f"{frame_name} - Cluster groups - Figure {figure_number}")
+            save_figure(fig, f"{suffix}clusters_{figure_number:03d}.png")
 
 
-        for ax in axes[n_panels:]:
-            ax.axis("off")
-
-
-        figure_number = (start // max_panels + 1)
-
-        fig.suptitle(f"Cluster groups — Figure {figure_number}")
-        save_figure(fig, f"clusters_{figure_number:03d}.png")
-
-
-
-# Plot representative trajectories
+# Plot representative trajectories.
 if PLOT_MEDOIDS or SAVE:
+    for inertial, frame_name, suffix in plot_frames:
+        fig_representatives, ax_representatives = plt.subplots(figsize=(10, 8), constrained_layout=True)
 
-    fig_representatives, ax_representatives = plt.subplots(figsize=(10, 8), constrained_layout=True)
+        for representative_id in representative_ids:
+            trajectory = X_curvature[representative_id]
+            if inertial:
+                trajectory = geocentric_inertial_trajectory(
+                    trajectory, trajectory_time_bounds[representative_id],
+                )
+            ax_representatives.plot(
+                trajectory[0], trajectory[1], color="navy", alpha=0.045, linewidth=0.35, rasterized=True,
+            )
 
-    for cluster_id, representative_id in enumerate(representative_ids):
-
-        trajectory = X_curvature[representative_id]
-
-        ax_representatives.plot(trajectory[0], trajectory[1], color="navy", alpha=0.045, linewidth=0.35, rasterized=True)
-
-    ax_representatives.scatter(-mu, 0, color="blue", s=50, label="Earth", zorder=3)
-    ax_representatives.scatter(1 - mu, 0, color="darkred", s=50, label="Moon", zorder=3)
-
-    ax_representatives.set_xlabel("X [LU]")
-    ax_representatives.set_ylabel("Y [LU]")
-    ax_representatives.set_title(f"Final representative trajectories — {len(representative_ids)} medoids")
-    ax_representatives.set_aspect("equal")
-    ax_representatives.set_box_aspect(1)
-    ax_representatives.grid(True, alpha=0.25)
-    ax_representatives.legend()
-    save_figure(fig_representatives, "representatives.png")
-
+        plot_frame_bodies(ax_representatives, inertial, size=50)
+        ax_representatives.set_xlabel("X [LU]")
+        ax_representatives.set_ylabel("Y [LU]")
+        ax_representatives.set_title(f"{frame_name} - {len(representative_ids)} medoids")
+        ax_representatives.set_aspect("equal")
+        ax_representatives.set_box_aspect(1)
+        ax_representatives.grid(True, alpha=0.25)
+        ax_representatives.legend()
+        save_figure(fig_representatives, f"representatives{suffix}.png")
 
 
 # Plot clustering in physical feature space

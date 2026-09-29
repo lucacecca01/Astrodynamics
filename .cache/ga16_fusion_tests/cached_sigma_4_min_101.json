@@ -1,0 +1,40 @@
+{
+  "name": "cached_sigma_4_min_101",
+  "sigma": 4.0,
+  "minimum": 101,
+  "freeze": false,
+  "baseline_clusters": 214,
+  "baseline_unassigned": 3417,
+  "best_single_unassigned": 2885,
+  "best_single_source": "sigma_4_minimum_101_scale_1.2_labels",
+  "clusters": 212,
+  "unassigned": 2099,
+  "minimum_size": 104,
+  "lost": 0,
+  "recovered": 1318,
+  "mean_std": [
+    0.020427569459616095,
+    0.02264103097223469,
+    4.053652352827473
+  ],
+  "weighted_std": [
+    0.021076820074559775,
+    0.022038916873637692,
+    3.925778969504188
+  ],
+  "maximum_std": [
+    0.039873116729907385,
+    0.04945197097783277,
+    7.887732299571102
+  ],
+  "largest_radial_sigma": 3.94691089170543,
+  "solver_seconds": 0.006799777999958678,
+  "solver_status": 0,
+  "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "gap": 0.0,
+  "used_fallback": false,
+  "candidates": 647,
+  "constraint_patterns": 646,
+  "candidate_uncovered": 1881,
+  "total_seconds": 0.08355093299996952
+}

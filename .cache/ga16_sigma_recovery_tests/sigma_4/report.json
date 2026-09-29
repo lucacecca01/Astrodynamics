@@ -1,0 +1,79 @@
+{
+  "sigma": 4.0,
+  "baseline": {
+    "k": 242,
+    "assigned": 94832,
+    "unassigned": 5481,
+    "singleton_clusters": 0,
+    "max_std": [
+      0.02927088489962244,
+      0.03963039698117467,
+      5.9896116794212
+    ],
+    "weighted_mean_std": [
+      0.019199562952149266,
+      0.01914742701972856,
+      3.503724671278157
+    ]
+  },
+  "stages": [
+    {
+      "minimum": 50,
+      "new_clusters": 42,
+      "recovered": 3391,
+      "total_clusters": 284,
+      "remaining": 2090
+    },
+    {
+      "minimum": 25,
+      "new_clusters": 29,
+      "recovered": 1092,
+      "total_clusters": 313,
+      "remaining": 998
+    },
+    {
+      "minimum": 12,
+      "new_clusters": 35,
+      "recovered": 687,
+      "total_clusters": 348,
+      "remaining": 311
+    },
+    {
+      "minimum": 6,
+      "new_clusters": 21,
+      "recovered": 176,
+      "total_clusters": 369,
+      "remaining": 135
+    },
+    {
+      "minimum": 3,
+      "new_clusters": 21,
+      "recovered": 85,
+      "total_clusters": 390,
+      "remaining": 50
+    },
+    {
+      "minimum": 1,
+      "new_clusters": 38,
+      "recovered": 50,
+      "total_clusters": 428,
+      "remaining": 0
+    }
+  ],
+  "final": {
+    "k": 428,
+    "assigned": 100313,
+    "unassigned": 0,
+    "singleton_clusters": 26,
+    "max_std": [
+      0.029704952602103818,
+      0.03963039698117467,
+      5.9896116794212
+    ],
+    "weighted_mean_std": [
+      0.018873269394134095,
+      0.0192588924236887,
+      3.5130789073865003
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+max_sigma,old_clusters,old_unassigned,old_lost_from_sigma2,fixed_clusters,fixed_unassigned,fixed_lost_from_sigma2
+2.0,356,2132,0,356,2132,0
+3.0,291,625,159,289,531,0
+3.5,283,427,47,278,425,0
+4.0,278,388,50,271,331,0

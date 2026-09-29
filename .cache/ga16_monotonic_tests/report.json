@@ -1,0 +1,79 @@
+{
+  "trajectories": 100313,
+  "anchor_sigma": 2.0,
+  "split_scale": [
+    0.04,
+    0.05,
+    8.0
+  ],
+  "cases": 210,
+  "monotonic_comparisons": 8610,
+  "lost_points": 0,
+  "reference_partition_matches": true,
+  "cap_policy": "raise, never truncate",
+  "old_vs_fixed": [
+    {
+      "max_sigma": 2.0,
+      "old_clusters": 356,
+      "old_unassigned": 2132,
+      "old_lost_from_sigma2": 0,
+      "fixed_clusters": 356,
+      "fixed_unassigned": 2132,
+      "fixed_lost_from_sigma2": 0
+    },
+    {
+      "max_sigma": 3.0,
+      "old_clusters": 291,
+      "old_unassigned": 625,
+      "old_lost_from_sigma2": 159,
+      "fixed_clusters": 289,
+      "fixed_unassigned": 531,
+      "fixed_lost_from_sigma2": 0
+    },
+    {
+      "max_sigma": 3.5,
+      "old_clusters": 283,
+      "old_unassigned": 427,
+      "old_lost_from_sigma2": 47,
+      "fixed_clusters": 278,
+      "fixed_unassigned": 425,
+      "fixed_lost_from_sigma2": 0
+    },
+    {
+      "max_sigma": 4.0,
+      "old_clusters": 278,
+      "old_unassigned": 388,
+      "old_lost_from_sigma2": 50,
+      "fixed_clusters": 271,
+      "fixed_unassigned": 331,
+      "fixed_lost_from_sigma2": 0
+    }
+  ],
+  "strictest_full_coverage": {
+    "case": 6,
+    "profile": "strict",
+    "std_eps": 0.03,
+    "std_e": 0.04,
+    "std_w": 6.0,
+    "max_sigma": 2.0,
+    "minpoints": 1,
+    "clusters": 852,
+    "unassigned": 0,
+    "assigned": 100313,
+    "minimum_size": 1,
+    "singletons": 86,
+    "weighted_std": [
+      0.017300650074539792,
+      0.01784072943744872,
+      3.21495784072088
+    ],
+    "maximum_std": [
+      0.029719621836595253,
+      0.037564966060262606,
+      5.973421053550657
+    ]
+  },
+  "seconds": 14.509765722000338,
+  "fits": 674,
+  "nodes": 1526
+}
