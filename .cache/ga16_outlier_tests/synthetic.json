@@ -1,0 +1,98 @@
+[
+  {
+    "n": 5,
+    "geometry": "normal",
+    "trials": 100,
+    "robust4": 37,
+    "robust6": 24,
+    "robust8": 18
+  },
+  {
+    "n": 5,
+    "geometry": "line",
+    "trials": 100,
+    "robust4": 19,
+    "robust6": 10,
+    "robust8": 8
+  },
+  {
+    "n": 5,
+    "geometry": "arc",
+    "trials": 100,
+    "robust4": 58,
+    "robust6": 35,
+    "robust8": 23
+  },
+  {
+    "n": 10,
+    "geometry": "normal",
+    "trials": 100,
+    "robust4": 30,
+    "robust6": 9,
+    "robust8": 5
+  },
+  {
+    "n": 10,
+    "geometry": "line",
+    "trials": 100,
+    "robust4": 8,
+    "robust6": 7,
+    "robust8": 5
+  },
+  {
+    "n": 10,
+    "geometry": "arc",
+    "trials": 100,
+    "robust4": 56,
+    "robust6": 36,
+    "robust8": 28
+  },
+  {
+    "n": 36,
+    "geometry": "normal",
+    "trials": 100,
+    "robust4": 4,
+    "robust6": 0,
+    "robust8": 0
+  },
+  {
+    "n": 36,
+    "geometry": "line",
+    "trials": 100,
+    "robust4": 0,
+    "robust6": 0,
+    "robust8": 0
+  },
+  {
+    "n": 36,
+    "geometry": "arc",
+    "trials": 100,
+    "robust4": 25,
+    "robust6": 13,
+    "robust8": 5
+  },
+  {
+    "n": 100,
+    "geometry": "normal",
+    "trials": 100,
+    "robust4": 4,
+    "robust6": 0,
+    "robust8": 0
+  },
+  {
+    "n": 100,
+    "geometry": "line",
+    "trials": 100,
+    "robust4": 0,
+    "robust6": 0,
+    "robust8": 0
+  },
+  {
+    "n": 100,
+    "geometry": "arc",
+    "trials": 100,
+    "robust4": 0,
+    "robust6": 0,
+    "robust8": 0
+  }
+]

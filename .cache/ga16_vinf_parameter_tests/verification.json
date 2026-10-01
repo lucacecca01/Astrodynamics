@@ -1,0 +1,20 @@
+[
+  {
+    "cache": "frozen",
+    "K": 25,
+    "excluded": 463,
+    "pct": 0.4615553318114302,
+    "total_selected_pct": 0.8007470990303608,
+    "total_database_pct": 0.9886263349430325,
+    "min_size": 697
+  },
+  {
+    "cache": "current_user_cache",
+    "K": 25,
+    "excluded": 463,
+    "pct": 0.4615553318114302,
+    "total_selected_pct": 0.8007470990303608,
+    "total_database_pct": 0.9886263349430325,
+    "min_size": 697
+  }
+]

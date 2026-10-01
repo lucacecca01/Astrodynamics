@@ -1,0 +1,6 @@
+Base KMeans: 32; blocchi: 32; unioni da verificare: 6709
+Unioni ammissibili: 4776; ottimizzazione...
+MILP: Optimization terminated successfully. (HiGHS Status 7: Optimal); gap=0.0
+Base KMeans: 64; blocchi: 118; unioni da verificare: 39347
+Unioni ammissibili: 27532; ottimizzazione...
+MILP: Optimization terminated successfully. (HiGHS Status 7: Optimal); gap=0.0

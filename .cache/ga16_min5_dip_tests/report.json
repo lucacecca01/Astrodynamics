@@ -1,0 +1,89 @@
+{
+  "n": 100313,
+  "sigma": 3,
+  "std_limits": [
+    0.04,
+    0.05,
+    10.0
+  ],
+  "dip_alpha": 0.01,
+  "gap_fraction": 0.2,
+  "gaussian_constraint": false,
+  "cases": [
+    {
+      "mode": "reference_min10",
+      "minimum": 10,
+      "clusters": 342,
+      "excluded": 123,
+      "excluded_percent": 0.12261621125876007,
+      "minimum_size": 10,
+      "median_size": 190.5,
+      "five_point_clusters": 0,
+      "clusters_5_to_9": 0,
+      "points_in_clusters_5_to_9": 0,
+      "lost": 0,
+      "recovered": 0,
+      "maximum_std": [
+        0.039710287574387736,
+        0.04968382482776031,
+        9.66504934954299
+      ],
+      "weighted_std": [
+        0.02095799996474626,
+        0.01899605910769259,
+        4.065178904544295
+      ]
+    },
+    {
+      "mode": "fresh_min5",
+      "minimum": 5,
+      "seconds": 9.236661787999992,
+      "clusters": 293,
+      "excluded": 36,
+      "excluded_percent": 0.03588767158792978,
+      "minimum_size": 5,
+      "median_size": 159.0,
+      "five_point_clusters": 3,
+      "clusters_5_to_9": 21,
+      "points_in_clusters_5_to_9": 155,
+      "lost": 2,
+      "recovered": 89,
+      "maximum_std": [
+        0.039710287574387736,
+        0.04873330761024173,
+        9.875156395986803
+      ],
+      "weighted_std": [
+        0.023925473600172404,
+        0.023771976254645725,
+        4.398743708003011
+      ]
+    },
+    {
+      "mode": "protected_min5",
+      "minimum": 5,
+      "seconds": 9.283952222000039,
+      "clusters": 290,
+      "excluded": 38,
+      "excluded_percent": 0.03788143112059254,
+      "minimum_size": 5,
+      "median_size": 163.0,
+      "five_point_clusters": 4,
+      "clusters_5_to_9": 19,
+      "points_in_clusters_5_to_9": 135,
+      "lost": 0,
+      "recovered": 85,
+      "maximum_std": [
+        0.039710287574387736,
+        0.04873330761024173,
+        9.875156395986803
+      ],
+      "weighted_std": [
+        0.023966692045662173,
+        0.023809156219731484,
+        4.397899039555068
+      ]
+    }
+  ],
+  "production_unchanged": true
+}

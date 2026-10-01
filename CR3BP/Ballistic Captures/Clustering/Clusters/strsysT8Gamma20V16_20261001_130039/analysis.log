@@ -1,0 +1,11 @@
+N=194058, N_branch=500, dt_b=-0.0001, dt_f=0.0001, rtol=1e-9
+T_min=0, T_max_b=-6.283185307179586, T_max_f=12.566370614359172, ZOOM=True
+Features: unchanged normalized position and unit tangent blocks.
+OE event: first outward crossing of 2.5 lunar SOI along each integration direction, before any detected collision.
+Frame: geocentric inertial axes coincident with synodic axes at t=0.
+STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).
+angle_resultant: 1=concentrated directions; 0=no defined mean direction. Broad angular clouds require caution with linearized moments.
+NaN: missing event, undefined parameter/statistic, or missing representative parameter.
+STD media geometrica < 0.01, minimo 50, massimo 1940 cluster, MAX_SIGMA=2.5
+Forma geometrica: DIP_ALPHA=0.01, GAP_FRACTION=0.2, STRONG_GAP_FRACTION=0.5, OUTLIER_SIGMA=3.0
+STD, sigma e KMeans usano tutte le feature; PCA solo per individuare vuoti.

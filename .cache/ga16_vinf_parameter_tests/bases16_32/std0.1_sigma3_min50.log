@@ -1,0 +1,12 @@
+Split vincoli: 16 cluster conservati, 18 da dividere, 74 divisioni (14 nei vuoti), 97 cluster finali.
+Nuove non assegnate: 187 in frammenti non ammissibili, 0 per il massimo di cluster.
+STD [vx, vy]: media [0.05983344 0.06096739], massimo [0.09898269 0.09970113]
+Candidati alternativi: 1/8
+Candidati alternativi: 2/8
+Candidati alternativi: 3/8
+Candidati alternativi: 4/8
+Candidati alternativi: 5/8
+Candidati alternativi: 6/8
+Candidati alternativi: 7/8
+Candidati alternativi: 8/8
+Fusione: 5321 candidati, 2654 validi; 88 cluster, 100229 punti assegnati, 84 non assegnati. MILP: Optimization terminated successfully. (HiGHS Status 7: Optimal); gap=0.0

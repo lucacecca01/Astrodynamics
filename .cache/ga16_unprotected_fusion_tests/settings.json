@@ -1,0 +1,35 @@
+{
+  "reference": {
+    "GAP_FRACTION": 0.2,
+    "DIP_ALPHA": 0.01,
+    "MAX_CLUSTERS": 1003,
+    "BASE_CLUSTER_COUNTS": [
+      99,
+      180
+    ],
+    "FUSION_SEEDS": [
+      42,
+      7,
+      123
+    ],
+    "GAUSSIAN_QQ_MAX": Infinity,
+    "EXTRA_CLUSTER_CONDITION": null,
+    "OUTLIER_SIGMA": 3.0,
+    "STD_LIMITS": [
+      0.04,
+      0.05,
+      10.0
+    ],
+    "MIN_CLUSTER_SIZE": 10,
+    "STRONG_GAP_FRACTION": 0.5,
+    "BASE_MIN_CLUSTER_SIZE": 200,
+    "MAX_SIGMA": 2.5,
+    "FUSION_TIME_LIMIT": 30.0,
+    "source_sha256": "6c371fa3a7451b204edeaa0a087daacbd444c2bec172f9d1d16f20fed677bc26",
+    "data_key": "3bc0f0340739022fa6c0d4589c530c95e504176d802a0c18a8b63813d79b1f81",
+    "n_points": 100313,
+    "cache_policy": "Empty initial pool; reuse candidates as STD limits increase; no production cache writes"
+  },
+  "source_sha256": "ef11f5b5b4c12d4eed7aa36c328f40706143dda1c1b3c5e88a2e3989413e57e6",
+  "experiment": "Same saved candidate pools and constraints; no protected assignments"
+}

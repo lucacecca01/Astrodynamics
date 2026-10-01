@@ -1,0 +1,264 @@
+{
+  "cases": [
+    {
+      "mode": "baseline",
+      "stage": "common_pool_unprotected",
+      "seconds": 3.420832862999305,
+      "clusters": 209,
+      "unassigned": 77,
+      "smallest": 10,
+      "weighted_std": [
+        0.025669548132194984,
+        0.02748449233020823,
+        4.69840436728193
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.933178690994655
+      ],
+      "lost": 1,
+      "mean_std": [
+        0.021367365216924623,
+        0.025994000286350617,
+        4.958705158863234
+      ],
+      "mean_qq": [
+        0.08308964306736467,
+        0.08214909357804426,
+        0.04335830572694078
+      ],
+      "weighted_qq": [
+        0.04314198286057197,
+        0.0732729755122007,
+        0.027350315008461926
+      ],
+      "below_20": 17,
+      "median_size": 269.0,
+      "recovered": 10,
+      "dip_flagged": 110,
+      "dip_flagged_points": 69845,
+      "gap10_flagged": 71,
+      "gap10_flagged_points": 36250,
+      "gap20_flagged": 42,
+      "gap20_flagged_points": 20247,
+      "gap30_flagged": 25,
+      "gap30_flagged_points": 12819
+    },
+    {
+      "mode": "gap_0.1",
+      "stage": "conservative_no_loss",
+      "reverted_parents": [
+        {
+          "original_cluster": 9,
+          "size": 181,
+          "points_that_would_be_lost": 25
+        },
+        {
+          "original_cluster": 43,
+          "size": 127,
+          "points_that_would_be_lost": 14
+        },
+        {
+          "original_cluster": 47,
+          "size": 59,
+          "points_that_would_be_lost": 6
+        },
+        {
+          "original_cluster": 52,
+          "size": 219,
+          "points_that_would_be_lost": 2
+        },
+        {
+          "original_cluster": 73,
+          "size": 276,
+          "points_that_would_be_lost": 3
+        },
+        {
+          "original_cluster": 83,
+          "size": 396,
+          "points_that_would_be_lost": 8
+        },
+        {
+          "original_cluster": 85,
+          "size": 250,
+          "points_that_would_be_lost": 9
+        },
+        {
+          "original_cluster": 103,
+          "size": 244,
+          "points_that_would_be_lost": 3
+        },
+        {
+          "original_cluster": 121,
+          "size": 315,
+          "points_that_would_be_lost": 14
+        }
+      ],
+      "clusters": 341,
+      "unassigned": 86,
+      "smallest": 10,
+      "weighted_std": [
+        0.022977036769956324,
+        0.020309352287648165,
+        4.190895784270933
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 0,
+      "mean_std": [
+        0.016189699735880313,
+        0.017477550728636798,
+        3.883638123588927
+      ],
+      "mean_qq": [
+        0.07501864285442107,
+        0.08298832688365304,
+        0.044741383283166895
+      ],
+      "weighted_qq": [
+        0.04635813134604297,
+        0.07623705954431054,
+        0.0271333968179148
+      ],
+      "below_20": 25,
+      "median_size": 121.0,
+      "recovered": 0,
+      "dip_flagged": 61,
+      "dip_flagged_points": 40242,
+      "gap10_flagged": 9,
+      "gap10_flagged_points": 2067,
+      "gap20_flagged": 5,
+      "gap20_flagged_points": 970,
+      "gap30_flagged": 1,
+      "gap30_flagged_points": 315
+    },
+    {
+      "mode": "gap_0.2",
+      "stage": "conservative_no_loss",
+      "reverted_parents": [
+        {
+          "original_cluster": 43,
+          "size": 127,
+          "points_that_would_be_lost": 14
+        },
+        {
+          "original_cluster": 47,
+          "size": 59,
+          "points_that_would_be_lost": 6
+        },
+        {
+          "original_cluster": 121,
+          "size": 315,
+          "points_that_would_be_lost": 14
+        }
+      ],
+      "clusters": 276,
+      "unassigned": 86,
+      "smallest": 10,
+      "weighted_std": [
+        0.024002886745409287,
+        0.022430818854477175,
+        4.302927277389638
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 0,
+      "mean_std": [
+        0.018643777835919986,
+        0.020495181918990447,
+        4.352141825544113
+      ],
+      "mean_qq": [
+        0.07375665419985468,
+        0.08617694676685082,
+        0.042974174516080335
+      ],
+      "weighted_qq": [
+        0.0443907858923674,
+        0.07520136065232665,
+        0.026482249333574032
+      ],
+      "below_20": 21,
+      "median_size": 197.5,
+      "recovered": 0,
+      "dip_flagged": 84,
+      "dip_flagged_points": 51574,
+      "gap10_flagged": 39,
+      "gap10_flagged_points": 17118,
+      "gap20_flagged": 3,
+      "gap20_flagged_points": 501,
+      "gap30_flagged": 1,
+      "gap30_flagged_points": 315
+    },
+    {
+      "mode": "gap_0.3",
+      "stage": "conservative_no_loss",
+      "reverted_parents": [
+        {
+          "original_cluster": 121,
+          "size": 315,
+          "points_that_would_be_lost": 14
+        }
+      ],
+      "clusters": 248,
+      "unassigned": 86,
+      "smallest": 10,
+      "weighted_std": [
+        0.024326601957807188,
+        0.023720017266215004,
+        4.341469033049374
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 0,
+      "mean_std": [
+        0.020306740546690245,
+        0.022664038443060665,
+        4.535118275052805
+      ],
+      "mean_qq": [
+        0.07413173254025983,
+        0.08163262056767533,
+        0.0408632644990521
+      ],
+      "weighted_qq": [
+        0.044501948295513946,
+        0.06907143344751178,
+        0.02587411882880309
+      ],
+      "below_20": 16,
+      "median_size": 247.0,
+      "recovered": 0,
+      "dip_flagged": 98,
+      "dip_flagged_points": 56831,
+      "gap10_flagged": 54,
+      "gap10_flagged_points": 23260,
+      "gap20_flagged": 22,
+      "gap20_flagged_points": 8327,
+      "gap30_flagged": 1,
+      "gap30_flagged_points": 315
+    }
+  ],
+  "timings": {
+    "targeted_gap20_seconds": [
+      0.16965113400055998,
+      0.14776107000034244,
+      0.15658594900014577
+    ]
+  },
+  "validation": {
+    "reversed_pool_same_coverage_and_K": true,
+    "angular_rotation_and_row_order": true,
+    "production_code_and_cache_unchanged": true
+  }
+}

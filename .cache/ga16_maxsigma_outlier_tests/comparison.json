@@ -1,0 +1,26 @@
+[
+  {
+    "max_sigma": 1.5,
+    "clusters": 1003,
+    "excluded": 64627,
+    "percent": 64.42534865869827,
+    "minimum_size": 21,
+    "seconds": 354.71275154399996
+  },
+  {
+    "max_sigma": 2.0,
+    "clusters": 498,
+    "excluded": 706,
+    "percent": 0.7037971150299562,
+    "minimum_size": 10,
+    "seconds": 53.78983475900003
+  },
+  {
+    "max_sigma": 2.5,
+    "clusters": 332,
+    "excluded": 317,
+    "percent": 0.31601088592704835,
+    "minimum_size": 10,
+    "seconds": 54.469724219
+  }
+]

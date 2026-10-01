@@ -1,0 +1,38 @@
+[
+  {
+    "sigma": "4.0",
+    "clusters": 325,
+    "excluded": 145,
+    "seconds": 8.599516580999989,
+    "lost": 90,
+    "recovered": 6,
+    "local_sizes": [
+      33
+    ],
+    "local_excluded": 3
+  },
+  {
+    "sigma": "6.0",
+    "clusters": 273,
+    "excluded": 79,
+    "seconds": 8.977066327000102,
+    "lost": 24,
+    "recovered": 6,
+    "local_sizes": [
+      33
+    ],
+    "local_excluded": 3
+  },
+  {
+    "sigma": "8.0",
+    "clusters": 271,
+    "excluded": 75,
+    "seconds": 9.192538252999839,
+    "lost": 19,
+    "recovered": 5,
+    "local_sizes": [
+      35
+    ],
+    "local_excluded": 1
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "DIP_ALPHA": 0.01,
+  "STD_LIMITS": [
+    0.04,
+    0.05,
+    10.0
+  ],
+  "MAX_CLUSTERS": 1003,
+  "OUTLIER_SIGMA": 3.0,
+  "BASE_MIN_CLUSTER_SIZE": 200,
+  "EXTRA_CLUSTER_CONDITION": null,
+  "MAX_SIGMA": 2.5,
+  "GAP_FRACTION": 0.2,
+  "FUSION_TIME_LIMIT": 30.0,
+  "FUSION_SEEDS": [
+    42,
+    7,
+    123
+  ],
+  "BASE_CLUSTER_COUNTS": [
+    99,
+    180
+  ],
+  "MIN_CLUSTER_SIZE": 1,
+  "STRONG_GAP_FRACTION": 0.5,
+  "GAUSSIAN_QQ_MAX": Infinity,
+  "source_sha256": "6c371fa3a7451b204edeaa0a087daacbd444c2bec172f9d1d16f20fed677bc26",
+  "data_key": "3bc0f0340739022fa6c0d4589c530c95e504176d802a0c18a8b63813d79b1f81",
+  "n_points": 100313,
+  "cache_policy": "Empty initial pool; reuse candidates as STD limits increase; no production cache writes"
+}

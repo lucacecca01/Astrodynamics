@@ -158,6 +158,16 @@ def moon_SOI_crossing(t, x, mu):
 
 
 
+# Define lunar distance event
+def moon_09_crossing(t, x, mu):
+
+    r_moon = np.linalg.norm(x[:3] - np.array([1 - mu, 0, 0]))
+
+    return r_moon - 0.9
+
+
+
+
 # Define collision events
 def collision(t, x, mu):
 
@@ -253,7 +263,7 @@ def integrate_one(x0, T_min, T_max, dt, events=None, rtol=1e-9):
 # Define integration and sampling function
 def integrate_and_sample_one(x0):
 
-    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, (earth_SOI_exit, moon_SOI_crossing, collision))
+    solution_b = integrate_one(x0, T_min, T_max_b, dt_b, (earth_SOI_exit, moon_09_crossing, collision))
 
     sampled_b = sample_branch(solution_b)
     oe_b, t_b = first_section_parameters(solution_b)
@@ -261,7 +271,7 @@ def integrate_and_sample_one(x0):
     del solution_b
 
 
-    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, moon_SOI_crossing, collision))
+    solution_f = integrate_one(x0, T_min, T_max_f, dt_f, (earth_SOI_exit, moon_09_crossing, collision))
 
     sampled_f = sample_branch(solution_f)
     oe_f, t_f = first_section_parameters(solution_f)
@@ -623,6 +633,9 @@ collision.direction = -1
 moon_SOI_crossing.terminal = False
 moon_SOI_crossing.direction = 1
 
+moon_09_crossing.terminal = False
+moon_09_crossing.direction = 1
+
 
 # Parallel integration backward and forward
 X_curvature = np.empty((len(x0_selection), 6, 2 * N_branch - 1), dtype=np.float32)
@@ -707,6 +720,7 @@ representative_ids, labels, radius_history, minimum_distances = (
     farthest_point_selection(
         clustering_features,
         max_representatives,
+        np.ones(len(clustering_features), dtype=bool)
     )
 )
 
@@ -766,7 +780,7 @@ for k in k_values:
 
     cluster_ids, sizes = np.unique(labels, return_counts=True)
 
-    variances = [np.mean(np.var(clustering_features[labels == c, :-1], axis=0)) for c in cluster_ids]
+    variances = [np.mean(np.var(clustering_features[labels == c], axis=0)) for c in cluster_ids]
 
     mean_std = np.sqrt(np.average(variances, weights=sizes))
 

@@ -1,0 +1,62 @@
+[
+  {
+    "minimum": 1,
+    "increase": 0,
+    "clusters": 422,
+    "excluded": 0
+  },
+  {
+    "minimum": 1,
+    "increase": 10,
+    "clusters": 389,
+    "excluded": 0
+  },
+  {
+    "minimum": 1,
+    "increase": 20,
+    "clusters": 336,
+    "excluded": 0
+  },
+  {
+    "minimum": 1,
+    "increase": 50,
+    "clusters": 275,
+    "excluded": 0
+  },
+  {
+    "minimum": 1,
+    "increase": 100,
+    "clusters": 247,
+    "excluded": 0
+  },
+  {
+    "minimum": 10,
+    "increase": 0,
+    "clusters": 322,
+    "excluded": 273
+  },
+  {
+    "minimum": 10,
+    "increase": 10,
+    "clusters": 314,
+    "excluded": 225
+  },
+  {
+    "minimum": 10,
+    "increase": 20,
+    "clusters": 304,
+    "excluded": 206
+  },
+  {
+    "minimum": 10,
+    "increase": 50,
+    "clusters": 232,
+    "excluded": 160
+  },
+  {
+    "minimum": 10,
+    "increase": 100,
+    "clusters": 218,
+    "excluded": 128
+  }
+]

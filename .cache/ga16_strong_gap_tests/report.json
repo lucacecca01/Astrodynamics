@@ -1,0 +1,101 @@
+{
+  "n": 100313,
+  "minimum": 5,
+  "sigma": 3,
+  "strong_gap_fraction": 0.5,
+  "before": {
+    "clusters": 293,
+    "excluded": 36
+  },
+  "after": {
+    "clusters": 293,
+    "excluded": 61,
+    "seconds": 35.120138290999876,
+    "lost": 29,
+    "recovered": 4,
+    "minimum_size": 5
+  },
+  "example": {
+    "n": 34,
+    "sizes": [
+      28,
+      6
+    ],
+    "pvalue": 0.09286804332971987,
+    "std": [
+      0.011533563569752296,
+      0.017721503151165982,
+      3.459063762153787
+    ],
+    "new_labels": {
+      "1": 6,
+      "4": 19,
+      "6": 9
+    }
+  },
+  "synthetic": [
+    {
+      "n": 10,
+      "geometry": "normal",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    },
+    {
+      "n": 10,
+      "geometry": "line",
+      "trials": 100,
+      "before": 0,
+      "after": 3
+    },
+    {
+      "n": 10,
+      "geometry": "arc",
+      "trials": 100,
+      "before": 0,
+      "after": 14
+    },
+    {
+      "n": 34,
+      "geometry": "normal",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    },
+    {
+      "n": 34,
+      "geometry": "line",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    },
+    {
+      "n": 34,
+      "geometry": "arc",
+      "trials": 100,
+      "before": 2,
+      "after": 2
+    },
+    {
+      "n": 100,
+      "geometry": "normal",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    },
+    {
+      "n": 100,
+      "geometry": "line",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    },
+    {
+      "n": 100,
+      "geometry": "arc",
+      "trials": 100,
+      "before": 0,
+      "after": 0
+    }
+  ]
+}

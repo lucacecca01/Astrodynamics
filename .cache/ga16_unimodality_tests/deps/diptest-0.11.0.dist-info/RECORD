@@ -1,0 +1,17 @@
+diptest-0.11.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+diptest-0.11.0.dist-info/METADATA,sha256=be7fhr0w4Iitu9c9Y0pvl6l4CZOYI-xXYbS8odIDKfA,6222
+diptest-0.11.0.dist-info/RECORD,,
+diptest-0.11.0.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
+diptest-0.11.0.dist-info/WHEEL,sha256=lgxP3x5DnmwMJNunrt66wozR5B4nEP4A6cuJDOsYjhc,157
+diptest-0.11.0.dist-info/licenses/COPYING,sha256=OXLcl0T2SZ8Pmy2_dmlvKuetivmyPd5m1q-Gyd-zaYY,35149
+diptest-0.11.0.dist-info/licenses/LICENSE,sha256=OXLcl0T2SZ8Pmy2_dmlvKuetivmyPd5m1q-Gyd-zaYY,35149
+diptest-0.11.0.dist-info/sboms/auditwheel.cdx.json,sha256=XhMTcTJxJXxqSrLfvM1-23YGQcqWiOc8xC12FId8BJc,1430
+diptest.libs/libgomp-e985bcbb.so.1.0.0,sha256=pDkE5PopcwHUZA3BuzyKNIC0BvmeSY66mxkUtoqrYEo,253289
+diptest/.diptest.py.un~,sha256=DJ7VQK2JcBUq7OIB6Rkm2FnL14ktaD9rUoVZTdF6ET0,1515
+diptest/__init__.py,sha256=uOxIGUfX6YGpjLv_NplfXKApqXvr74QcDRJ1JP7VVSs,1509
+diptest/__pycache__/__init__.cpython-312.pyc,,
+diptest/__pycache__/consts.cpython-312.pyc,,
+diptest/__pycache__/diptest.cpython-312.pyc,,
+diptest/consts.py,sha256=01BFx6m7v0yDWewYJaCBr6JSEUMruh74NxJ8GvT4eQo,23298
+diptest/diptest.py,sha256=vDTqGq4ghxbKEVGtDUjCtOH2BiB9pisiuWRuIqLpxRI,7040
+diptest/lib/_diptest_core.cpython-312-x86_64-linux-gnu.so,sha256=DIfvdIi9om6JhDqI7Clj3Wa5WnYsxRd8KDRoh7r5VZ8,220345

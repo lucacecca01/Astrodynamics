@@ -1,0 +1,23 @@
+{
+  "increase_percent": 20,
+  "std_eps": 0.048,
+  "std_e": 0.06,
+  "std_omega": 12.0,
+  "clusters": 197,
+  "excluded": 915,
+  "excluded_percent": 0.9121449861932153,
+  "singletons": 0,
+  "clusters_under_10": 0,
+  "minimum_size": 50,
+  "seconds": 11.375883976000068,
+  "maximum_std": [
+    0.044382302218069096,
+    0.059578361941910934,
+    11.865810190654527
+  ],
+  "solver": {
+    "status": 0,
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "gap": 0.0
+  }
+}

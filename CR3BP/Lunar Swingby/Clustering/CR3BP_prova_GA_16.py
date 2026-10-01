@@ -2,16 +2,20 @@ from Celestial_Mechanics import Integration, Transformations
 from pathlib import Path
 from multiprocessing import get_context
 from itertools import combinations
+from contextlib import nullcontext
+import hashlib
 import time
 
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
+from matplotlib.backends.backend_pdf import PdfPages
 from scipy.optimize import Bounds, LinearConstraint, milp
-from scipy.sparse import coo_matrix
+from scipy.sparse import coo_matrix, csr_matrix, vstack
 from scipy.special import ndtri
 from sklearn.cluster import KMeans
 from threadpoolctl import threadpool_limits
+from diptest import diptest
 
 
 
@@ -33,6 +37,54 @@ def save_figure(fig, name):
         fig.savefig(output_directory / name, dpi=200)
     if not PLOT_CLUSTERS:
         plt.close(fig)
+
+
+
+
+def plot_dispersion_rankings(cluster_ids, sizes, values, metric_names, title, stem):
+    """Rank all final clusters per metric, with bounded-size pages."""
+    if not (SAVE or PLOT_CLUSTERS) or len(cluster_ids) == 0:
+        return
+    cluster_ids = np.asarray(cluster_ids)
+    sizes = np.asarray(sizes)
+    values = np.asarray(values, dtype=float)
+    colors = plt.get_cmap("turbo", len(cluster_ids))(np.arange(len(cluster_ids)))
+    # Undefined dispersions go last, visibly marked rather than treated as zero.
+    orders = np.argsort(-np.where(np.isfinite(values), values, -np.inf), axis=0, kind="stable")
+    rows_per_page = 40
+    page_count = (len(cluster_ids) + rows_per_page - 1) // rows_per_page
+    document = PdfPages(output_directory / f"{stem}.pdf") if SAVE else nullcontext(None)
+    with document as pdf:
+        for page, start in enumerate(range(0, len(cluster_ids), rows_per_page), start=1):
+            stop = min(start + rows_per_page, len(cluster_ids))
+            positions = np.arange(stop - start)
+            fig, axes = plt.subplots(
+                1, len(metric_names), figsize=(6 * len(metric_names), max(4, .24 * len(positions) + 1.8)),
+                squeeze=False, constrained_layout=True,
+            )
+            for j, ax in enumerate(axes[0]):
+                order = orders[start:stop, j]
+                ranked = values[order, j]
+                finite = np.isfinite(ranked)
+                bars = ax.barh(positions[finite], ranked[finite], color=colors[order[finite]], height=.7)
+                ax.bar_label(bars, fmt="%.3g", padding=3, fontsize=7)
+                ax.set_yticks(positions, [f"{cluster_ids[i]} | N={sizes[i]}" for i in order], fontsize=8)
+                for position in positions[~finite]:
+                    ax.text(.01, position, "N/A", transform=ax.get_yaxis_transform(), va="center",
+                            fontsize=8, color="dimgray")
+                maximum = np.max(values[np.isfinite(values[:, j]), j], initial=0.)
+                ax.set_xlim(0, maximum * 1.2 if maximum > 0 else 1.)
+                ax.set_ylim(len(positions) - .5, -.5)
+                ax.set_title(metric_names[j], fontsize=11)
+                ax.set_xlabel(metric_names[j])
+                ax.set_ylabel("Cluster ID | Number of trajectories")
+                ax.set_axisbelow(True)
+                ax.grid(axis="x", alpha=.25)
+            fig.suptitle(f"{title} | K={len(cluster_ids)} | "
+                         f"Ranks {start + 1}-{stop} | Page {page}/{page_count}", fontsize=13)
+            if pdf is not None:
+                pdf.savefig(fig)
+            save_figure(fig, f"{stem}_{page:03d}.png")
 
 
 
@@ -226,6 +278,110 @@ def gaussian_shape_penalty(parameters):
     return penalty
 
 
+class ClusterShapeConstraint:
+    """Reject separated modes and isolated tails, optionally bounding Gaussian Q-Q error."""
+
+    def __init__(self, parameters, scale, *, dip_alpha=0.01, gap_fraction=0.2,
+                 gaussian_qq_max=np.inf, strong_gap_fraction=0.5, outlier_sigma=6.):
+        self.data = np.asarray(parameters, dtype=float)
+        scale = np.asarray(scale, dtype=float)
+        self.qq_max = np.broadcast_to(np.asarray(gaussian_qq_max, dtype=float), (3,)).copy()
+        if (self.data.ndim != 2 or self.data.shape[1] != 3 or not np.all(np.isfinite(self.data))
+                or scale.shape != (3,) or np.any(np.isnan(scale)) or np.any(scale <= 0)):
+            raise ValueError("Servono feature finite [eps, e, omega_deg] e tre scale positive.")
+        if not np.isfinite(dip_alpha) or not 0 <= dip_alpha < 1:
+            raise ValueError("DIP_ALPHA deve essere in [0, 1); 0 disabilita il dip test.")
+        if not np.isfinite(gap_fraction) or not 0 <= gap_fraction < 1:
+            raise ValueError("GAP_FRACTION deve essere in [0, 1).")
+        if np.isnan(strong_gap_fraction) or strong_gap_fraction < gap_fraction or strong_gap_fraction <= 0:
+            raise ValueError("STRONG_GAP_FRACTION deve essere positivo e >= GAP_FRACTION; np.inf lo disabilita.")
+        if np.any(np.isnan(self.qq_max)) or np.any(self.qq_max <= 0):
+            raise ValueError("GAUSSIAN_QQ_MAX deve essere positivo; np.inf disabilita il limite.")
+        if np.isnan(outlier_sigma) or outlier_sigma <= 0:
+            raise ValueError("OUTLIER_SIGMA deve essere positivo; np.inf disabilita il controllo.")
+        self.scale = np.where(np.isfinite(scale), scale, 1.)
+        self.alpha = dip_alpha
+        self.gap_fraction = gap_fraction
+        self.strong_gap_fraction = strong_gap_fraction
+        self.outlier_sigma = outlier_sigma
+        self.cache = {}
+
+    def _measure(self, ids):
+        ids = np.sort(np.asarray(ids, dtype=np.int64))
+        key = hashlib.sha256(ids.tobytes()).digest()
+        if key in self.cache:
+            return self.cache[key]
+        if len(ids) < 2:
+            result = (np.full(3, np.inf), None)
+            self.cache[key] = result
+            return result
+
+        data = self.data[ids].copy()
+        qq = gaussian_shape_penalty(data) if np.any(np.isfinite(self.qq_max)) else np.zeros(3)
+        origin = np.rad2deg(np.angle(np.mean(np.exp(1j * np.deg2rad(data[:, 2])))))
+        data[:, 2] = (data[:, 2] - origin + 180) % 360 - 180
+        scaled = data / self.scale
+        center = scaled.mean(axis=0)
+        x = scaled - center
+        best_gap, cut = self.gap_fraction, None
+        if (self.alpha > 0 or np.isfinite(self.strong_gap_fraction)
+                or np.isfinite(self.outlier_sigma)) and len(ids) >= 3:
+            _, _, axes = np.linalg.svd(x, full_matrices=False)
+            directions = np.vstack((np.eye(3), axes))
+            # The dip test can miss a small detached population, even across a huge gap.
+            support = max(3, int(np.ceil(0.1 * len(ids))))
+            for j, direction in enumerate(directions):
+                values = np.sort(x @ direction)
+                span = np.ptp(values)
+                if span <= 1e-12:
+                    continue
+                gaps = np.diff(values)
+                choices = []
+                if len(ids) >= 6:
+                    strong_at = 2 + int(np.argmax(gaps[2:len(ids) - 3]))
+                    if gaps[strong_at] / span > self.strong_gap_fraction:
+                        choices.append(strong_at)
+                if self.alpha > 0 and len(ids) >= 6:
+                    _, pvalue = diptest(values, sort_x=False, boot_pval=False)
+                    eligible = gaps[support - 1:len(ids) - support]
+                    if pvalue < self.alpha / len(directions) and len(eligible):
+                        choices.append(support - 1 + int(np.argmax(eligible)))
+                # Check physical marginals: PCA tails can be artifacts of curved families.
+                # A detached tail may contain only one point; final min_size is checked later.
+                if j < 3 and np.isfinite(self.outlier_sigma):
+                    median = np.median(values)
+                    robust_std = 1.4826 * np.median(np.abs(values - median))
+                    bound = self.outlier_sigma * max(robust_std, 1e-12)
+                    isolated = ((values[:-1] < median - bound)
+                                | (values[1:] > median + bound))
+                    eligible = np.flatnonzero(isolated & (gaps / span > self.gap_fraction))
+                    if len(eligible):
+                        choices.append(int(eligible[np.argmax(gaps[eligible])]))
+                for at in choices:
+                    relative_gap = gaps[at] / span
+                    if relative_gap > best_gap:
+                        best_gap = relative_gap
+                        threshold = (values[at] + values[at + 1]) / 2 + center @ direction
+                        cut = (direction.copy(), float(threshold), float(origin))
+        result = (qq, cut)
+        self.cache[key] = result
+        return result
+
+    def __call__(self, ids):
+        qq, cut = self._measure(ids)
+        return bool(np.all(qq <= self.qq_max) and cut is None)
+
+    def split(self, ids):
+        """Return a binary cut at the detected gap, or None for the usual KMeans split."""
+        _, cut = self._measure(ids)
+        if cut is None:
+            return None
+        direction, threshold, origin = cut
+        data = self.data[ids].copy()
+        data[:, 2] = (data[:, 2] - origin + 180) % 360 - 180
+        return ((data / self.scale) @ direction > threshold).astype(int)
+
+
 
 # Physical STD with omega centered on its circular mean.
 def physical_std(parameters):
@@ -244,7 +400,7 @@ def normalize_block(features):
     scale = np.linalg.norm(centered) / np.sqrt(len(centered))
 
     if scale <= 1e-14:
-        raise ValueError("Feature block has zero variance.")
+        return np.zeros_like(centered)
 
     return centered / scale
 
@@ -253,8 +409,74 @@ def normalize_block(features):
 # Use the same normalized radial sigma constraint in both clustering stages.
 def within_sigma(features, sigma_limit):
 
+    if sigma_limit == np.inf:
+        return True
     distance_squared = np.sum((features - features.mean(axis=0))**2, axis=1)
     return np.all(distance_squared <= sigma_limit**2 * np.var(features, axis=0).sum())
+
+
+def make_cluster_validator(physical_features, features, std_limits, min_size, sigma_limit,
+                           *, directions=None, extra_condition=None, shape_condition=None):
+    """Return a deterministic predicate on row indices; extra_condition adds local constraints."""
+    data = np.asarray(physical_features, dtype=float)
+    features = np.asarray(features, dtype=float)
+    limits = np.asarray(std_limits, dtype=float)
+    if data.ndim != 2 or data.shape[1] != 3 or not np.all(np.isfinite(data)):
+        raise ValueError("Servono feature fisiche finite con forma (N, 3).")
+    if (features.ndim != 2 or len(features) != len(data) or features.shape[1] == 0
+            or not np.all(np.isfinite(features))):
+        raise ValueError("Servono feature normalizzate finite con N righe.")
+    if limits.shape != (3,) or np.any(np.isnan(limits)) or np.any(limits <= 0):
+        raise ValueError("I limiti STD devono essere positivi; np.inf disabilita un limite.")
+    if not isinstance(min_size, (int, np.integer)) or isinstance(min_size, (bool, np.bool_)) or min_size < 1:
+        raise ValueError("min_size deve essere un intero positivo.")
+    if np.isnan(sigma_limit) or sigma_limit <= 0:
+        raise ValueError("MAX_SIGMA deve essere positivo; np.inf disabilita il limite.")
+    if directions is not None:
+        directions = np.asarray(directions)
+        if directions.shape != (len(data),) or not np.all(np.isin(directions, [-1, 1])):
+            raise ValueError("Verso orbitale non definito per ogni traiettoria.")
+    if extra_condition is not None and not callable(extra_condition):
+        raise TypeError("extra_condition deve essere una funzione degli indici del cluster.")
+    if shape_condition is not None and not callable(shape_condition):
+        raise TypeError("shape_condition deve essere una funzione degli indici del cluster.")
+
+    def valid_group(ids):
+        return (len(ids) >= min_size
+                and (directions is None or np.all(directions[ids] == directions[ids[0]]))
+                and np.all(physical_std(data[ids]) < limits)
+                and (np.isinf(sigma_limit) or within_sigma(features[ids], sigma_limit))
+                and (extra_condition is None or bool(extra_condition(ids)))
+                and (shape_condition is None or bool(shape_condition(ids))))
+
+    return valid_group
+
+
+def cluster_groups(labels):
+    ids = np.flatnonzero(labels >= 0)
+    ids = ids[np.argsort(labels[ids], kind="stable")]
+    return np.split(ids, np.flatnonzero(np.diff(labels[ids])) + 1) if len(ids) else []
+
+
+def kmeans_partition(features, directions, n_base, random_state=42):
+    if not isinstance(n_base, (int, np.integer)) or n_base < 1:
+        raise ValueError("Il numero di cluster base deve essere un intero positivo.")
+    labels = np.full(len(features), -1, dtype=int)
+    offset = 0
+    with threadpool_limits(limits=2):
+        for sign in np.unique(directions):
+            ids = np.flatnonzero(directions == sign)
+            k = min(len(ids), max(1, round(n_base * len(ids) / len(features))))
+            k = min(k, len(np.unique(features[ids], axis=0)))
+            model = KMeans(n_clusters=k, n_init=5, random_state=random_state,
+                           max_iter=500, tol=1e-9, algorithm="lloyd")
+            labels[ids] = model.fit_predict(features[ids]) + offset
+            offset += k
+    return labels
+
+
+class NoFeasiblePartitionError(RuntimeError):
+    """The initial full-coverage clustering is unavailable for these constraints."""
 
 
 # Select valid unions of standard KMeans groups, minimizing normalized SSE.
@@ -271,7 +493,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
         for sign in np.unique(directions):
             ids = np.flatnonzero(directions == sign)
             if len(ids) < min_size:
-                raise ValueError(f"Verso {sign:+g}: meno di {min_size} traiettorie.")
+                raise NoFeasiblePartitionError(f"Verso {sign:+g}: meno di {min_size} traiettorie.")
             k = min(len(ids), max(1, round(n_base * len(ids) / len(features))))
             model = KMeans(n_clusters=k, n_init=5, random_state=42,
                            max_iter=500, tol=1e-9, algorithm="lloyd")
@@ -343,7 +565,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
 
     covered = {j for spec, _ in feasible for j in spec}
     if len(covered) != len(blocks):
-        raise RuntimeError("Unioni ammissibili insufficienti: provare un'altra base KMeans.")
+        raise NoFeasiblePartitionError("Unioni ammissibili insufficienti: provare un'altra base KMeans.")
 
     rows, cols = [], []
     for j, (spec, _) in enumerate(feasible):
@@ -365,7 +587,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
         if previous_labels is not None:
             print("Mantengo la precedente partizione ammissibile.", flush=True)
             return previous_labels.copy()
-        raise RuntimeError("Nessuna partizione ammissibile trovata entro il limite MILP.")
+        raise NoFeasiblePartitionError("Nessuna partizione ammissibile trovata entro il limite MILP.")
 
     chosen = np.flatnonzero(result.x > 0.5)
     if not np.all(np.asarray(incidence[:, chosen].sum(axis=1)).ravel() == 1):
@@ -387,9 +609,10 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
     return labels
 
 
-# Split only over-dispersed parents; never move points between existing clusters.
+# Split invalid parents, preferring detected gaps; never move points between existing clusters.
 def split_messy_clusters(labels, physical_features, std_limits, min_size, max_clusters,
-                         *, features, sigma_limit):
+                         *, features, sigma_limit, group_validator=None, random_state=42,
+                         split_scale=None, candidate_groups=None, verbose=True, gap_splitter=None):
 
     labels = np.asarray(labels)
     data = np.asarray(physical_features, dtype=float)
@@ -402,23 +625,26 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
     if (features.ndim != 2 or features.shape[0] != len(data) or features.shape[1] == 0
             or not np.all(np.isfinite(features))):
         raise ValueError("Servono le feature normalizzate della prima fase, con N righe finite.")
-    if limits.shape != (3,) or not np.all(np.isfinite(limits)) or np.any(limits <= 0):
-        raise ValueError("I tre limiti STD devono essere finiti e positivi.")
+    if limits.shape != (3,) or np.any(np.isnan(limits)) or np.any(limits <= 0):
+        raise ValueError("I tre limiti STD devono essere positivi.")
     if not isinstance(min_size, (int, np.integer)) or min_size < 1:
         raise ValueError("min_size deve essere un intero positivo.")
     if not isinstance(max_clusters, (int, np.integer)) or max_clusters < 0:
         raise ValueError("max_clusters deve essere un intero non negativo.")
-    if not np.isfinite(sigma_limit) or sigma_limit <= 0:
-        raise ValueError("sigma_limit deve essere finito e positivo.")
+    if np.isnan(sigma_limit) or sigma_limit <= 0:
+        raise ValueError("sigma_limit deve essere positivo.")
 
-    def valid_group(ids):
-        return (np.all(physical_std(data[ids]) < limits)
-                and within_sigma(features[ids], sigma_limit))
+    valid_group = group_validator or make_cluster_validator(data, features, limits, min_size, sigma_limit)
+    if not callable(valid_group):
+        raise TypeError("group_validator deve essere una funzione degli indici del cluster.")
+    if gap_splitter is not None and not callable(gap_splitter):
+        raise TypeError("gap_splitter deve essere una funzione degli indici del cluster.")
 
     preserved, pending, children = [], [], []
     small_points = 0
-    for c in np.unique(labels[labels >= 0]):
-        ids = np.flatnonzero(labels == c)
+    for ids in cluster_groups(labels):
+        if candidate_groups is not None:
+            candidate_groups.append(ids)
         if len(ids) < min_size:
             small_points += len(ids)
         elif valid_group(ids):
@@ -432,25 +658,45 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
 
     messy_parents = len(pending)
     n_splits = 0
+    n_gap_splits = 0
     angles = np.deg2rad(data[:, 2])
+    scale = np.where(np.isfinite(limits), limits, 1.) if split_scale is None else np.asarray(split_scale, dtype=float)
+    if scale.shape != (3,) or not np.all(np.isfinite(scale)) or np.any(scale <= 0):
+        raise ValueError("La scala di suddivisione deve contenere tre valori finiti e positivi.")
     coordinates = np.column_stack((
-        data[:, :2] / limits[:2],
-        np.cos(angles) / np.deg2rad(limits[2]),
-        np.sin(angles) / np.deg2rad(limits[2]),
+        data[:, :2] / scale[:2],
+        np.cos(angles) / np.deg2rad(scale[2]),
+        np.sin(angles) / np.deg2rad(scale[2]),
     ))
 
     with threadpool_limits(limits=2):
         while pending:
             ids = pending.pop()
-            # These coordinates avoid an artificial cut at omega = 0/360.
-            model = KMeans(n_clusters=2, n_init=5, random_state=42,
-                           max_iter=500, tol=1e-9, algorithm="lloyd")
-            split = model.fit_predict(coordinates[ids])
-            if len(np.unique(split)) != 2:
+            if len(ids) <= min_size or len(ids) < 2:
+                small_points += len(ids)
+                continue
+            split = None if gap_splitter is None else gap_splitter(ids)
+            if split is None:
+                # These coordinates avoid an artificial cut at omega = 0/360.
+                values = coordinates[ids]
+                if np.all(values == values[0]):
+                    values = features[ids]
+                if np.all(values == values[0]):
+                    small_points += len(ids)
+                    continue
+                model = KMeans(n_clusters=2, n_init=5, random_state=random_state,
+                               max_iter=500, tol=1e-9, algorithm="lloyd")
+                split = model.fit_predict(values)
+            else:
+                n_gap_splits += 1
+            split = np.asarray(split)
+            if split.shape != (len(ids),) or not np.array_equal(np.unique(split), [0, 1]):
                 raise RuntimeError("Cluster fuori soglia non divisibile in due gruppi distinti.")
             n_splits += 1
             for side in (0, 1):
                 members = ids[split == side]
+                if candidate_groups is not None:
+                    candidate_groups.append(members)
                 if len(members) < min_size:
                     small_points += len(members)
                 elif valid_group(members):
@@ -468,20 +714,213 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
     final_stds = []
     for c, ids in enumerate(groups):
         std = physical_std(data[ids])
-        if (len(ids) < min_size or not np.all(std < limits)
-                or not within_sigma(features[ids], sigma_limit)):
-            raise RuntimeError("Un cluster finale non rispetta i vincoli STD/MAX_SIGMA/dimensione.")
+        if len(ids) < min_size or not valid_group(ids):
+            raise RuntimeError("Un cluster finale non rispetta i vincoli STD/MAX_SIGMA/dimensione/forma.")
         final_stds.append(std)
         result[ids] = c
 
-    print(f"Split STD/MAX_SIGMA: {len(preserved)} cluster conservati, {messy_parents} da dividere, "
-          f"{n_splits} divisioni, {len(groups)} cluster finali.", flush=True)
-    print(f"Nuove non assegnate: {small_points} in frammenti sotto il minimo, "
-          f"{capped_points} per il massimo di cluster.", flush=True)
-    if final_stds:
-        print(f"STD fisiche [eps, e, omega_deg]: media {np.mean(final_stds, axis=0)}, "
-              f"massimo {np.max(final_stds, axis=0)}", flush=True)
+    if verbose:
+        print(f"Split vincoli: {len(preserved)} cluster conservati, {messy_parents} da dividere, "
+              f"{n_splits} divisioni ({n_gap_splits} nei vuoti), {len(groups)} cluster finali.", flush=True)
+        print(f"Nuove non assegnate: {small_points} in frammenti non ammissibili, "
+              f"{capped_points} per il massimo di cluster.", flush=True)
+        if final_stds:
+            print(f"STD fisiche [eps, e, omega_deg]: media {np.mean(final_stds, axis=0)}, "
+                  f"massimo {np.max(final_stds, axis=0)}", flush=True)
     return result
+
+
+def fuse_cluster_candidates(candidates, n_points, valid_group, max_clusters,
+                            *, previous_labels=None, time_limit=30.):
+    """Maximize coverage, then minimize K; previous assignments are not mandatory.
+
+    valid_group(ids) defines all local constraints and must be deterministic.
+    Previous groups are candidates and, when feasible, a solver-timeout fallback.
+    Only disjointness and the global cluster cap live here.
+    Returned candidates include rejected groups, for revalidation on later runs.
+    """
+    for name, value in (("n_points", n_points), ("max_clusters", max_clusters)):
+        if not isinstance(value, (int, np.integer)) or isinstance(value, (bool, np.bool_)) or value < 0:
+            raise ValueError(f"{name} deve essere un intero non negativo.")
+    if not callable(valid_group):
+        raise TypeError("valid_group deve essere una funzione degli indici del cluster.")
+    if not np.isfinite(time_limit) or time_limit < 0:
+        raise ValueError("time_limit deve essere finito e non negativo.")
+    if previous_labels is None:
+        previous_labels = np.full(n_points, -1, dtype=int)
+    previous_labels = np.asarray(previous_labels)
+    if (previous_labels.shape != (n_points,) or not np.issubdtype(previous_labels.dtype, np.integer)
+            or np.any(previous_labels < -1)):
+        raise ValueError("Etichette precedenti non valide.")
+    previous_groups = cluster_groups(previous_labels)
+    pool, seen = [], set()
+    for members in list(candidates) + previous_groups:
+        ids = np.asarray(members)
+        if ids.ndim != 1 or not np.issubdtype(ids.dtype, np.integer):
+            raise ValueError("Ogni candidato deve contenere indici interi in un vettore.")
+        if len(ids) == 0:
+            continue
+        ids = np.sort(ids.astype(np.int64, copy=True))
+        if ids[0] < 0 or ids[-1] >= n_points or np.any(np.diff(ids) == 0):
+            raise ValueError("Candidato con indici fuori intervallo o ripetuti.")
+        key = ids.tobytes()
+        if key not in seen:
+            seen.add(key)
+            pool.append(ids)
+    groups = [ids for ids in pool if valid_group(ids)]
+    result_labels = np.full(n_points, -1, dtype=int)
+    if not groups or max_clusters == 0:
+        print("Fusione: nessun cluster ammissibile.", flush=True)
+        return result_labels, pool
+
+    lookup = {ids.tobytes(): j for j, ids in enumerate(groups)}
+    fallback = [lookup.get(np.asarray(ids, dtype=np.int64).tobytes()) for ids in previous_groups]
+    fallback_valid = all(j is not None for j in fallback) and len(fallback) <= max_clusters
+    fallback = np.asarray(fallback, dtype=int) if fallback_valid else np.empty(0, dtype=int)
+    rows = np.concatenate(groups)
+    cols = np.repeat(np.arange(len(groups)), [len(ids) for ids in groups])
+    incidence = coo_matrix((np.ones(len(rows)), (rows, cols)), shape=(n_points, len(groups))).tocsr()
+    # Compress identical incidence rows.
+    patterns, representatives = set(), []
+    for i in range(n_points):
+        pattern = incidence.indices[incidence.indptr[i]:incidence.indptr[i + 1]]
+        if not len(pattern):
+            continue
+        key = pattern.tobytes()
+        if key not in patterns:
+            patterns.add(key)
+            representatives.append(i)
+    matrix = vstack((incidence[representatives], csr_matrix(np.ones((1, len(groups)))))).tocsc()
+    gains = np.array([len(ids) for ids in groups])
+    # One additional assigned point outweighs any possible cluster-count change.
+    cap = min(max_clusters, n_points, len(groups))
+    cost = 1. - (cap + 1.) * gains
+    result = milp(
+        cost, integrality=np.ones(len(groups)), bounds=Bounds(0, 1),
+        constraints=LinearConstraint(matrix, 0., np.r_[np.ones(len(representatives)), cap]),
+        options={"time_limit": time_limit, "mip_rel_gap": 0.},
+    )
+    chosen = fallback
+    if result.x is not None and np.all(np.isfinite(result.x)):
+        proposal = np.flatnonzero(result.x > .5)
+        coverage = np.asarray(incidence[:, proposal].sum(axis=1)).ravel()
+        feasible = len(proposal) <= cap and np.all(coverage <= 1)
+        if feasible and cost[proposal].sum() < cost[chosen].sum():
+            chosen = proposal
+
+    selected = sorted((groups[j] for j in chosen), key=lambda ids: int(ids[0]))
+    for c, ids in enumerate(selected):
+        if not valid_group(ids) or np.any(result_labels[ids] >= 0):
+            raise RuntimeError("La verifica finale della fusione ha rilevato un cluster non valido.")
+        result_labels[ids] = c
+    if len(selected) > max_clusters:
+        raise RuntimeError("La fusione supera il massimo di cluster.")
+    assigned = np.count_nonzero(result_labels >= 0)
+    print(f"Fusione: {len(pool)} candidati, {len(groups)} validi; {len(selected)} cluster, "
+          f"{assigned} punti assegnati, {np.count_nonzero(result_labels < 0)} non assegnati. "
+          f"MILP: {result.message}; gap={getattr(result, 'mip_gap', None)}", flush=True)
+    return result_labels, pool
+
+
+def refine_and_fuse_clusters(partitions, physical_features, features, directions,
+                             std_limits, min_size, max_clusters, sigma_limit, *,
+                             seeds=(42, 7, 123), base_count=180, extra_condition=None,
+                             candidates=(), previous_labels=None, time_limit=30., shape_condition=None):
+    valid_group = make_cluster_validator(physical_features, features, std_limits, min_size,
+                                         sigma_limit, directions=directions, extra_condition=extra_condition,
+                                         shape_condition=shape_condition)
+    gap_splitter = None if shape_condition is None else shape_condition.split
+    seeds = tuple(seeds)
+    if not seeds or any(not isinstance(seed, (int, np.integer)) or seed < 0 for seed in seeds):
+        raise ValueError("Servono seed interi non negativi per i candidati alternativi.")
+    if not partitions:
+        partitions = [kmeans_partition(features, directions, base_count, seeds[0])]
+    pool = list(candidates)
+    n_points = len(features)
+    baseline = split_messy_clusters(
+        partitions[-1], physical_features, std_limits, min_size, n_points,
+        features=features, sigma_limit=sigma_limit, group_validator=valid_group,
+        candidate_groups=pool, gap_splitter=gap_splitter,
+    )
+    # Supply an optional fallback, without fixing any point's assignment.
+    if previous_labels is None and len(cluster_groups(baseline)) <= max_clusters:
+        previous_labels = baseline
+
+    scale = np.where(np.isfinite(std_limits), std_limits, 1.)
+    variants = [(partition, seeds[0], scale) for partition in partitions[:-1]]
+    variants.extend((partitions[-1], seed, scale) for seed in seeds[1:])
+    # Relative metric variations generate alternatives; validity never changes.
+    variants.extend((partitions[-1], seeds[0], scale * weights)
+                    for weights in ([1.5, .7, 1.], [.75, 1.6, .75]))
+    variants.extend((kmeans_partition(features, directions, base_count, seed), seed, scale)
+                    for seed in seeds[1:])
+    if previous_labels is not None:
+        variants.append((previous_labels, seeds[0], scale))
+    for i, (partition, seed, split_scale) in enumerate(variants):
+        split_messy_clusters(
+            partition, physical_features, std_limits, min_size, n_points,
+            features=features, sigma_limit=sigma_limit, group_validator=valid_group,
+            random_state=seed, split_scale=split_scale, candidate_groups=pool, verbose=False,
+            gap_splitter=gap_splitter,
+        )
+        print(f"Candidati alternativi: {i + 1}/{len(variants)}", flush=True)
+    labels, pool = fuse_cluster_candidates(pool, n_points, valid_group, max_clusters,
+                                           previous_labels=previous_labels, time_limit=time_limit)
+    return labels, baseline, pool
+
+
+def fusion_fingerprint(*arrays):
+    digest = hashlib.sha256()
+    for array in arrays:
+        array = np.ascontiguousarray(array)
+        digest.update(str((array.shape, array.dtype.str)).encode("ascii"))
+        digest.update(array.tobytes())
+    return digest.hexdigest()
+
+
+def load_fusion_cache(path, fingerprint, n_points, *, constraints_key=None):
+    if path is None or not Path(path).exists():
+        return [], None
+    try:
+        with np.load(path, allow_pickle=False) as cache:
+            if str(cache["fingerprint"]) != fingerprint:
+                print("Cache fusione ignorata: dati, ordine delle righe o feature diversi.", flush=True)
+                return [], None
+            members, offsets, labels = cache["members"], cache["offsets"], cache["labels"]
+            if (members.ndim != 1 or offsets.ndim != 1 or not len(offsets)
+                    or not np.issubdtype(members.dtype, np.integer)
+                    or not np.issubdtype(offsets.dtype, np.integer)
+                    or offsets[0] != 0 or offsets[-1] != len(members) or np.any(np.diff(offsets) <= 0)
+                    or labels.shape != (n_points,) or not np.issubdtype(labels.dtype, np.integer)
+                    or np.any(labels < -1) or np.any(members < 0) or np.any(members >= n_points)):
+                raise ValueError("Struttura della cache non valida.")
+            groups = list(np.split(members, offsets[1:-1])) if len(members) else []
+            if constraints_key is not None and ("constraints_key" not in cache
+                                                or str(cache["constraints_key"]) != constraints_key):
+                print(f"Cache: vincoli diversi; riuso {len(groups)} candidati da rivalidare.", flush=True)
+                return groups, None
+        print(f"Cache fusione: {len(groups)} candidati e {np.count_nonzero(labels >= 0)} "
+              "assegnazioni precedenti non vincolanti.", flush=True)
+        return groups, labels
+    except (OSError, ValueError, KeyError) as exc:
+        raise RuntimeError(f"Cache fusione non leggibile: {path}. Nessuna assegnazione precedente ignorata.") from exc
+
+
+def save_fusion_cache(path, fingerprint, candidates, labels, *, constraints_key=None):
+    if path is None:
+        return
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".tmp")
+    try:
+        with temporary.open("wb") as stream:
+            np.savez_compressed(stream, fingerprint=fingerprint, labels=labels,
+                                constraints_key="" if constraints_key is None else constraints_key,
+                                members=np.concatenate(candidates) if candidates else np.empty(0, dtype=int),
+                                offsets=np.r_[0, np.cumsum([len(ids) for ids in candidates], dtype=int)])
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def plot_unassigned_trajectories(trajectories, labels, mu):
@@ -639,12 +1078,21 @@ print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 
 # Clustering limits are based on all retained trajectories, including unassigned points.
-STD_LIMITS = np.array([0.04, 0.05, 10.0])
-MIN_CLUSTER_SIZE = (n_kept + 999) // 2000  # ceil(0.1% of the total)
-MAX_CLUSTERS = n_kept // 100              # floor(1% of the total)
+STD_LIMITS = np.array([0.04, 0.05, 12])
+MIN_CLUSTER_SIZE = 50
+MAX_CLUSTERS = max(1, n_kept // 100)    # floor(1% of the total), at least one
 BASE_MIN_CLUSTER_SIZE = 200
 MAX_SIGMA = 2.5
+DIP_ALPHA = 0.01                        # Family threshold for 3 physical + 3 PCA projections
+GAP_FRACTION = 0.20                     # Internal empty interval / projected range
+STRONG_GAP_FRACTION = 0.50              # Cut also without dip significance; at least 3 points per side
+OUTLIER_SIGMA = 3.0                     # Median/MAD tail separation, also requiring GAP_FRACTION
+GAUSSIAN_QQ_MAX = np.inf                # Disabled: Q-Q is diagnostic only
 BASE_CLUSTER_COUNTS = (99, 180)
+FUSION_SEEDS = (42, 7, 123)
+FUSION_TIME_LIMIT = 30.
+FUSION_CACHE_FILE = Path(__file__).resolve().parent / "Clusters/GA_16_dip_gap_candidates_sigma2_5.npz"
+EXTRA_CLUSTER_CONDITION = None          # Optional callable(ids), using event_features/selection
 
 # Same initial clustering and normalization as GA_15.
 w = np.deg2rad(event_features[:, 2])
@@ -660,20 +1108,60 @@ clustering_features = np.column_stack((
 
 print(f"Vincoli: STD < {STD_LIMITS}, minimo {MIN_CLUSTER_SIZE} punti, "
       f"massimo {MAX_CLUSTERS} cluster, MAX_SIGMA = {MAX_SIGMA:g}", flush=True)
+shape_condition = ClusterShapeConstraint(event_features[:, :3], STD_LIMITS, dip_alpha=DIP_ALPHA,
+                                         gap_fraction=GAP_FRACTION, gaussian_qq_max=GAUSSIAN_QQ_MAX,
+                                         strong_gap_fraction=STRONG_GAP_FRACTION,
+                                         outlier_sigma=OUTLIER_SIGMA)
+print(f"Forma: DIP_ALPHA = {DIP_ALPHA:g}, GAP_FRACTION = {GAP_FRACTION:g}, "
+      f"STRONG_GAP_FRACTION = {STRONG_GAP_FRACTION:g}, OUTLIER_SIGMA = {OUTLIER_SIGMA:g}", flush=True)
+if np.any(np.isfinite(shape_condition.qq_max)):
+    print(f"Gaussian Q-Q <= {shape_condition.qq_max} per feature (approssimazione, non normalita' esatta).",
+          flush=True)
+else:
+    print("Vincolo gaussiano disattivato: Q-Q solo diagnostico.", flush=True)
+final_validator = make_cluster_validator(
+    event_features[:, :3], clustering_features, STD_LIMITS, MIN_CLUSTER_SIZE, MAX_SIGMA,
+    directions=event_features[:, 6], extra_condition=EXTRA_CLUSTER_CONDITION, shape_condition=shape_condition,
+)
+fingerprint = fusion_fingerprint(source_ids, selection, event_features, clustering_features)
+constraints_key = fusion_fingerprint(
+    np.r_[STD_LIMITS, MIN_CLUSTER_SIZE, MAX_CLUSTERS, MAX_SIGMA, DIP_ALPHA, GAP_FRACTION,
+          STRONG_GAP_FRACTION, OUTLIER_SIGMA, shape_condition.qq_max],
+    np.frombuffer(b"dip-gap-qq-v3-outliers", dtype=np.uint8),
+)
+fusion_candidates, previous_fused_labels = load_fusion_cache(
+    FUSION_CACHE_FILE, fingerprint, n_kept, constraints_key=constraints_key,
+)
 partitions = []
 labels = None
 for n_base in BASE_CLUSTER_COUNTS:
-    labels = constrained_clustering(
-        clustering_features, event_features[:, 6], n_base,
-        min_size=BASE_MIN_CLUSTER_SIZE, sigma_limit=MAX_SIGMA, previous_labels=labels,
-    )
-    partitions.append(labels.copy())
+    try:
+        labels = constrained_clustering(
+            clustering_features, event_features[:, 6], n_base,
+            min_size=BASE_MIN_CLUSTER_SIZE, sigma_limit=MAX_SIGMA, previous_labels=labels,
+        )
+        partitions.append(labels.copy())
+    except NoFeasiblePartitionError as exc:
+        print(f"Base vincolata non disponibile ({exc}); genero candidati KMeans.", flush=True)
+        partitions.append(kmeans_partition(clustering_features, event_features[:, 6], n_base))
+        labels = None
 
-labels = split_messy_clusters(
-    labels, event_features[:, :3], STD_LIMITS, MIN_CLUSTER_SIZE, MAX_CLUSTERS,
-    features=clustering_features, sigma_limit=MAX_SIGMA,
+labels, split_labels, fusion_candidates = refine_and_fuse_clusters(
+    partitions, event_features[:, :3], clustering_features, event_features[:, 6],
+    STD_LIMITS, MIN_CLUSTER_SIZE, MAX_CLUSTERS, MAX_SIGMA,
+    seeds=FUSION_SEEDS, base_count=BASE_CLUSTER_COUNTS[-1], extra_condition=EXTRA_CLUSTER_CONDITION,
+    candidates=fusion_candidates, previous_labels=previous_fused_labels, time_limit=FUSION_TIME_LIMIT,
+    shape_condition=shape_condition,
 )
-partitions.append(labels)
+final_groups = cluster_groups(labels)
+if any(not final_validator(ids) for ids in final_groups):
+    raise RuntimeError("Verifica finale fallita: un cluster viola i vincoli fisici o di forma.")
+if final_groups:
+    qq_values = [gaussian_shape_penalty(event_features[ids, :3]) for ids in final_groups if len(ids) >= 2]
+    qq_maximum = np.max(qq_values, axis=0) if qq_values else np.full(3, np.nan)
+    print(f"Gaussian Q-Q massimo finale [eps, e, omega]: {qq_maximum}", flush=True)
+partitions.extend((split_labels, labels))
+save_fusion_cache(FUSION_CACHE_FILE, fingerprint, fusion_candidates, labels, constraints_key=constraints_key)
 
 cluster_counts = []
 mean_stds = []
@@ -693,6 +1181,7 @@ if not np.any(labels >= 0):
         plt.show()
     raise SystemExit(0)
 
+partitions = [partition for partition in partitions if np.any(partition >= 0)]
 physical_std_history = []
 gaussian_shape_history = []
 outlier_cluster_percent = []
@@ -896,6 +1385,13 @@ if SAVE or PLOT_CLUSTERS:
 
     save_figure(fig, f"cluster_diagnostics_K{len(cluster_ids)}.png")    
 
+    plot_dispersion_rankings(
+        cluster_ids, sizes, escape_stats,
+        ("STD |v SOI| [km/s]", "Direction dispersion [0, 1]"),
+        "Escape diversity by orbital cluster", f"escape_dispersion_ranking_K{len(cluster_ids)}",
+    )
+
+
 
 
 
@@ -912,7 +1408,7 @@ if SAVE:
     plt.close(fig)
 
 
-print("\n=== GA_15 + SPLIT STD/MAX_SIGMA + RAPPRESENTANTI ===")
+print("\n=== GA_15 + SPLIT + FUSIONE + RAPPRESENTANTI ===")
 print(f"Representatives: {len(representative_ids)}")
 print(f"Final mean distance: {np.mean(minimum_distances[assigned]):.6f}")
 print(f"Final 95th percentile: {np.percentile(minimum_distances[assigned], 95):.6f}")
@@ -1065,7 +1561,7 @@ if PLOT_MEDOIDS or SAVE:
                     trajectory, trajectory_time_bounds[representative_id],
                 )
             ax_representatives.plot(
-                trajectory[0], trajectory[1], color="navy", alpha=0.045, linewidth=0.35, rasterized=True,
+                trajectory[0], trajectory[1], color="navy", alpha=0.2, linewidth=1, rasterized=True,
             )
 
         plot_frame_bodies(ax_representatives, inertial, size=50)

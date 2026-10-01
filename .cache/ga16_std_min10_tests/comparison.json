@@ -1,0 +1,92 @@
+[
+  {
+    "increase_percent": 0,
+    "std_eps": 0.04,
+    "std_e": 0.05,
+    "std_omega": 10.0,
+    "clusters": 332,
+    "excluded": 317,
+    "excluded_percent": 0.31601088592704835,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 10,
+    "seconds": 9.504768216999992,
+    "maximum_std": [
+      0.03974065434412716,
+      0.049707065694433394,
+      9.807507869163894
+    ]
+  },
+  {
+    "increase_percent": 10,
+    "std_eps": 0.044000000000000004,
+    "std_e": 0.05500000000000001,
+    "std_omega": 11.0,
+    "clusters": 328,
+    "excluded": 265,
+    "excluded_percent": 0.26417313807781645,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 10,
+    "seconds": 9.784049866000032,
+    "maximum_std": [
+      0.04309819092965081,
+      0.052646868507783315,
+      10.907173100051132
+    ]
+  },
+  {
+    "increase_percent": 20,
+    "std_eps": 0.048,
+    "std_e": 0.06,
+    "std_omega": 12.0,
+    "clusters": 317,
+    "excluded": 254,
+    "excluded_percent": 0.25320746064817123,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 10,
+    "seconds": 9.404397788999859,
+    "maximum_std": [
+      0.047816822529522254,
+      0.05865031707286455,
+      11.786667895240047
+    ]
+  },
+  {
+    "increase_percent": 50,
+    "std_eps": 0.06,
+    "std_e": 0.07500000000000001,
+    "std_omega": 15.0,
+    "clusters": 263,
+    "excluded": 198,
+    "excluded_percent": 0.1973821937336138,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 10,
+    "seconds": 9.00390599100001,
+    "maximum_std": [
+      0.05501332944971115,
+      0.07316878471164896,
+      14.839052909833287
+    ]
+  },
+  {
+    "increase_percent": 100,
+    "std_eps": 0.08,
+    "std_e": 0.1,
+    "std_omega": 20.0,
+    "clusters": 256,
+    "excluded": 166,
+    "excluded_percent": 0.16548204121100954,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 10,
+    "seconds": 9.064168038000162,
+    "maximum_std": [
+      0.07248515813852068,
+      0.09695566095406032,
+      16.529053207491245
+    ]
+  }
+]

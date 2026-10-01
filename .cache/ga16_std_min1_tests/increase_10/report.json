@@ -1,0 +1,17 @@
+{
+  "increase_percent": 10,
+  "std_eps": 0.044000000000000004,
+  "std_e": 0.05500000000000001,
+  "std_omega": 11.0,
+  "clusters": 389,
+  "excluded": 0,
+  "excluded_percent": 0.0,
+  "singletons": 73,
+  "clusters_under_10": 133,
+  "seconds": 41.86325761499995,
+  "maximum_std": [
+    0.04309819092965081,
+    0.05329818715702271,
+    10.907173100051132
+  ]
+}

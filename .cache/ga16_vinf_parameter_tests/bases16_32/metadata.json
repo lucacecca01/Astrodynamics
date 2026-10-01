@@ -1,0 +1,28 @@
+{
+  "source_sha256": "48c153ede6bd70077e3a89345a691b32fa9f8bfa3554e6e7aa6a219fa9bef1b4",
+  "data_fingerprint": "050bd73d02ef567030fb0810a5020c9582db9a1d36c5a0ceb5d8994d65d37954",
+  "initial_cache_sha256": "706443fb9338df8c742020c5c5a912fa8cc191ba0aa00ead9d900c407e3b4941",
+  "n_clustering": 100313,
+  "n_selected": 100656,
+  "n_database": 100847,
+  "preexcluded": 343,
+  "max_clusters": 1003,
+  "base_min": 200,
+  "bases": [
+    16,
+    32
+  ],
+  "seeds": [
+    42,
+    7,
+    123
+  ],
+  "dip_alpha": 0.01,
+  "gap_fraction": 0.2,
+  "strong_gap_fraction": 0.5,
+  "outlier_sigma": 3,
+  "gaussian_qq": "disabled",
+  "fusion_time_limit": 30,
+  "cache_policy": "same frozen initial pool for every configuration",
+  "objective": "maximize coverage, then minimize cluster count"
+}

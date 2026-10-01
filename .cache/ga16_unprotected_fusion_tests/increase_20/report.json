@@ -1,0 +1,35 @@
+{
+  "increase_percent": 20,
+  "std_limits": [
+    0.048,
+    0.06,
+    12.0
+  ],
+  "before_clusters": 317,
+  "clusters": 304,
+  "before_excluded": 254,
+  "excluded": 206,
+  "excluded_percent": 0.20535723186426486,
+  "newly_assigned": 65,
+  "newly_excluded": 17,
+  "previously_protected_lost": 17,
+  "minimum_size": 10,
+  "mean_std": [
+    0.016905495548107285,
+    0.01771938811779017,
+    4.226571762754975
+  ],
+  "maximum_std": [
+    0.047816822529522254,
+    0.05865031707286455,
+    11.865810190654527
+  ],
+  "seconds": 1.4725907710017054,
+  "solver": {
+    "status": 0,
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "gap": 0.0,
+    "objective": -100507124.00000001,
+    "dual_bound": -100507124.00000001
+  }
+}

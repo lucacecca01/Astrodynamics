@@ -1,0 +1,461 @@
+{
+  "n": 100313,
+  "sigma": 3.0,
+  "limits": [
+    0.04,
+    0.05,
+    10.0
+  ],
+  "minimum": 10,
+  "alpha": 0.01,
+  "tests": "3 physical axes + 3 PCA axes; Bonferroni x6 heuristic",
+  "source_hashes": {
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/CR3BP_prova_GA_16.py": "b01eb4573425802169acd38d4429ea79b6f36d4adf0600e0f474edd999a4a0ec",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_fusion_candidates.npz": "bd2709244347261db0a17a816662f127cbf5e8b255a0ad74d807f6c0a8e6d984"
+  },
+  "synthetic": [
+    {
+      "n": 20,
+      "geometry": "normal",
+      "repetitions": 100,
+      "dip": 0,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 20,
+      "geometry": "uniform_line",
+      "repetitions": 100,
+      "dip": 0,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 20,
+      "geometry": "continuous_arc",
+      "repetitions": 100,
+      "dip": 1,
+      "gap_0.1": 1,
+      "gap_0.2": 1,
+      "gap_0.3": 0
+    },
+    {
+      "n": 20,
+      "geometry": "two_blobs",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    },
+    {
+      "n": 20,
+      "geometry": "two_branches",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    },
+    {
+      "n": 55,
+      "geometry": "normal",
+      "repetitions": 100,
+      "dip": 0,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 55,
+      "geometry": "uniform_line",
+      "repetitions": 100,
+      "dip": 0,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 55,
+      "geometry": "continuous_arc",
+      "repetitions": 100,
+      "dip": 2,
+      "gap_0.1": 1,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 55,
+      "geometry": "two_blobs",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    },
+    {
+      "n": 55,
+      "geometry": "two_branches",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    },
+    {
+      "n": 500,
+      "geometry": "normal",
+      "repetitions": 100,
+      "dip": 0,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 500,
+      "geometry": "uniform_line",
+      "repetitions": 100,
+      "dip": 1,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 500,
+      "geometry": "continuous_arc",
+      "repetitions": 100,
+      "dip": 67,
+      "gap_0.1": 0,
+      "gap_0.2": 0,
+      "gap_0.3": 0
+    },
+    {
+      "n": 500,
+      "geometry": "two_blobs",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    },
+    {
+      "n": 500,
+      "geometry": "two_branches",
+      "repetitions": 100,
+      "dip": 100,
+      "gap_0.1": 100,
+      "gap_0.2": 100,
+      "gap_0.3": 100
+    }
+  ],
+  "cases": [
+    {
+      "mode": "baseline",
+      "stage": "reference",
+      "seconds": 0.0,
+      "clusters": 220,
+      "unassigned": 86,
+      "smallest": 10,
+      "weighted_std": [
+        0.024616996737502256,
+        0.026145364217918195,
+        4.399526094371969
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 0,
+      "mean_std": [
+        0.021441472037761176,
+        0.025746673762010702,
+        4.737987426852079
+      ],
+      "mean_qq": [
+        0.07878440263477818,
+        0.08256432299456132,
+        0.04117073721651266
+      ],
+      "weighted_qq": [
+        0.04353329106731365,
+        0.07348828398171442,
+        0.02526328983189492
+      ],
+      "below_20": 16,
+      "median_size": 277.5,
+      "recovered": 0,
+      "dip_flagged": 118,
+      "dip_flagged_points": 68679,
+      "gap10_flagged": 76,
+      "gap10_flagged_points": 35646,
+      "gap20_flagged": 45,
+      "gap20_flagged_points": 20847,
+      "gap30_flagged": 24,
+      "gap30_flagged_points": 12835
+    },
+    {
+      "mode": "dip",
+      "stage": "local_split",
+      "seconds": 1.3877571490002083,
+      "clusters": 835,
+      "unassigned": 377,
+      "smallest": 10,
+      "weighted_std": [
+        0.015396690316986822,
+        0.013213288237244759,
+        3.244660972458029
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.65114773546719
+      ],
+      "lost": 291,
+      "mean_std": [
+        0.008882659378796084,
+        0.008797648213817502,
+        2.3478416450093285
+      ],
+      "mean_qq": [
+        0.07102285424610265,
+        0.1141975737966361,
+        0.0496847274707556
+      ],
+      "weighted_qq": [
+        0.04863351344583064,
+        0.10481819539418401,
+        0.03207172629076784
+      ],
+      "below_20": 88,
+      "median_size": 56.0,
+      "recovered": 0,
+      "dip_flagged": 0,
+      "dip_flagged_points": 0,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.1",
+      "stage": "local_split",
+      "seconds": 0.5457329499995467,
+      "clusters": 507,
+      "unassigned": 259,
+      "smallest": 10,
+      "weighted_std": [
+        0.02034377042113333,
+        0.018935237755843368,
+        3.8100285133800784
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.696436119978786
+      ],
+      "lost": 173,
+      "mean_std": [
+        0.01153395404658431,
+        0.012406153807965012,
+        2.940688706166409
+      ],
+      "mean_qq": [
+        0.08207651267647958,
+        0.1121068989069773,
+        0.0411978063040825
+      ],
+      "weighted_qq": [
+        0.04614961597811165,
+        0.0887600458698241,
+        0.026918911236397402
+      ],
+      "below_20": 55,
+      "median_size": 65.0,
+      "recovered": 0,
+      "dip_flagged": 48,
+      "dip_flagged_points": 34894,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.2",
+      "stage": "local_split",
+      "seconds": 0.26348074399993493,
+      "clusters": 341,
+      "unassigned": 125,
+      "smallest": 10,
+      "weighted_std": [
+        0.02252292909491044,
+        0.02182150951055001,
+        4.085657336660863
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.696436119978786
+      ],
+      "lost": 39,
+      "mean_std": [
+        0.015611010679127004,
+        0.017161439516662755,
+        3.6991913984968634
+      ],
+      "mean_qq": [
+        0.08404028966744725,
+        0.10016217187451522,
+        0.0401017560943371
+      ],
+      "weighted_qq": [
+        0.044201755991490926,
+        0.07736282396553285,
+        0.025956261801693005
+      ],
+      "below_20": 26,
+      "median_size": 121.0,
+      "recovered": 0,
+      "dip_flagged": 77,
+      "dip_flagged_points": 49486,
+      "gap10_flagged": 33,
+      "gap10_flagged_points": 15714,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.3",
+      "stage": "local_split",
+      "seconds": 0.18520626200006518,
+      "clusters": 286,
+      "unassigned": 109,
+      "smallest": 10,
+      "weighted_std": [
+        0.023400494952057965,
+        0.02351296076187844,
+        4.209679462799618
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 23,
+      "mean_std": [
+        0.017912478877955666,
+        0.02003904967088785,
+        4.049358634400028
+      ],
+      "mean_qq": [
+        0.07385693400159153,
+        0.09677715670069531,
+        0.03808424504928088
+      ],
+      "weighted_qq": [
+        0.04339690972235564,
+        0.07833724217859621,
+        0.024980688600354996
+      ],
+      "below_20": 20,
+      "median_size": 196.5,
+      "recovered": 0,
+      "dip_flagged": 97,
+      "dip_flagged_points": 57191,
+      "gap10_flagged": 54,
+      "gap10_flagged_points": 23541,
+      "gap20_flagged": 23,
+      "gap20_flagged_points": 8742,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    }
+  ],
+  "example": {
+    "original_cluster": 41,
+    "size": 62,
+    "feature_row_ids": [
+      6212,
+      6237,
+      6266,
+      6296,
+      6297,
+      6336,
+      6337,
+      6338,
+      6398,
+      6399,
+      6400,
+      6401,
+      6478,
+      6479,
+      6480,
+      6481,
+      6549,
+      6550,
+      6551,
+      6552,
+      6553,
+      6591,
+      6592,
+      6593,
+      6594,
+      6595,
+      6596,
+      6597,
+      6598,
+      6599,
+      6612,
+      6613,
+      6614,
+      6615,
+      6616,
+      6617,
+      6618,
+      6619,
+      6620,
+      6621,
+      7272,
+      7315,
+      7379,
+      7456,
+      7526,
+      7596,
+      7643,
+      7644,
+      7645,
+      7646,
+      7647,
+      7648,
+      7649,
+      7650,
+      7651,
+      7652,
+      7653,
+      7654,
+      7655,
+      7656,
+      7657,
+      7658
+    ],
+    "outcomes": {
+      "baseline": {
+        "41": 62
+      },
+      "dip": {
+        "116": 40,
+        "117": 22
+      },
+      "gap_0.2": {
+        "69": 40,
+        "70": 22
+      }
+    }
+  }
+}

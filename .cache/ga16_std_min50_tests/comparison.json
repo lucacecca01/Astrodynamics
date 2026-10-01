@@ -1,0 +1,186 @@
+[
+  {
+    "increase_percent": -50,
+    "std_eps": 0.02,
+    "std_e": 0.025,
+    "std_omega": 5.0,
+    "clusters": 469,
+    "excluded": 4839,
+    "excluded_percent": 4.823901189277561,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 15.300930949999838,
+    "maximum_std": [
+      0.019859374678108953,
+      0.024870050520657806,
+      4.902706921849108
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": -20,
+    "std_eps": 0.032,
+    "std_e": 0.04000000000000001,
+    "std_omega": 8.0,
+    "clusters": 286,
+    "excluded": 1899,
+    "excluded_percent": 1.893074676263296,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 11.604820298999812,
+    "maximum_std": [
+      0.03188775262894607,
+      0.03958101060666167,
+      7.883920412160345
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": -10,
+    "std_eps": 0.036000000000000004,
+    "std_e": 0.045000000000000005,
+    "std_omega": 9.0,
+    "clusters": 256,
+    "excluded": 1495,
+    "excluded_percent": 1.4903352506654173,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 11.161601078000103,
+    "maximum_std": [
+      0.0349107405151141,
+      0.044903709246303554,
+      8.826864219114425
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": 0,
+    "std_eps": 0.04,
+    "std_e": 0.05,
+    "std_omega": 10.0,
+    "clusters": 258,
+    "excluded": 1234,
+    "excluded_percent": 1.2301496316529263,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 11.884014843999921,
+    "maximum_std": [
+      0.03974065434412716,
+      0.04988929737215994,
+      9.85853068199114
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": 10,
+    "std_eps": 0.044000000000000004,
+    "std_e": 0.05500000000000001,
+    "std_omega": 11.0,
+    "clusters": 251,
+    "excluded": 1151,
+    "excluded_percent": 1.1474086110474215,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 11.134164276000092,
+    "maximum_std": [
+      0.0414161604846158,
+      0.05329818715702271,
+      10.803728494416527
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": 20,
+    "std_eps": 0.048,
+    "std_e": 0.06,
+    "std_omega": 12.0,
+    "clusters": 197,
+    "excluded": 915,
+    "excluded_percent": 0.9121449861932153,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 11.375883976000068,
+    "maximum_std": [
+      0.044382302218069096,
+      0.059578361941910934,
+      11.865810190654527
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": 50,
+    "std_eps": 0.06,
+    "std_e": 0.07500000000000001,
+    "std_omega": 15.0,
+    "clusters": 164,
+    "excluded": 690,
+    "excluded_percent": 0.6878470387686542,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 12.757109864999848,
+    "maximum_std": [
+      0.0536953998858356,
+      0.07497081665897438,
+      14.518853847329966
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  },
+  {
+    "increase_percent": 100,
+    "std_eps": 0.08,
+    "std_e": 0.1,
+    "std_omega": 20.0,
+    "clusters": 143,
+    "excluded": 613,
+    "excluded_percent": 0.6110872967611376,
+    "singletons": 0,
+    "clusters_under_10": 0,
+    "minimum_size": 50,
+    "seconds": 10.98641183399991,
+    "maximum_std": [
+      0.0787986789952442,
+      0.07849787597018612,
+      15.277130244897476
+    ],
+    "solver": {
+      "status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "gap": 0.0
+    }
+  }
+]

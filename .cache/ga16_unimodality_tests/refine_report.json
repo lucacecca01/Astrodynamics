@@ -1,0 +1,472 @@
+{
+  "n": 100313,
+  "sigma": 3.0,
+  "minimum": 10,
+  "limits": [
+    0.04,
+    0.05,
+    10.0
+  ],
+  "cases": [
+    {
+      "mode": "gap_0.1",
+      "stage": "targeted_split",
+      "seconds": 0.24167201699947327,
+      "clusters": 367,
+      "unassigned": 170,
+      "smallest": 10,
+      "weighted_std": [
+        0.022583039772718923,
+        0.019843735215117914,
+        4.138923537111216
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.977377526984325
+      ],
+      "lost": 84,
+      "mean_std": [
+        0.014897974899974447,
+        0.016144422801879145,
+        3.7441307119604654
+      ],
+      "mean_qq": [
+        0.0744995154078437,
+        0.08276627196208677,
+        0.04450434011138719
+      ],
+      "weighted_qq": [
+        0.0450640509747924,
+        0.07645409856176928,
+        0.02645939371545988
+      ],
+      "below_20": 28,
+      "median_size": 94.0,
+      "recovered": 0,
+      "dip_flagged": 54,
+      "dip_flagged_points": 38479,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.2",
+      "stage": "targeted_split",
+      "seconds": 0.07102181899972493,
+      "clusters": 283,
+      "unassigned": 120,
+      "smallest": 10,
+      "weighted_std": [
+        0.02388284117020554,
+        0.02232370048878989,
+        4.2930798829850625
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.977377526984325
+      ],
+      "lost": 34,
+      "mean_std": [
+        0.018046132928511024,
+        0.019818954057170424,
+        4.320913743555987
+      ],
+      "mean_qq": [
+        0.07401101164794018,
+        0.08640661315269761,
+        0.0423047921614307
+      ],
+      "weighted_qq": [
+        0.043437326369567215,
+        0.07533990982796125,
+        0.0258151299547091
+      ],
+      "below_20": 22,
+      "median_size": 188.0,
+      "recovered": 0,
+      "dip_flagged": 81,
+      "dip_flagged_points": 51073,
+      "gap10_flagged": 36,
+      "gap10_flagged_points": 16617,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.3",
+      "stage": "targeted_split",
+      "seconds": 0.059333635000257345,
+      "clusters": 250,
+      "unassigned": 100,
+      "smallest": 10,
+      "weighted_std": [
+        0.02423943798238565,
+        0.023710825223169342,
+        4.333730060274731
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04969795553092068,
+        9.696436119978786
+      ],
+      "lost": 14,
+      "mean_std": [
+        0.020057971414572794,
+        0.022484934150845064,
+        4.504629698526511
+      ],
+      "mean_qq": [
+        0.07245142381107153,
+        0.081511525622694,
+        0.03998435056859483
+      ],
+      "weighted_qq": [
+        0.043375278117808676,
+        0.06918103782661052,
+        0.0251237644867963
+      ],
+      "below_20": 17,
+      "median_size": 242.0,
+      "recovered": 0,
+      "dip_flagged": 98,
+      "dip_flagged_points": 56779,
+      "gap10_flagged": 54,
+      "gap10_flagged_points": 23208,
+      "gap20_flagged": 22,
+      "gap20_flagged_points": 8275,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "dip",
+      "stage": "production_refine",
+      "seconds": 20.341397309999593,
+      "clusters": 592,
+      "unassigned": 139,
+      "smallest": 10,
+      "weighted_std": [
+        0.018235222653928566,
+        0.014645903316298376,
+        3.5972944190817744
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04801693320487551,
+        9.65114773546719
+      ],
+      "lost": 53,
+      "mean_std": [
+        0.011922822246875943,
+        0.011672364972763954,
+        2.9067751311402152
+      ],
+      "mean_qq": [
+        0.0818465526857651,
+        0.09959478026888029,
+        0.05171792793635101
+      ],
+      "weighted_qq": [
+        0.05048444126623825,
+        0.08309379110034985,
+        0.0298722619909217
+      ],
+      "below_20": 47,
+      "median_size": 77.5,
+      "recovered": 0,
+      "dip_flagged": 0,
+      "dip_flagged_points": 0,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.2",
+      "stage": "production_refine",
+      "seconds": 10.69259453199993,
+      "clusters": 271,
+      "unassigned": 89,
+      "smallest": 10,
+      "weighted_std": [
+        0.02479052176519305,
+        0.02403281621755948,
+        4.580685026314655
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.696436119978786
+      ],
+      "lost": 8,
+      "mean_std": [
+        0.017905991507207866,
+        0.02049682919191951,
+        4.41765150298405
+      ],
+      "mean_qq": [
+        0.08136493813198566,
+        0.09414235669513692,
+        0.045334337263212135
+      ],
+      "weighted_qq": [
+        0.043044524131725596,
+        0.07781013987914488,
+        0.028262050176552898
+      ],
+      "below_20": 23,
+      "median_size": 155.0,
+      "recovered": 5,
+      "dip_flagged": 76,
+      "dip_flagged_points": 54035,
+      "gap10_flagged": 30,
+      "gap10_flagged_points": 16565,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "baseline",
+      "stage": "common_pool",
+      "seconds": 1.9957253449993004,
+      "protected_possible": true,
+      "protection_error": null,
+      "clusters": 207,
+      "unassigned": 81,
+      "smallest": 10,
+      "weighted_std": [
+        0.02565560277787151,
+        0.027572856084171957,
+        4.694338800161409
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.696436119978786
+      ],
+      "lost": 0,
+      "mean_std": [
+        0.021555891470160467,
+        0.02653007759085989,
+        4.963816395120271
+      ],
+      "mean_qq": [
+        0.08160629761599403,
+        0.0841389809195875,
+        0.0436783654999723
+      ],
+      "weighted_qq": [
+        0.042867334246293604,
+        0.07334879659134474,
+        0.027463913681231383
+      ],
+      "below_20": 16,
+      "median_size": 271.0,
+      "recovered": 5,
+      "dip_flagged": 113,
+      "dip_flagged_points": 70191,
+      "gap10_flagged": 73,
+      "gap10_flagged_points": 36599,
+      "gap20_flagged": 44,
+      "gap20_flagged_points": 20596,
+      "gap30_flagged": 25,
+      "gap30_flagged_points": 12886
+    },
+    {
+      "mode": "dip",
+      "stage": "common_pool",
+      "seconds": 2.166347069999574,
+      "protected_possible": false,
+      "protection_error": "I nuovi vincoli non permettono al pool di coprire tutti i punti gia' assegnati.",
+      "clusters": 571,
+      "unassigned": 120,
+      "smallest": 10,
+      "weighted_std": [
+        0.018895054018038832,
+        0.015688516712701682,
+        3.7472986020282013
+      ],
+      "maximum_std": [
+        0.039710287574387736,
+        0.04982751369865655,
+        9.933178690994655
+      ],
+      "lost": 41,
+      "mean_std": [
+        0.01181702139677426,
+        0.011675487543201973,
+        2.997291317464512
+      ],
+      "mean_qq": [
+        0.0764463531439246,
+        0.09766871491818908,
+        0.05260873452819652
+      ],
+      "weighted_qq": [
+        0.04886703678794787,
+        0.08332188302820201,
+        0.028934048496947654
+      ],
+      "below_20": 47,
+      "median_size": 76.0,
+      "recovered": 7,
+      "dip_flagged": 0,
+      "dip_flagged_points": 0,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.1",
+      "stage": "common_pool",
+      "seconds": 2.7637348590005786,
+      "protected_possible": false,
+      "protection_error": "Nessuna fusione ammissibile trovata senza perdere punti protetti: The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+      "clusters": 320,
+      "unassigned": 85,
+      "smallest": 10,
+      "weighted_std": [
+        0.024133458729425704,
+        0.023529958625871306,
+        4.429466530820483
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.933178690994655
+      ],
+      "lost": 9,
+      "mean_std": [
+        0.015679755132843337,
+        0.017640186685023252,
+        4.04180929318963
+      ],
+      "mean_qq": [
+        0.09364586789476577,
+        0.0947564306658177,
+        0.045381444232612325
+      ],
+      "weighted_qq": [
+        0.04433027859272537,
+        0.07630253355168337,
+        0.025190017363107057
+      ],
+      "below_20": 34,
+      "median_size": 94.0,
+      "recovered": 10,
+      "dip_flagged": 56,
+      "dip_flagged_points": 45083,
+      "gap10_flagged": 0,
+      "gap10_flagged_points": 0,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.2",
+      "stage": "common_pool",
+      "seconds": 3.0865953410002476,
+      "protected_possible": false,
+      "protection_error": "Nessuna fusione ammissibile trovata senza perdere punti protetti: The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+      "clusters": 267,
+      "unassigned": 79,
+      "smallest": 10,
+      "weighted_std": [
+        0.025369421314458282,
+        0.025240156281704042,
+        4.67159171476777
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.933178690994655
+      ],
+      "lost": 3,
+      "mean_std": [
+        0.01802054839393049,
+        0.020206486066052694,
+        4.465146230502252
+      ],
+      "mean_qq": [
+        0.08898986007594294,
+        0.09478238545895452,
+        0.045830029704471656
+      ],
+      "weighted_qq": [
+        0.04331300498224622,
+        0.07454930913160361,
+        0.02696051445436738
+      ],
+      "below_20": 30,
+      "median_size": 137.0,
+      "recovered": 10,
+      "dip_flagged": 68,
+      "dip_flagged_points": 52023,
+      "gap10_flagged": 26,
+      "gap10_flagged_points": 14142,
+      "gap20_flagged": 0,
+      "gap20_flagged_points": 0,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    },
+    {
+      "mode": "gap_0.3",
+      "stage": "common_pool",
+      "seconds": 3.390695134999987,
+      "protected_possible": false,
+      "protection_error": "Nessuna fusione ammissibile trovata senza perdere punti protetti: The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+      "clusters": 227,
+      "unassigned": 79,
+      "smallest": 10,
+      "weighted_std": [
+        0.025937495352658504,
+        0.02694063136577906,
+        4.7575528122710375
+      ],
+      "maximum_std": [
+        0.0399631357259752,
+        0.04998932154803676,
+        9.933178690994655
+      ],
+      "lost": 3,
+      "mean_std": [
+        0.02001270140494592,
+        0.023292914162971096,
+        4.735612706876454
+      ],
+      "mean_qq": [
+        0.08391126752411572,
+        0.08292310884082464,
+        0.04465572172877903
+      ],
+      "weighted_qq": [
+        0.042153932955535524,
+        0.06445223818916707,
+        0.02691002241197802
+      ],
+      "below_20": 22,
+      "median_size": 188.0,
+      "recovered": 10,
+      "dip_flagged": 82,
+      "dip_flagged_points": 58418,
+      "gap10_flagged": 40,
+      "gap10_flagged_points": 21398,
+      "gap20_flagged": 16,
+      "gap20_flagged_points": 8557,
+      "gap30_flagged": 0,
+      "gap30_flagged_points": 0
+    }
+  ]
+}

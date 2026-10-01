@@ -1,0 +1,6 @@
+mode,stage,seconds,clusters,unassigned,smallest,lost,below_20,median_size,recovered,dip_flagged,dip_flagged_points,gap10_flagged,gap10_flagged_points,gap20_flagged,gap20_flagged_points,gap30_flagged,gap30_flagged_points
+baseline,reference,0.0,220,86,10,0,16,277.5,0,118,68679,76,35646,45,20847,24,12835
+dip,local_split,1.3877571490002083,835,377,10,291,88,56.0,0,0,0,0,0,0,0,0,0
+gap_0.1,local_split,0.5457329499995467,507,259,10,173,55,65.0,0,48,34894,0,0,0,0,0,0
+gap_0.2,local_split,0.26348074399993493,341,125,10,39,26,121.0,0,77,49486,33,15714,0,0,0,0
+gap_0.3,local_split,0.18520626200006518,286,109,10,23,20,196.5,0,97,57191,54,23541,23,8742,0,0

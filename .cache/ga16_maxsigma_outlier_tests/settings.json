@@ -1,0 +1,29 @@
+{
+  "FUSION_SEEDS": [
+    42,
+    7,
+    123
+  ],
+  "BASE_MIN_CLUSTER_SIZE": 200,
+  "STD_LIMITS": [
+    0.04,
+    0.05,
+    10.0
+  ],
+  "DIP_ALPHA": 0.01,
+  "MAX_CLUSTERS": 1003,
+  "MIN_CLUSTER_SIZE": 10,
+  "GAP_FRACTION": 0.2,
+  "FUSION_TIME_LIMIT": 30.0,
+  "OUTLIER_SIGMA": 3.0,
+  "STRONG_GAP_FRACTION": 0.5,
+  "EXTRA_CLUSTER_CONDITION": null,
+  "GAUSSIAN_QQ_MAX": Infinity,
+  "BASE_CLUSTER_COUNTS": [
+    99,
+    180
+  ],
+  "n_points": 100313,
+  "source_sha256": "0564ef9eed16654875cfb677d4d7170eea20406f29ece2458ff9f7c145aa1b72",
+  "fusion_cache": false
+}
