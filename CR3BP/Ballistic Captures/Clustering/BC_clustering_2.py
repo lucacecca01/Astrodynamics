@@ -1075,7 +1075,7 @@ del backward_tangent, forward_tangent
 
 # GA_16-style candidate splitting and fusion on the unchanged geometric features.
 STD_MEAN_LIMIT = 0.1                  # Max distance from mean for EVERY normalized XY/tangent pair
-MIN_CLUSTER_SIZE = 100
+MIN_CLUSTER_SIZE = 50
 MAX_CLUSTERS = max(1, len(clustering_features) // 100)
 MAX_SIGMA = 2.5                        # Distance / RMS radius in the full geometric space
 DIP_ALPHA = 0.01
