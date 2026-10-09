@@ -12,6 +12,8 @@ from matplotlib.collections import LineCollection
 from matplotlib.backends.backend_pdf import PdfPages
 from scipy.optimize import Bounds, LinearConstraint, milp
 from scipy.sparse import coo_matrix, csr_matrix, vstack
+from scipy.sparse.csgraph import connected_components
+from scipy.spatial import cKDTree
 from scipy.special import ndtri
 from sklearn.cluster import KMeans
 from threadpoolctl import threadpool_limits
@@ -278,32 +280,20 @@ def gaussian_shape_penalty(parameters):
     return penalty
 
 
-class ClusterShapeConstraint:
-    """Reject separated modes and isolated tails, optionally bounding Gaussian Q-Q error."""
+class TimeShapeConstraint:
+    """Veto detected non-unimodal SOI times, without bounding their STD or range.
 
-    def __init__(self, parameters, scale, *, dip_alpha=0.01, gap_fraction=0.2,
-                 gaussian_qq_max=np.inf, strong_gap_fraction=0.5, outlier_sigma=6.):
-        self.data = np.asarray(parameters, dtype=float)
-        scale = np.asarray(scale, dtype=float)
-        self.qq_max = np.broadcast_to(np.asarray(gaussian_qq_max, dtype=float), (3,)).copy()
-        if (self.data.ndim != 2 or self.data.shape[1] != 3 or not np.all(np.isfinite(self.data))
-                or scale.shape != (3,) or np.any(np.isnan(scale)) or np.any(scale <= 0)):
-            raise ValueError("Servono feature finite [eps, e, omega_deg] e tre scale positive.")
+    A dip-test rejection triggers a scalar two-means split. Passing this finite-
+    sample test is not a mathematical guarantee of population unimodality.
+    """
+
+    def __init__(self, times_days, *, dip_alpha=0.01):
+        self.data = np.asarray(times_days, dtype=float)
+        if self.data.ndim != 1 or not np.all(np.isfinite(self.data)):
+            raise ValueError("Servono tempi SOI finiti in un vettore monodimensionale.")
         if not np.isfinite(dip_alpha) or not 0 <= dip_alpha < 1:
-            raise ValueError("DIP_ALPHA deve essere in [0, 1); 0 disabilita il dip test.")
-        if not np.isfinite(gap_fraction) or not 0 <= gap_fraction < 1:
-            raise ValueError("GAP_FRACTION deve essere in [0, 1).")
-        if np.isnan(strong_gap_fraction) or strong_gap_fraction < gap_fraction or strong_gap_fraction <= 0:
-            raise ValueError("STRONG_GAP_FRACTION deve essere positivo e >= GAP_FRACTION; np.inf lo disabilita.")
-        if np.any(np.isnan(self.qq_max)) or np.any(self.qq_max <= 0):
-            raise ValueError("GAUSSIAN_QQ_MAX deve essere positivo; np.inf disabilita il limite.")
-        if np.isnan(outlier_sigma) or outlier_sigma <= 0:
-            raise ValueError("OUTLIER_SIGMA deve essere positivo; np.inf disabilita il controllo.")
-        self.scale = np.where(np.isfinite(scale), scale, 1.)
+            raise ValueError("TIME_DIP_ALPHA deve essere in [0, 1); 0 disabilita il test.")
         self.alpha = dip_alpha
-        self.gap_fraction = gap_fraction
-        self.strong_gap_fraction = strong_gap_fraction
-        self.outlier_sigma = outlier_sigma
         self.cache = {}
 
     def _measure(self, ids):
@@ -311,75 +301,91 @@ class ClusterShapeConstraint:
         key = hashlib.sha256(ids.tobytes()).digest()
         if key in self.cache:
             return self.cache[key]
-        if len(ids) < 2:
-            result = (np.full(3, np.inf), None)
-            self.cache[key] = result
-            return result
-
-        data = self.data[ids].copy()
-        qq = gaussian_shape_penalty(data) if np.any(np.isfinite(self.qq_max)) else np.zeros(3)
-        origin = np.rad2deg(np.angle(np.mean(np.exp(1j * np.deg2rad(data[:, 2])))))
-        data[:, 2] = (data[:, 2] - origin + 180) % 360 - 180
-        scaled = data / self.scale
-        center = scaled.mean(axis=0)
-        x = scaled - center
-        best_gap, cut = self.gap_fraction, None
-        if (self.alpha > 0 or np.isfinite(self.strong_gap_fraction)
-                or np.isfinite(self.outlier_sigma)) and len(ids) >= 3:
-            _, _, axes = np.linalg.svd(x, full_matrices=False)
-            directions = np.vstack((np.eye(3), axes))
-            # The dip test can miss a small detached population, even across a huge gap.
-            support = max(3, int(np.ceil(0.1 * len(ids))))
-            for j, direction in enumerate(directions):
-                values = np.sort(x @ direction)
-                span = np.ptp(values)
-                if span <= 1e-12:
-                    continue
-                gaps = np.diff(values)
-                choices = []
-                if len(ids) >= 6:
-                    strong_at = 2 + int(np.argmax(gaps[2:len(ids) - 3]))
-                    if gaps[strong_at] / span > self.strong_gap_fraction:
-                        choices.append(strong_at)
-                if self.alpha > 0 and len(ids) >= 6:
-                    _, pvalue = diptest(values, sort_x=False, boot_pval=False)
-                    eligible = gaps[support - 1:len(ids) - support]
-                    if pvalue < self.alpha / len(directions) and len(eligible):
-                        choices.append(support - 1 + int(np.argmax(eligible)))
-                # Check physical marginals: PCA tails can be artifacts of curved families.
-                # A detached tail may contain only one point; final min_size is checked later.
-                if j < 3 and np.isfinite(self.outlier_sigma):
-                    median = np.median(values)
-                    robust_std = 1.4826 * np.median(np.abs(values - median))
-                    bound = self.outlier_sigma * max(robust_std, 1e-12)
-                    isolated = ((values[:-1] < median - bound)
-                                | (values[1:] > median + bound))
-                    eligible = np.flatnonzero(isolated & (gaps / span > self.gap_fraction))
-                    if len(eligible):
-                        choices.append(int(eligible[np.argmax(gaps[eligible])]))
-                for at in choices:
-                    relative_gap = gaps[at] / span
-                    if relative_gap > best_gap:
-                        best_gap = relative_gap
-                        threshold = (values[at] + values[at + 1]) / 2 + center @ direction
-                        cut = (direction.copy(), float(threshold), float(origin))
-        result = (qq, cut)
+        values = np.sort(self.data[ids])
+        pvalue, split_after = 1.0, None
+        if self.alpha > 0 and len(values) >= 4 and values[-1] > values[0]:
+            # Scale only for numerical stability; no physical time limit is used.
+            x = (values - values[0]) / (values[-1] - values[0])
+            _, pvalue = diptest(x, sort_x=False, boot_pval=False)
+            if not np.isfinite(pvalue):
+                raise RuntimeError("Dip test temporale non finito.")
+            if pvalue < self.alpha:
+                # Exact 1-D two-means cut, including modes without a large empty gap.
+                left_count = np.arange(1, len(x))
+                prefix = np.cumsum(x)
+                prefix_squared = np.cumsum(x*x)
+                cost = (prefix_squared[:-1] - prefix[:-1]**2 / left_count
+                        + prefix_squared[-1] - prefix_squared[:-1]
+                        - (prefix[-1] - prefix[:-1])**2 / (len(x) - left_count))
+                cost[np.diff(values) == 0] = np.inf
+                split_after = float(values[int(np.argmin(cost))])
+        result = (float(pvalue), split_after)
         self.cache[key] = result
         return result
 
     def __call__(self, ids):
-        qq, cut = self._measure(ids)
-        return bool(np.all(qq <= self.qq_max) and cut is None)
+        return self._measure(ids)[1] is None
 
     def split(self, ids):
-        """Return a binary cut at the detected gap, or None for the usual KMeans split."""
-        _, cut = self._measure(ids)
-        if cut is None:
+        _, split_after = self._measure(ids)
+        if split_after is None:
             return None
-        direction, threshold, origin = cut
-        data = self.data[ids].copy()
-        data[:, 2] = (data[:, 2] - origin + 180) % 360 - 180
-        return ((data / self.scale) @ direction > threshold).astype(int)
+        return (self.data[ids] > split_after).astype(int)
+
+
+class ConnectivityShapeConstraint:
+    """Require connected velocity/time samples and unimodal SOI times.
+
+    Features are normalized once on the full catalog, never within a cluster.
+    Paths must use members of the candidate group only. This is connectivity
+    at the chosen radius, not a guarantee of continuity of the physical family.
+    """
+
+    def __init__(self, features, radius, *, times_days=None, time_dip_alpha=0.01):
+        self.features = np.asarray(features, dtype=float)
+        if (self.features.ndim != 2 or self.features.shape[1] == 0
+                or not np.all(np.isfinite(self.features))):
+            raise ValueError("Servono feature normalizzate finite con forma (N, D).")
+        if not np.isfinite(radius) or radius <= 0:
+            raise ValueError("CONNECTIVITY_RADIUS deve essere finito e positivo.")
+        self.radius = float(radius)
+        self.time_shape = (None if times_days is None else
+                           TimeShapeConstraint(times_days, dip_alpha=time_dip_alpha))
+        if self.time_shape is not None and len(self.time_shape.data) != len(self.features):
+            raise ValueError("Tempi SOI e feature devono avere lo stesso numero di righe.")
+        self.cache = {}
+
+    def _components(self, ids):
+        ids = np.asarray(ids, dtype=np.int64)
+        if len(ids) < 2:
+            return None
+        ordered = np.sort(ids)
+        key = hashlib.sha256(ordered.tobytes()).digest()
+        if key not in self.cache:
+            pairs = cKDTree(self.features[ordered]).query_pairs(self.radius, output_type="ndarray")
+            graph = csr_matrix(
+                (np.ones(len(pairs), dtype=bool), (pairs[:, 0], pairs[:, 1])),
+                shape=(len(ordered), len(ordered)),
+            )
+            count, components = connected_components(graph, directed=False)
+            # Bound memory during candidate-union checks; connected groups store no labels.
+            if len(self.cache) >= 4096:
+                self.cache.pop(next(iter(self.cache)))
+            self.cache[key] = None if count == 1 else components
+        components = self.cache[key]
+        return None if components is None else components[np.searchsorted(ordered, ids)]
+
+    def __call__(self, ids):
+        return bool(len(ids) > 0
+                    and (self.time_shape is None or self.time_shape(ids))
+                    and self._components(ids) is None)
+
+    def split(self, ids):
+        """Isolate all connected components before applying any temporal split."""
+        components = self._components(ids)
+        if components is not None:
+            return components
+        return None if self.time_shape is None else self.time_shape.split(ids)
 
 
 
@@ -609,7 +615,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
     return labels
 
 
-# Split invalid parents, preferring detected gaps; never move points between existing clusters.
+# Split invalid parents, preferring connected components; never move points between existing clusters.
 def split_messy_clusters(labels, physical_features, std_limits, min_size, max_clusters,
                          *, features, sigma_limit, group_validator=None, random_state=42,
                          split_scale=None, candidate_groups=None, verbose=True, gap_splitter=None):
@@ -667,6 +673,7 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
         data[:, :2] / scale[:2],
         np.cos(angles) / np.deg2rad(scale[2]),
         np.sin(angles) / np.deg2rad(scale[2]),
+        features[:, 3:],  # Include the normalized ETD-to-SOI time in ordinary splits.
     ))
 
     with threadpool_limits(limits=2):
@@ -690,10 +697,12 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
             else:
                 n_gap_splits += 1
             split = np.asarray(split)
-            if split.shape != (len(ids),) or not np.array_equal(np.unique(split), [0, 1]):
-                raise RuntimeError("Cluster fuori soglia non divisibile in due gruppi distinti.")
+            split_groups = np.unique(split)
+            if (split.shape != (len(ids),) or len(split_groups) < 2
+                    or not np.array_equal(split_groups, np.arange(len(split_groups)))):
+                raise RuntimeError("Cluster fuori soglia non divisibile in gruppi distinti.")
             n_splits += 1
-            for side in (0, 1):
+            for side in split_groups:
                 members = ids[split == side]
                 if candidate_groups is not None:
                     candidate_groups.append(members)
@@ -721,7 +730,7 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
 
     if verbose:
         print(f"Split vincoli: {len(preserved)} cluster conservati, {messy_parents} da dividere, "
-              f"{n_splits} divisioni ({n_gap_splits} nei vuoti), {len(groups)} cluster finali.", flush=True)
+              f"{n_splits} divisioni ({n_gap_splits} guidate dalla forma), {len(groups)} cluster finali.", flush=True)
         print(f"Nuove non assegnate: {small_points} in frammenti non ammissibili, "
               f"{capped_points} per il massimo di cluster.", flush=True)
         if final_stds:
@@ -729,14 +738,105 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
     return result
 
 
+def merge_valid_clusters(labels, candidates, valid_group):
+    """Reduce K by valid unions, without losing any currently assigned point.
+
+    Try every pair, including disjoint clusters, and each candidate united with
+    ALL current clusters it intersects. Prefer the largest reduction in K, then
+    the largest recovery of unassigned points. Stop only when neither move works.
+    This is a local minimum for these moves, not a proof of the global minimum K.
+    Candidates are the sorted, unique member arrays validated by the caller.
+    """
+    labels = np.asarray(labels)
+    originally_assigned = labels >= 0
+    groups = {i: ids for i, ids in enumerate(cluster_groups(labels))}
+    initial_count = len(groups)
+    if any(not valid_group(ids) for ids in groups.values()):
+        raise RuntimeError("La fusione richiede una partizione iniziale ammissibile.")
+    owner = np.full(len(labels), -1, dtype=int)
+    for group_id, ids in groups.items():
+        owner[ids] = group_id
+
+    # Group IDs are immutable versions: every union gets a new ID, never reused.
+    # Cached rejections therefore expire whenever a constituent group changes.
+    next_id = initial_count
+    pair_validity = {}
+    bridge_signatures = [None] * len(candidates)
+    bridge_validity = [False] * len(candidates)
+    unions = []
+
+    while groups:
+        best_score = None
+        best_groups = None
+        best_candidate = None
+        for group_ids in combinations(sorted(groups), 2):
+            if group_ids not in pair_validity:
+                merged = np.sort(np.concatenate([groups[c] for c in group_ids]))
+                pair_validity[group_ids] = bool(valid_group(merged))
+            if pair_validity[group_ids]:
+                score = (-1, 0, group_ids, -1)
+                if best_score is None or score < best_score:
+                    best_score, best_groups, best_candidate = score, group_ids, None
+
+        # Include rejected candidates too: validity of a union is not monotone.
+        for j, candidate in enumerate(candidates):
+            memberships = owner[candidate]
+            group_ids = tuple(np.unique(memberships[memberships >= 0]))
+            recovered = int(np.count_nonzero(memberships < 0))
+            if not group_ids or (len(group_ids) == 1 and recovered == 0):
+                continue
+            if bridge_signatures[j] != group_ids:
+                merged = np.unique(np.concatenate(
+                    [candidate] + [groups[c] for c in group_ids],
+                ))
+                bridge_signatures[j] = group_ids
+                bridge_validity[j] = bool(valid_group(merged))
+            if bridge_validity[j]:
+                score = (1 - len(group_ids), -recovered, group_ids, j)
+                if best_score is None or score < best_score:
+                    best_score, best_groups, best_candidate = score, group_ids, j
+
+        if best_groups is None:
+            break
+        parts = [groups[c] for c in best_groups]
+        if best_candidate is not None:
+            parts.append(candidates[best_candidate])
+        merged = np.unique(np.concatenate(parts))
+        if not valid_group(merged):
+            raise RuntimeError("L'unione selezionata non rispetta i vincoli.")
+        for group_id in best_groups:
+            del groups[group_id]
+        groups[next_id] = merged
+        owner[merged] = next_id
+        next_id += 1
+        unions.append(merged)
+        if len(unions) == 1 or len(unions) % 10 == 0:
+            print(f"Unioni ammissibili: {len(unions)} applicate; "
+                  f"K {initial_count} -> {len(groups)}.", flush=True)
+
+    result = np.full(len(labels), -1, dtype=int)
+    for c, ids in enumerate(sorted(groups.values(), key=lambda ids: int(ids[0]))):
+        if not valid_group(ids) or np.any(result[ids] >= 0):
+            raise RuntimeError("La fusione ha prodotto gruppi non validi o sovrapposti.")
+        result[ids] = c
+    if len(groups) > initial_count or np.any(result[originally_assigned] < 0):
+        raise RuntimeError("La fusione ha aumentato K o perso traiettorie assegnate.")
+    recovered = np.count_nonzero((result >= 0) & ~originally_assigned)
+    print(f"Fusioni finali: K {initial_count} -> {len(groups)}, "
+          f"{recovered} traiettorie recuperate; nessuna persa. "
+          "Nessun'altra unione ammissibile tra coppie o tramite i candidati.", flush=True)
+    return result, unions
+
+
 def fuse_cluster_candidates(candidates, n_points, valid_group, max_clusters,
                             *, previous_labels=None, time_limit=30.):
-    """Maximize coverage, then minimize K; previous assignments are not mandatory.
+    """Minimize K at preserved seed coverage, then close admissible unions.
 
     valid_group(ids) defines all local constraints and must be deterministic.
-    Previous groups are candidates and, when feasible, a solver-timeout fallback.
-    Only disjointness and the global cluster cap live here.
-    Returned candidates include rejected groups, for revalidation on later runs.
+    A valid previous partition, or a greedy seed, supplies mandatory assigned
+    points and a solver-timeout fallback. The MILP minimizes K first and maximizes
+    extra coverage only at equal K. Final unions preserve every assigned point.
+    Returned candidates retain rejected groups and include accepted new unions.
     """
     for name, value in (("n_points", n_points), ("max_clusters", max_clusters)):
         if not isinstance(value, (int, np.integer)) or isinstance(value, (bool, np.bool_)) or value < 0:
@@ -791,19 +891,33 @@ def fuse_cluster_candidates(candidates, n_points, valid_group, max_clusters,
             representatives.append(i)
     matrix = vstack((incidence[representatives], csr_matrix(np.ones((1, len(groups)))))).tocsc()
     gains = np.array([len(ids) for ids in groups])
-    # One additional assigned point outweighs any possible cluster-count change.
     cap = min(max_clusters, n_points, len(groups))
-    cost = 1. - (cap + 1.) * gains
+    if not len(fallback):
+        # Keep a nonempty feasible seed even if MILP times out without an incumbent.
+        occupied = np.zeros(n_points, dtype=bool)
+        greedy = []
+        for j in np.argsort(-gains, kind="stable"):
+            if not np.any(occupied[groups[j]]):
+                greedy.append(j)
+                occupied[groups[j]] = True
+                if len(greedy) == cap:
+                    break
+        fallback = np.asarray(greedy, dtype=int)
+    protected = np.asarray(incidence[:, fallback].sum(axis=1)).ravel() > 0
+    # Keep every seed assignment. One fewer cluster outweighs all extra coverage.
+    cost = (n_points + 1.) - gains
+    lower = np.r_[protected[representatives].astype(float), 0.]
     result = milp(
         cost, integrality=np.ones(len(groups)), bounds=Bounds(0, 1),
-        constraints=LinearConstraint(matrix, 0., np.r_[np.ones(len(representatives)), cap]),
+        constraints=LinearConstraint(matrix, lower, np.r_[np.ones(len(representatives)), cap]),
         options={"time_limit": time_limit, "mip_rel_gap": 0.},
     )
     chosen = fallback
     if result.x is not None and np.all(np.isfinite(result.x)):
         proposal = np.flatnonzero(result.x > .5)
         coverage = np.asarray(incidence[:, proposal].sum(axis=1)).ravel()
-        feasible = len(proposal) <= cap and np.all(coverage <= 1)
+        feasible = (len(proposal) <= cap and np.all(coverage <= 1)
+                    and np.all(coverage[protected] == 1))
         if feasible and cost[proposal].sum() < cost[chosen].sum():
             chosen = proposal
 
@@ -814,11 +928,78 @@ def fuse_cluster_candidates(candidates, n_points, valid_group, max_clusters,
         result_labels[ids] = c
     if len(selected) > max_clusters:
         raise RuntimeError("La fusione supera il massimo di cluster.")
+    result_labels, unions = merge_valid_clusters(result_labels, pool, valid_group)
+    for ids in unions:
+        key = ids.tobytes()
+        if key not in seen:
+            seen.add(key)
+            pool.append(ids)
     assigned = np.count_nonzero(result_labels >= 0)
-    print(f"Fusione: {len(pool)} candidati, {len(groups)} validi; {len(selected)} cluster, "
+    final_count = len(np.unique(result_labels[result_labels >= 0]))
+    print(f"Fusione: {len(pool)} candidati; {final_count} cluster, "
           f"{assigned} punti assegnati, {np.count_nonzero(result_labels < 0)} non assegnati. "
-          f"MILP: {result.message}; gap={getattr(result, 'mip_gap', None)}", flush=True)
+          f"MILP iniziale: {result.message}; gap={getattr(result, 'mip_gap', None)}", flush=True)
     return result_labels, pool
+
+
+def recover_unassigned_members(labels, features, valid_group, *, directions=None):
+    """Insert admissible individual trajectories into existing clusters only.
+
+    Distances order the attempts; all clusters are eligible for a full validity
+    check. Retry rejected points when a group changes, until no insertion works.
+    This is a local recovery, not a guarantee of maximum possible coverage.
+    """
+    labels = np.asarray(labels)
+    features = np.asarray(features, dtype=float)
+    if (labels.ndim != 1 or not np.issubdtype(labels.dtype, np.integer)
+            or np.any(labels < -1) or features.ndim != 2
+            or len(features) != len(labels) or not np.all(np.isfinite(features))):
+        raise ValueError("Servono etichette intere e feature finite con lo stesso numero di righe.")
+    if directions is not None:
+        directions = np.asarray(directions)
+        if directions.shape != labels.shape or not np.all(np.isin(directions, [-1, 1])):
+            raise ValueError("Serve un verso orbitale valido per ogni traiettoria.")
+    result = labels.copy()
+    missing = np.flatnonzero(result < 0)
+    cluster_ids = np.unique(result[result >= 0])
+    groups = cluster_groups(result)
+    if not len(missing) or not groups:
+        return result, []
+    if any(not valid_group(ids) for ids in groups):
+        raise RuntimeError("Il recupero richiede cluster iniziali ammissibili.")
+    centers = np.array([features[ids].mean(axis=0) for ids in groups])
+    versions = np.zeros(len(groups), dtype=int)
+    failed_versions = np.full((len(missing), len(groups)), -1, dtype=int)
+    recovered = 0
+    while True:
+        added = 0
+        for row, point in enumerate(missing):
+            if result[point] >= 0:
+                continue
+            order = np.argsort(np.sum((centers - features[point])**2, axis=1), kind="stable")
+            for j in order:
+                if (failed_versions[row, j] == versions[j]
+                        or (directions is not None and directions[point] != directions[groups[j][0]])):
+                    continue
+                members = np.sort(np.r_[groups[j], point])
+                if valid_group(members):
+                    centers[j] += (features[point] - centers[j]) / len(members)
+                    groups[j] = members
+                    result[point] = cluster_ids[j]
+                    versions[j] += 1
+                    added += 1
+                    break
+                failed_versions[row, j] = versions[j]
+        recovered += added
+        if not added:
+            break
+        print(f"Recupero individuale: +{added} traiettorie, {recovered} totali; "
+              f"K = {len(groups)} invariato.", flush=True)
+
+    if (np.any(result[labels >= 0] != labels[labels >= 0])
+            or any(not valid_group(ids) for ids in groups)):
+        raise RuntimeError("Il recupero ha alterato assegnazioni esistenti o violato i vincoli.")
+    return result, [groups[j] for j in np.flatnonzero(versions)]
 
 
 def refine_and_fuse_clusters(partitions, physical_features, features, directions,
@@ -841,7 +1022,7 @@ def refine_and_fuse_clusters(partitions, physical_features, features, directions
         features=features, sigma_limit=sigma_limit, group_validator=valid_group,
         candidate_groups=pool, gap_splitter=gap_splitter,
     )
-    # Supply an optional fallback, without fixing any point's assignment.
+    # Preserve the valid seed's coverage without fixing its group membership.
     if previous_labels is None and len(cluster_groups(baseline)) <= max_clusters:
         previous_labels = baseline
 
@@ -865,6 +1046,25 @@ def refine_and_fuse_clusters(partitions, physical_features, features, directions
         print(f"Candidati alternativi: {i + 1}/{len(variants)}", flush=True)
     labels, pool = fuse_cluster_candidates(pool, n_points, valid_group, max_clusters,
                                            previous_labels=previous_labels, time_limit=time_limit)
+    seen = {ids.tobytes() for ids in pool}
+    while True:
+        labels, expanded = recover_unassigned_members(
+            labels, features, valid_group, directions=directions,
+        )
+        if not expanded:
+            break
+        for ids in expanded:
+            if ids.tobytes() not in seen:
+                seen.add(ids.tobytes())
+                pool.append(ids)
+        # Insertions can make new unions admissible; keep minimizing K as well.
+        labels, unions = merge_valid_clusters(labels, pool, valid_group)
+        for ids in unions:
+            if ids.tobytes() not in seen:
+                seen.add(ids.tobytes())
+                pool.append(ids)
+        if not unions:
+            break
     return labels, baseline, pool
 
 
@@ -899,7 +1099,7 @@ def load_fusion_cache(path, fingerprint, n_points, *, constraints_key=None):
                 print(f"Cache: vincoli diversi; riuso {len(groups)} candidati da rivalidare.", flush=True)
                 return groups, None
         print(f"Cache fusione: {len(groups)} candidati e {np.count_nonzero(labels >= 0)} "
-              "assegnazioni precedenti non vincolanti.", flush=True)
+              "assegnazioni precedenti da rivalidare.", flush=True)
         return groups, labels
     except (OSError, ValueError, KeyError) as exc:
         raise RuntimeError(f"Cache fusione non leggibile: {path}. Nessuna assegnazione precedente ignorata.") from exc
@@ -954,6 +1154,60 @@ def print_clustering_summary(labels):
     print(f"Cluster: {len(np.unique(labels[labels >= 0]))}")
     print(f"Traiettorie assegnate: {len(labels) - unassigned} ({assigned_percentage:.2f}%)")
     print(f"Traiettorie non assegnate: {unassigned} ({percentage:.2f}%)", flush=True)
+
+
+
+
+def save_cluster_velocity_statistics(path, labels, velocities, times_days, catalog_name, positions):
+    """Save population statistics of SOI vx/vy and signed event times from ETD."""
+    cluster_ids = np.unique(labels[labels >= 0])
+    table = np.empty((len(cluster_ids), 14), dtype=float)
+
+    for i, cluster_id in enumerate(cluster_ids):
+        mask = labels == cluster_id
+        velocity_xy = velocities[mask, :2]
+        event_times = times_days[mask]
+
+        mean_velocity = np.mean(velocity_xy, axis=0)
+        std_velocity = np.std(velocity_xy, axis=0, ddof=0)
+
+        table[i] = np.r_[
+            cluster_id,
+            len(velocity_xy),
+            mean_velocity,
+            std_velocity,
+            event_times.mean(axis=0),
+            event_times.std(axis=0, ddof=0),
+            positions[mask, :2].mean(axis=0),
+            positions[mask, :2].std(axis=0, ddof=0),
+        ]
+
+    header = (
+        "cluster_id n_trajectories "
+        "mean_vx_km_s mean_vy_km_s std_vx_km_s std_vy_km_s "
+        "mean_t_perigee_days mean_t_soi_days "
+        "std_t_perigee_days std_t_soi_days "
+        "mean_x_soi_km mean_y_soi_km "
+        "std_x_soi_km std_y_soi_km\n"
+        f"Catalog: {catalog_name}\n"
+        "Frame: geocentric inertial model axes.\n"
+        "Velocities evaluated at Earth SOI exit; units: km/s.\n"
+        "Times: signed days from ETD = original database state at t=0.\n"
+        "t_soi is ETD-to-SOI duration; t_perigee is negative.\n"
+        "STD: population standard deviation, ddof=0.\n"
+        "Unassigned trajectories (cluster_id=-1) excluded.\\n"
+        "Positions: geocentric inertial SOI exit positions; km.\n"
+    )
+
+    np.savetxt(
+        path,
+        table,
+        fmt=("%d", "%d") + ("%.17e",) * 12,
+        header=header,
+    )
+
+    print(f"Statistiche salvate: {len(cluster_ids)} cluster in {path}")
+
 
 
 
@@ -1077,23 +1331,25 @@ print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 
 # Clustering limits are based on all retained trajectories, including unassigned points.
-STD_LIMITS = np.array([0.1, 0.1, np.inf])
-MIN_CLUSTER_SIZE = 100
+STD_LIMITS = np.array([0.04, 0.04, np.inf])
+MIN_CLUSTER_SIZE = 10
 MAX_CLUSTERS = max(1, n_kept // 100)    # floor(1% of the total), at least one
 BASE_MIN_CLUSTER_SIZE = 200
-MAX_SIGMA = 2.5
-DIP_ALPHA = 0.01                        # Family threshold for 3 physical + 3 PCA projections
-GAP_FRACTION = 0.20                     # Internal empty interval / projected range
-STRONG_GAP_FRACTION = 0.50              # Cut also without dip significance; at least 3 points per side
-OUTLIER_SIGMA = 3.0                     # Median/MAD tail separation, also requiring GAP_FRACTION
-GAUSSIAN_QQ_MAX = np.inf                # Disabled: Q-Q is diagnostic only
+MAX_SIGMA = 2.5                         # Radial bound in joint normalized velocity/time features.
+TIME_WEIGHT = 1                         # Relative weight of the normalized ETD-to-SOI time.
+TIME_DIP_ALPHA = 0.01                   # Separate scalar unimodality test on ETD-to-SOI times.
+CONNECTIVITY_RADIUS = 0.05              # Neighbor distance in globally normalized velocity/time features.
 BASE_CLUSTER_COUNTS = (99, 180)
 FUSION_SEEDS = (42, 7, 123)
 FUSION_TIME_LIMIT = 30.
-FUSION_CACHE_FILE = Path(__file__).resolve().parent / "Clusters/GA_16_vxvy_candidates.npz"
-EXTRA_CLUSTER_CONDITION = None          # Optional callable(ids), using event_features/selection
+FUSION_CACHE_FILE = Path(__file__).resolve().parent / "Clusters/GA_16_vxvy_time_candidates.npz"
+# Preserve connected velocity branches; do not additionally trim their velocity-only radial tails.
+EXTRA_CLUSTER_CONDITION = None
 
-# Same initial clustering and normalization as GA_15.
+# Signed event times in days, relative to the original database state (ETD).
+event_times_days = (trajectory_time_bounds - T_min) * TU / day
+
+# Same velocity normalization as GA_15, with an additional normalized time block.
 w = np.deg2rad(event_features[:, 2])
 angular_features = np.column_stack((np.cos(w), np.sin(w)))
 
@@ -1103,31 +1359,35 @@ clustering_features = np.column_stack((
    # normalize_block(angular_features),                                # w
    # 100 *normalize_block(event_features[:, 6:7]),                     # verso al perigeo
     normalize_block(event_features[:, 3:6]),                          # v_SOI
+    TIME_WEIGHT * normalize_block(event_times_days[:, 1:2]),          # ETD -> SOI
 ))
 
 
 print(f"Vincoli: STD < {STD_LIMITS}, minimo {MIN_CLUSTER_SIZE} punti, "
-      f"massimo {MAX_CLUSTERS} cluster, MAX_SIGMA = {MAX_SIGMA:g}", flush=True)
-shape_condition = ClusterShapeConstraint(event_features[:, 3:6], STD_LIMITS, dip_alpha=DIP_ALPHA,
-                                         gap_fraction=GAP_FRACTION, gaussian_qq_max=GAUSSIAN_QQ_MAX,
-                                         strong_gap_fraction=STRONG_GAP_FRACTION,
-                                         outlier_sigma=OUTLIER_SIGMA)
-print(f"Forma: DIP_ALPHA = {DIP_ALPHA:g}, GAP_FRACTION = {GAP_FRACTION:g}, "
-      f"STRONG_GAP_FRACTION = {STRONG_GAP_FRACTION:g}, OUTLIER_SIGMA = {OUTLIER_SIGMA:g}", flush=True)
-if np.any(np.isfinite(shape_condition.qq_max)):
-    print(f"Gaussian Q-Q <= {shape_condition.qq_max} per feature (approssimazione, non normalita' esatta).",
-          flush=True)
-else:
-    print("Vincolo gaussiano disattivato: Q-Q solo diagnostico.", flush=True)
+      f"massimo {MAX_CLUSTERS} cluster, MAX_SIGMA congiunto = {MAX_SIGMA:g}", flush=True)
+print(f"Feature temporale: ETD -> SOI normalizzata, peso {TIME_WEIGHT:g}; "
+      "nessun limite STD temporale assoluto.", flush=True)
+shape_condition = ConnectivityShapeConstraint(
+    clustering_features, CONNECTIVITY_RADIUS,
+    times_days=event_times_days[:, 1], time_dip_alpha=TIME_DIP_ALPHA,
+)
+print(f"Forma: componenti connesse, raggio = {CONNECTIVITY_RADIUS:g} "
+      "nelle feature velocità/tempo normalizzate globalmente; "
+      "controllo attivo anche in fusione e recupero.", flush=True)
+print(f"Forma tempi ETD -> SOI: gruppi respinti dal dip test se p < {TIME_DIP_ALPHA:g}, "
+      "anche durante le fusioni.", flush=True)
+print("Gaussian Q-Q solo diagnostico; rimosso il controllo separato delle code delle velocità.", flush=True)
 final_validator = make_cluster_validator(
     event_features[:, 3:6], clustering_features, STD_LIMITS, MIN_CLUSTER_SIZE, MAX_SIGMA,
     directions=event_features[:, 6], extra_condition=EXTRA_CLUSTER_CONDITION, shape_condition=shape_condition,
 )
-fingerprint = fusion_fingerprint(source_ids, selection, event_features, clustering_features)
+fingerprint = fusion_fingerprint(
+    source_ids, selection, event_features, clustering_features, trajectory_time_bounds,
+)
 constraints_key = fusion_fingerprint(
-    np.r_[STD_LIMITS, MIN_CLUSTER_SIZE, MAX_CLUSTERS, MAX_SIGMA, DIP_ALPHA, GAP_FRACTION,
-          STRONG_GAP_FRACTION, OUTLIER_SIGMA, shape_condition.qq_max],
-    np.frombuffer(b"dip-gap-qq-v3-outliers", dtype=np.uint8),
+    np.r_[STD_LIMITS, MIN_CLUSTER_SIZE, MAX_CLUSTERS, MAX_SIGMA,
+          CONNECTIVITY_RADIUS, TIME_WEIGHT, TIME_DIP_ALPHA],
+    np.frombuffer(b"connected-branches-v6-time-unimodality", dtype=np.uint8),
 )
 fusion_candidates, previous_fused_labels = load_fusion_cache(
     FUSION_CACHE_FILE, fingerprint, n_kept, constraints_key=constraints_key,
@@ -1169,8 +1429,51 @@ small_cluster_counts = []
 small_trajectory_fractions = []
 escape_stats = []
 
-output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_16_plots_vinf_K{len(np.unique(labels[labels >= 0]))}")
+output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_16_plots_vinf_time_K{len(np.unique(labels[labels >= 0]))}")
 output_directory.mkdir(parents=True, exist_ok=True)
+
+
+# Posizioni geocentriche inerziali alle uscite SOI, in km.
+x_soi = X_curvature[:, 0, -1] + mu
+y_soi = X_curvature[:, 1, -1]
+phi_soi = trajectory_time_bounds[:, 1]
+
+positions_soi = d * np.column_stack((
+    np.cos(phi_soi) * x_soi - np.sin(phi_soi) * y_soi,
+    np.sin(phi_soi) * x_soi + np.cos(phi_soi) * y_soi,
+))
+
+
+save_cluster_velocity_statistics(
+    output_directory / "cluster_velocity_statistics.txt",
+    labels,
+    event_features[:, 3:5],
+    times_days=event_times_days,
+    catalog_name=f"{Path(__file__).stem}_time",
+    positions=positions_soi,
+)
+
+np.savetxt(
+    output_directory / "trajectory_exit_catalog.txt",
+    np.column_stack((source_ids, labels, event_features[:, 3:6], event_times_days,
+                     positions_soi, event_features[:, :3])),
+    fmt=("%d", "%d") + ("%.17e",) * 10,
+    header=(
+        "source_id cluster_id vx_soi_km_s vy_soi_km_s vz_soi_km_s "
+        "t_perigee_days t_soi_days x_soi_km y_soi_km "
+        "eps_perigee_km2_s2 e_perigee omega_perigee_deg\n"
+        f"Catalog: {Path(__file__).stem}_time\n"
+        f"Source: {DATA_FILE}\n"
+        "source_id: zero-based numeric row in the original database.\n"
+        "cluster_id=-1: unassigned trajectory.\n"
+        "Velocity: geocentric inertial model axes, at Earth SOI; km/s.\n"
+        "Times: signed days from ETD = original database state at t=0.\n"
+        "Positions: geocentric inertial model axes at Earth SOI exit; km.\n"
+        "eps/e/omega: Earth osculating orbit at the selected perigee; "
+        "km^2/s^2, dimensionless, degrees; omega uses catalog model axes, as in GA16."
+    ),
+)
+
 
 if SAVE or PLOT_CLUSTERS:
     plot_unassigned_trajectories(X_curvature, labels, mu)
@@ -1679,6 +1982,41 @@ if SAVE or PLOT_CLUSTERS:
 
         fig.suptitle(f"Cluster {cid} — {len(values)} trajectories")
         save_figure(fig, f"cluster_{cid:03d}_features.png")
+
+        # SOI velocities and exit time; PCA is only a plotting coordinate.
+        velocities_plot = event_features[labels == cid, 3:5]
+        times_plot = event_times_days[labels == cid, 1]
+        mean_velocity = velocities_plot.mean(axis=0)
+        centered_velocity = velocities_plot - mean_velocity
+        _, _, velocity_axes = np.linalg.svd(centered_velocity, full_matrices=False)
+        pc1_axis = velocity_axes[0]
+        if pc1_axis[np.argmax(np.abs(pc1_axis))] < 0:
+            pc1_axis = -pc1_axis
+        pc1 = centered_velocity @ pc1_axis
+
+        fig, axes = plt.subplots(1, 2, figsize=(13, 6), constrained_layout=True)
+        axes[0].scatter(
+            velocities_plot[:, 0], velocities_plot[:, 1],
+            s=10, alpha=0.65, color=color, rasterized=True,
+        )
+        axes[0].scatter(*mean_velocity, marker="x", s=60, color="black",
+                        label="Media del cluster", zorder=3)
+        axes[0].set(xlabel=r"$v_x$ [km/s]", ylabel=r"$v_y$ [km/s]",
+                    title="Velocità alla SOI — geocentriche inerziali")
+        axes[0].set_aspect("equal", adjustable="datalim")
+
+        axes[1].scatter(pc1, times_plot, s=10, alpha=0.65, color=color, rasterized=True)
+        axes[1].scatter(0, times_plot.mean(), marker="x", s=60, color="black",
+                        label="Media del cluster", zorder=3)
+        axes[1].set(xlabel="PC1 delle velocità centrate [km/s]",
+                    ylabel="Tempo ETD → SOI [giorni]",
+                    title="Tempo di uscita — PCA del singolo cluster")
+        for ax in axes:
+            ax.set_box_aspect(1)
+            ax.grid(alpha=0.3)
+            ax.legend(fontsize="small")
+        fig.suptitle(f"Cluster {cid} — {len(velocities_plot)} traiettorie")
+        save_figure(fig, f"cluster_{cid:03d}_velocity_time.png")
 
 
 

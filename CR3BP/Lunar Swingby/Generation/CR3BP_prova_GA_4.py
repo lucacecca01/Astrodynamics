@@ -579,7 +579,7 @@ filters = {
     "capture": False,
     "ETD": True,
     "perilune": False,
-    "lunar_flyby": True,
+    "lunar_flyby": False,
     "maximum_flybys": False,
     "no_collision": True,
     "significant_first_flyby": False,
@@ -701,8 +701,8 @@ T_min = 0
 total = 0
 forward_collisions = 0
 retro_collisions = 0
-n_samples_r = 100
-n_samples_theta = 360
+n_samples_r = 400
+n_samples_theta = 500
 rev_n = 1
 flyby_n = 3
 flyby_tol = 0.1
@@ -733,7 +733,7 @@ pool = get_context("fork").Pool()
 
 
 # Iterate over Jacobi constants
-for Cj_norm in np.arange(Cj_min, Cj_max, 0.1):
+for Cj_norm in np.arange(Cj_min, Cj_max, 0.01):
 
 
     initial_conditions = []
@@ -766,9 +766,11 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.1):
     if len(initial_conditions) == 0:
         continue
 
-    all_initial_conditions.extend(initial_conditions)
     total += len(initial_conditions)
-    initial_conditions = np.array(initial_conditions)
+
+    if PLOT:
+        all_initial_conditions.extend(initial_conditions)
+        initial_conditions = np.array(initial_conditions)
 
 
 
@@ -879,15 +881,18 @@ for Cj_norm in np.arange(Cj_min, Cj_max, 0.1):
 
         transition_indices.append(len(sol_r[0]) - 1)
 
-        times.append(np.concatenate((sol_r[0][::-1], sol_f[0][1:])))
-        SV.append(np.concatenate((traj_r[:, ::-1], traj_f[:, 1:]), axis=1))
-        SV_inertial.append(np.concatenate((bar_r[:, ::-1], bar_f[:, 1:]), axis=1))
-        moon_inertial.append(np.concatenate((bar_r[:, ::-1] - moon_r[:, ::-1], bar_f[:, 1:] - moon_f[:, 1:]), axis=1))
-        earth_inertial.append(np.concatenate((bar_r[:, ::-1] - earth_r[:, ::-1], bar_f[:, 1:] - earth_f[:, 1:]), axis=1))
-        moon_energy.append(np.concatenate((m_r[::-1], m_f[1:]), axis=0))
-        earth_energy.append(np.concatenate((e_r[::-1], e_f[1:]), axis=0))
-        bar_energy.append(np.concatenate((b_r[::-1], b_f[1:]), axis=0))
-        Cj.append(np.concatenate((Cj_r[::-1], Cj_f[1:]), axis=0))
+        if PLOT:
+            times.append(np.concatenate((sol_r[0][::-1], sol_f[0][1:])))
+            SV.append(np.concatenate((traj_r[:, ::-1], traj_f[:, 1:]), axis=1))
+            SV_inertial.append(np.concatenate((bar_r[:, ::-1], bar_f[:, 1:]), axis=1))
+            moon_inertial.append(np.concatenate((bar_r[:, ::-1] - moon_r[:, ::-1], bar_f[:, 1:] - moon_f[:, 1:]), axis=1))
+            earth_inertial.append(np.concatenate((bar_r[:, ::-1] - earth_r[:, ::-1], bar_f[:, 1:] - earth_f[:, 1:]), axis=1))
+            moon_energy.append(np.concatenate((m_r[::-1], m_f[1:]), axis=0))
+            earth_energy.append(np.concatenate((e_r[::-1], e_f[1:]), axis=0))
+            bar_energy.append(np.concatenate((b_r[::-1], b_f[1:]), axis=0))
+            Cj.append(np.concatenate((Cj_r[::-1], Cj_f[1:]), axis=0))
+
+
         Cj_cicle.append(Cj_norm)
         flyby_counts.append(len(sol_f[2][3]) + len(sol_r[2][4]) - 1)
         encounters.append(np.concatenate((sol_r[2][4][1:], sol_f[2][3][1:])))
@@ -920,7 +925,7 @@ pool.join()
 
 
 # Print results and exit if no trajectories were accepted
-if len(SV) == 0:
+if len(Cj_cicle) == 0:
     elapsed_time = time.perf_counter() - start_time
 
     print("\n=== Simulation Results ===")
@@ -976,7 +981,7 @@ if False:
     np.savetxt(f"{trajectory_type}_trajectories_2.txt", data, header="r0x r0y r0z v0x v0y v0z t0_days Cj DE DV Emax h_perigeo h_min_periluneo")
 elif SAVE:
     data = np.column_stack((x0, Cj_cicle, final_energy*G*M/d, (rp_m-1)*R_L, perigee*d-R_E))
-    np.savetxt(f"{trajectory_type}_initial_conditions_CR3BP.txt", data, header="x0 y0 z0 v0x v0y v0z Cj E_SOI h_min_periluneo h_perigeo")
+    np.savetxt(f"{trajectory_type}_initial_conditions_CR3BP_x.txt", data, header="x0 y0 z0 v0x v0y v0z Cj E_SOI h_min_periluneo h_perigeo")
 
 
 
@@ -993,7 +998,7 @@ initial_conditions = np.array(all_initial_conditions)
 if total > 0:
     print("\n=== Simulation Results ===")
     print(f"Total computed trajectories:      {total}")
-    print(f"Total accepted trajectories:      {len(SV)} ({100 * len(SV) / total:.1f} %)")
+    print(f"Total accepted trajectories:      {len(Cj_cicle)} ({100 * len(Cj_cicle) / total:.1f} %)")
     print(f"Forward collisions:               {forward_collisions} ({100 * forward_collisions / total:.1f} %)")
     print(f"Retrograde collisions:            {retro_collisions} ({100 * retro_collisions / total:.1f} %)\n")
 else:

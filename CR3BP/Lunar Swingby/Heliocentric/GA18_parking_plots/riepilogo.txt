@@ -1,0 +1,19 @@
+Catalogo: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_vinf_time_K605/cluster_velocity_statistics.txt
+Scenari caricati: 6 (solo i file esplicitamente selezionati)
+Orbita di parcheggio: legata, perigeo sopra la superficie
+Membri assegnati analizzati: 97711; non assegnati esclusi: 1894; altri esclusi: 708
+DV rendez-vous: nessun limite; durata perigeo MEDIO -> arrivo: nessun limite
+Ogni membro eredita le prestazioni del modello medio del proprio cluster.
+Min DV per cella, per scenario: migliore trasferimento tra i cluster rappresentati nella cella.
+ETD per cella, per scenario: media per membro del numero di ETD distinte compatibili.
+Copertura per cella: media per membro della percentuale di scenari raggiungibili.
+Il denominatore include anche i membri senza trasferimenti sotto soglia.
+La griglia completa delle ETD non e salvata: i conteggi non sono probabilita o frazioni delle partenze provate.
+Finestre e passi temporali diversi fra scenari possono influenzare i conteggi di ETD.
+Il DV include solo il rendez-vous, non il costo di partenza dall'orbita terrestre.
+asteroide_2_20261009_181844: 447 trasferimenti caricati; 447 sotto soglia; 146 cluster raggiungibili
+asteroide_3_20261009_182925: 1513 trasferimenti caricati; 1513 sotto soglia; 223 cluster raggiungibili
+asteroide_5_20261009_174623: 3142 trasferimenti caricati; 3142 sotto soglia; 246 cluster raggiungibili
+asteroide_6_20261009_170938: 23891 trasferimenti caricati; 23891 sotto soglia; 605 cluster raggiungibili
+asteroide_7_20261009_190925: 5315 trasferimenti caricati; 5315 sotto soglia; 601 cluster raggiungibili
+asteroide_67_20261009_183646: 4748 trasferimenti caricati; 4748 sotto soglia; 596 cluster raggiungibili

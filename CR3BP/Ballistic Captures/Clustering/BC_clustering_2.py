@@ -65,20 +65,37 @@ T_max_b = -2 * np.pi
 dt_b = -0.0001
 
 N_branch = 500
+SOI_POINTS_PER_REGION = max(2, N_branch // 2)
+SOI_NORMALIZATION_FILE = Path(__file__).resolve().parent / "Clusters/BC_2_soi_normalization.npz"
 
 
 
 
-# Define function to build initial conditions database from file
+DATABASE_FIELDS = ("x20", "y20", "sigma0", "NRev", "NRevALL", "TimeEn", "CasoEn", "Coll", "min_r2", "min_r2_1stRev", "a", "e", "aBW", "eBW", "GAMMA")
+
+
+# Define function to build initial conditions database from one or more files
 def build_x0_database(filename, mu, collisions = "all"):
 
-    fields = ["x20", "y20", "sigma0", "NRev", "NRevALL", "TimeEn", "CasoEn", "Coll", "min_r2", "min_r2_1stRev", "a", "e", "aBW", "eBW", "GAMMA"]
+    files = [Path(filename)] if isinstance(filename, (str, Path)) else [Path(path) for path in filename]
+    if not files:
+        raise FileNotFoundError("Nessun file .dat nella cartella di input.")
 
-    with open(filename, encoding = "utf-8-sig") as file:
-        rows = [np.fromstring(line, sep = " ") for line in file if line.strip()]
+    chunks, offsets = [], [0]
+    for path in files:
+        with path.open(encoding="utf-8-sig") as file:
+            rows = [np.fromstring(line, sep=" ") for line in file if line.strip()]
+        if len(rows) != len(DATABASE_FIELDS) or not len(rows[0]):
+            raise ValueError(f"{path.name}: attese {len(DATABASE_FIELDS)} righe di dati non vuote.")
+        count = len(rows[0])
+        if any(len(row) != count for row in rows[:-1]) or len(rows[-1]) not in (1, count):
+            raise ValueError(f"{path.name}: numero di colonne incoerente; solo GAMMA puo' essere scalare.")
+        chunk = dict(zip(DATABASE_FIELDS, rows))
+        chunk["GAMMA"] = np.broadcast_to(chunk["GAMMA"], (count,))
+        chunks.append(chunk)
+        offsets.append(offsets[-1] + count)
 
-    data = dict(zip(fields, rows))
-    data["GAMMA"] = np.broadcast_to(data["GAMMA"], data["x20"].shape)
+    data = {name: np.concatenate([chunk[name] for chunk in chunks]) for name in DATABASE_FIELDS}
     indices = np.arange(len(data["x20"]))
 
     collision_tau = 2 * np.pi * data["Coll"]
@@ -124,6 +141,9 @@ def build_x0_database(filename, mu, collisions = "all"):
     data["column_indices"] = indices
     data["tau_ref"] = 2*np.pi*data["TimeEn"]
     data["mu"] = mu
+    # Global source ID = file offset + original (zero-based) column index.
+    data["source_files"] = np.array([str(path.resolve()) for path in files])
+    data["source_offsets"] = np.array(offsets, dtype=np.int64)
 
     return X0, data
 
@@ -324,18 +344,133 @@ def sample_branch(sol):
 
 
 
-# Define normalization function for features
-def normalize_block(features):
+def original_geometric_blocks(trajectories):
+    """Original backward/forward XY positions and unit tangents."""
+    branch = (trajectories.shape[2] + 1) // 2
+    position = trajectories[:, :2].transpose(0, 2, 1)
+    velocity = trajectories[:, 3:5].transpose(0, 2, 1)
+    speed = np.linalg.norm(velocity, axis=2, keepdims=True)
+    tangent = np.divide(velocity, speed, out=np.zeros_like(velocity), where=speed > 1e-14)
+    return np.stack((position[:, :branch], tangent[:, :branch],
+                     position[:, branch - 1:], tangent[:, branch - 1:]), axis=1)
 
-    centered = features - np.mean(features, axis=0)
-    scale = np.linalg.norm(centered) / np.sqrt(len(centered))
 
-    if scale <= 1e-14:
-        raise ValueError("Feature block has zero variance.")
+def build_soi_features(trajectories, mu, radius, points, normalization_file, settings,
+                       *, reference_key="", save=True, batch_size=256):
+    """Equal regional MSE weights, with fixed reference scatter scales."""
+    if (trajectories.ndim != 3 or trajectories.shape[1] != 6
+            or trajectories.shape[2] < 3 or trajectories.shape[2] % 2 != 1
+            or not len(trajectories)):
+        raise ValueError("Servono traiettorie (N, 6, 2*N_branch-1), con N positivo.")
+    if not isinstance(points, (int, np.integer)) or points < 2 or not np.isfinite(radius) or radius <= 0:
+        raise ValueError("SOI e numero di campioni regionali non validi.")
+    n = len(trajectories)
+    branch = (trajectories.shape[2] + 1) // 2
+    # Four blocks: backward/in, backward/out, forward/in, forward/out.
+    features = np.zeros((n, 4, 2, points, 2), dtype=np.float32)
+    counts = np.zeros((n, 4), dtype=np.int32)
+    point_sum = np.zeros((4, branch, 2), dtype=np.float64)
+    point_square_sum = np.zeros_like(point_sum)
+    for start in range(0, n, batch_size):
+        chunk = trajectories[start:start + batch_size]
+        if not np.all(np.isfinite(chunk)):
+            raise ValueError("Campioni di traiettoria non finiti.")
+        blocks = original_geometric_blocks(chunk)
+        point_sum += blocks.sum(axis=0, dtype=np.float64)
+        point_square_sum += np.square(blocks, dtype=np.float64).sum(axis=0)
+        distance = np.linalg.norm(chunk[:, :3].astype(np.float64)
+                                  - np.array([1 - mu, 0., 0.])[None, :, None], axis=1)
+        for row in range(len(chunk)):
+            for phase, section in enumerate((slice(0, branch), slice(branch - 1, None))):
+                inside = distance[row, section] < radius
+                for region, mask in enumerate((inside, ~inside)):
+                    block = 2 * phase + region
+                    ids = np.flatnonzero(mask)
+                    counts[start + row, block] = len(ids)
+                    if len(ids):
+                        # Select real samples in order; never interpolate across separate visits.
+                        selected = ids[np.rint(np.linspace(0, len(ids) - 1, points)).astype(int)]
+                        features[start + row, block] = blocks[row, 2*phase:2*phase + 2][:, selected]
+    presence = counts > 0
+    signature = np.r_[1., mu, radius, branch, points, np.asarray(settings, dtype=float)]
+    path = Path(normalization_file)
+    if path.exists():
+        with np.load(path, allow_pickle=False) as stored:
+            normalization = {name: stored[name] for name in stored.files}
+        if not np.array_equal(normalization.get("signature"), signature):
+            raise ValueError(f"Normalizzazione SOI incompatibile: scegliere un nuovo SOI_NORMALIZATION_FILE ({path}).")
+        print(f"Scale SOI: riuso del riferimento {path.name}", flush=True)
+    else:
+        centers = np.zeros((4, 2, points, 2), dtype=np.float64)
+        centers[:, 0, :, 0] = 1 - mu
+        scales = np.tile([radius, 1.], (4, 1))
+        for block in range(4):
+            number = int(presence[:, block].sum())
+            if not number:
+                continue
+            total = np.zeros((2, points, 2), dtype=np.float64)
+            square_total = np.zeros_like(total)
+            for start in range(0, n, batch_size):
+                values = features[start:start + batch_size, block][presence[start:start + batch_size, block]]
+                total += values.sum(axis=0, dtype=np.float64)
+                square_total += np.square(values, dtype=np.float64).sum(axis=0)
+            centers[block] = total / number
+            variance = np.maximum(square_total / number - centers[block]**2, 0.)
+            scatter = np.sqrt(variance.sum(axis=2).mean(axis=1))
+            scales[block] = np.where(scatter > 1e-12, scatter, scales[block])
+        variance = np.maximum(point_square_sum / n - (point_sum / n)**2, 0.)
+        pointwise_scales = np.sqrt(variance.sum(axis=(1, 2)))
+        fallback = np.array([radius, 1., radius, 1.]) * np.sqrt(branch)
+        pointwise_scales = np.where(pointwise_scales > 1e-12, pointwise_scales, fallback)
+        normalization = dict(signature=signature, centers=centers, scales=scales,
+                             pointwise_scales=pointwise_scales, reference_key=np.array(reference_key),
+                             reference_count=np.array(n), block_counts=presence.sum(axis=0))
+        if save:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            np.savez(path, **normalization)
+        print(f"Scale SOI: nuovo riferimento su {n} traiettorie" + (f", salvato in {path.name}" if save else " (non salvato)"), flush=True)
+    centers, scales = normalization["centers"], normalization["scales"]
+    pointwise_scales = normalization["pointwise_scales"]
+    if (centers.shape != (4, 2, points, 2) or scales.shape != (4, 2)
+            or pointwise_scales.shape != (4,) or not np.all(np.isfinite(centers))
+            or not np.all(np.isfinite(scales) & (scales > 0))
+            or not np.all(np.isfinite(pointwise_scales) & (pointwise_scales > 0))):
+        raise ValueError("Scale o centri nel riferimento SOI non validi.")
+    for start in range(0, n, batch_size):
+        for block in range(4):
+            active = presence[start:start + batch_size, block]
+            # Half per region, half per feature type, equal share between available branches.
+            branches = presence[start:start + batch_size, block % 2::2].sum(axis=1)
+            weight = np.sqrt(.25 / (points * np.maximum(branches, 1)))
+            values = (features[start:start + batch_size, block] - centers[block]) / scales[block, :, None, None]
+            values *= weight[:, None, None, None]
+            values[~active] = 0.
+            features[start:start + batch_size, block] = values
+    return features.reshape(n, -1), presence, counts, normalization
 
-    centered /= scale
 
-    return centered
+class OriginalPointwiseDeviation:
+    """Check ALL original samples independently of the clustering weights."""
+
+    def __init__(self, trajectories, scales, batch_size=256):
+        self.trajectories = trajectories
+        self.scales = np.asarray(scales, dtype=float)
+        self.batch_size = batch_size
+
+    def __call__(self, ids):
+        ids = np.asarray(ids, dtype=int)
+        if not len(ids):
+            raise ValueError("Cluster vuoto.")
+        center = np.zeros((4, (self.trajectories.shape[2] + 1)//2, 2), dtype=np.float64)
+        for start in range(0, len(ids), self.batch_size):
+            center += original_geometric_blocks(self.trajectories[ids[start:start + self.batch_size]]).sum(axis=0, dtype=np.float64)
+        center /= len(ids)
+        maximum = 0.
+        for start in range(0, len(ids), self.batch_size):
+            residual = original_geometric_blocks(self.trajectories[ids[start:start + self.batch_size]]) - center
+            residual /= self.scales[None, :, None, None]
+            maximum = max(maximum, float(np.square(residual).sum(axis=3).max()))
+        return np.sqrt(maximum)
 
 
 
@@ -370,7 +505,7 @@ class GeometricClusterConstraint:
 
     def __init__(self, features, std_limit, min_size, sigma_limit, *,
                  dip_alpha=0.01, gap_fraction=0.2, strong_gap_fraction=0.5,
-                 outlier_sigma=3.):
+                 outlier_sigma=3., region_presence=None, pointwise_deviation=None):
         self.features = np.asarray(features)
         if (self.features.ndim != 2 or not self.features.shape[1] or self.features.shape[1] % 2
                 or not np.issubdtype(self.features.dtype, np.floating)):
@@ -395,6 +530,10 @@ class GeometricClusterConstraint:
         self.std_limit, self.min_size, self.sigma_limit = std_limit, min_size, sigma_limit
         self.alpha, self.gap_fraction = dip_alpha, gap_fraction
         self.strong_gap_fraction, self.outlier_sigma = strong_gap_fraction, outlier_sigma
+        self.region_presence = None if region_presence is None else np.asarray(region_presence, dtype=bool)
+        if self.region_presence is not None and self.region_presence.shape != (len(features), 4):
+            raise ValueError("Presenza SOI: attesa matrice (N, 4).")
+        self.pointwise_deviation = pointwise_deviation
         self.stats_cache, self.shape_cache = {}, {}
 
     @staticmethod
@@ -405,11 +544,18 @@ class GeometricClusterConstraint:
         key = self.key(ids)
         if key not in self.stats_cache:
             std, sigma, _, _, max_deviation = geometric_statistics(self.features, ids)
+            if self.pointwise_deviation is not None:
+                max_deviation = self.pointwise_deviation(ids)
             self.stats_cache[key] = (std, sigma, max_deviation)
         return self.stats_cache[key]
 
     def split(self, ids):
         ids = np.sort(np.asarray(ids, dtype=int))
+        if self.region_presence is not None and len(ids):
+            presence = self.region_presence[ids]
+            mixed = np.flatnonzero(np.any(presence != presence[0], axis=0))
+            if len(mixed):
+                return presence[:, mixed[0]].astype(np.int8)
         key = self.key(ids)
         if key not in self.shape_cache:
             self.shape_cache[key] = self._gap_split(ids)
@@ -469,6 +615,8 @@ class GeometricClusterConstraint:
 
     def __call__(self, ids):
         if len(ids) < self.min_size:
+            return False
+        if self.region_presence is not None and np.any(self.region_presence[ids] != self.region_presence[ids[0]]):
             return False
         _, sigma, max_deviation = self.statistics(ids)
         return (max_deviation < self.std_limit and sigma <= self.sigma_limit
@@ -532,7 +680,7 @@ def add_neighbor_candidates(labels, features, validator, candidates):
         delta_squared = np.sum((centers[i] - centers[j])**2)
         pooled = ((ni * stats[i][0]**2 + nj * stats[j][0]**2) / (ni + nj)
                   + ni * nj / (ni + nj)**2 * delta_squared / features.shape[1])
-        if np.sqrt(2 * pooled) < validator.std_limit:
+        if validator.pointwise_deviation is not None or np.sqrt(2 * pooled) < validator.std_limit:
             candidates.append(np.sort(np.r_[groups[i], groups[j]]))
 
 
@@ -922,22 +1070,31 @@ def save_orbital_report(k, labels, representative_ids):
 
 
 # Input
-DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Ballistic Captures/Clustering/Database_Lorenzo/strsysT8Gamma20V16.dat"
+DATA_DIR = Path(__file__).resolve().parent / "Database_Lorenzo"
+DATA_FILES = sorted(DATA_DIR.glob("*.dat"))
 
-database, data = build_x0_database(DATA_FILE, mu=mu, collisions="exclude")
+database, data = build_x0_database(DATA_FILES, mu=mu, collisions="exclude")
+DATA_NAME = DATA_FILES[0].stem if len(DATA_FILES) == 1 else f"{DATA_DIR.name}_combined"
 
 
-x0_selection = database[::1]
-source_ids = data["column_indices"][::1]
+x0_selection = database[::2]
+source_ids = data["column_indices"][::2]
 
-with np.load(Path(__file__).resolve().parent / "Clusters/strsysT8Gamma20V16_20260922_004745/orbital_parameters.npz") as previous:
-    excluded_ids = previous["source_ids"][~np.isfinite(previous["perigee_times_tau"]).all(axis=1)]
+# These exclusions were measured only on the original Gamma20 database.
+excluded_ids = np.empty(0, dtype=np.int64)
+for path, offset in zip(DATA_FILES, data["source_offsets"][:-1]):
+    if path.name == "strsysT8Gamma20V16.dat":
+        with np.load(Path(__file__).resolve().parent / "Clusters/strsysT8Gamma20V16_20260922_004745/orbital_parameters.npz") as previous:
+            excluded_ids = offset + previous["source_ids"][~np.isfinite(previous["perigee_times_tau"]).all(axis=1)]
 
 keep = ~np.isin(source_ids, excluded_ids)
 x0_selection, source_ids = x0_selection[keep], source_ids[keep]
 
 
-print(f"\nDatabase trajectories: {len(database)}")
+print(f"\nInput files: {len(DATA_FILES)}")
+for path, count in zip(DATA_FILES, np.diff(data["source_offsets"])):
+    print(f"  {path.name}: {count} trajectories")
+print(f"Database trajectories: {len(database)}")
 print(f"Selected trajectories: {len(x0_selection)}")
 
 
@@ -957,16 +1114,18 @@ parameter_units = ("km^2/s^2", "-", "deg")
 
 statistic_names = ("n_valid", "n_missing", "median", "std", "p05", "p95", "width90", "minimum", "maximum", "range", "skewness", "error95", "error_max", "angle_origin_deg", "angle_resultant")
 
-output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{Path(DATA_FILE).stem}_{time.strftime('%Y%m%d_%H%M%S')}")
+output_directory = (Path(__file__).resolve().parent / "Clusters" / f"{DATA_NAME}_{time.strftime('%Y%m%d_%H%M%S')}")
 
 if SAVE:
     output_directory.mkdir(parents=True, exist_ok=True)
 
     with (output_directory / "analysis.log").open("w", encoding="utf-8") as log:
+        for path, offset, count in zip(DATA_FILES, data["source_offsets"][:-1], np.diff(data["source_offsets"])):
+            log.write(f"Input: {path.name}, columns={count}, source_id=column_index+{offset} (zero-based)\n")
         log.write(f"N={len(x0_selection)}, N_branch={N_branch}, dt_b={dt_b}, dt_f={dt_f}, rtol=1e-9\n")
         log.write(f"T_min={T_min}, T_max_b={T_max_b}, T_max_f={T_max_f}\n")
         log.write("Cluster views: full trajectories and lunar zoom (+/-0.25 LU).\n")
-        log.write("Features: unchanged normalized position and unit tangent blocks.\n")
+        log.write("Features: SOI-balanced position and unit tangent blocks; original plot samples unchanged.\n")
         log.write("OE event: first outward crossing of 2.5 lunar SOI along each integration direction, before any detected collision.\n")
         log.write("Frame: geocentric inertial axes coincident with synodic axes at t=0.\n")
         log.write("STD: ddof=0; w statistics use offsets from the cluster circular mean (angle_origin_deg).\n")
@@ -1025,6 +1184,8 @@ if SAVE:
     np.savez(
         output_directory / "orbital_parameters.npz",
         source_ids=source_ids,
+        source_files=data["source_files"],
+        source_offsets=data["source_offsets"],
         parameters=orbital_elements,
         perigee_times_tau=perigee_times,
         phase_names=phase_names,
@@ -1036,45 +1197,32 @@ if SAVE:
 
 
 # Compute clustering features
-sampled_position = X_curvature[:, :2]
-sampled_velocity = X_curvature[:, 3:5]
-
-sampled_speed = np.linalg.norm(sampled_velocity, axis=1, keepdims=True)
-unit_tangent = np.divide(sampled_velocity, sampled_speed, out=np.zeros_like(sampled_velocity), where=sampled_speed > 1e-14)
-
-del sampled_speed
-
-backward_position = sampled_position[:, :, :N_branch]
-forward_position = sampled_position[:, :, N_branch - 1:]
-
-backward_tangent = unit_tangent[:, :, :N_branch]
-forward_tangent = unit_tangent[:, :, N_branch - 1:]
-
-backward_position = backward_position.transpose(0, 2, 1).reshape(len(X_curvature), -1)
-forward_position = forward_position.transpose(0, 2, 1).reshape(len(X_curvature), -1)
-
-backward_tangent = backward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
-forward_tangent = forward_tangent.transpose(0, 2, 1).reshape(len(X_curvature), -1)
-
-del sampled_position, sampled_velocity, unit_tangent
-
-backward_position = normalize_block(backward_position)
-forward_position = normalize_block(forward_position)
-
-backward_tangent = normalize_block(backward_tangent)
-forward_tangent = normalize_block(forward_tangent)
-
-clustering_features = np.hstack((backward_position, backward_tangent, forward_position, forward_tangent))
-
-del backward_position, forward_position
-del backward_tangent, forward_tangent
+clustering_features, soi_presence, soi_counts, soi_normalization = build_soi_features(
+    X_curvature, mu, M_SOI / d, SOI_POINTS_PER_REGION, SOI_NORMALIZATION_FILE,
+    [T_min, T_max_b, T_max_f, dt_b, dt_f], reference_key=fusion_fingerprint(source_ids), save=SAVE,
+)
+pointwise_check = OriginalPointwiseDeviation(X_curvature, soi_normalization["pointwise_scales"])
+inside_fraction = soi_counts[:, ::2].sum() / soi_counts.sum()
+print(f"Campioni originali nella SOI lunare: {100*inside_fraction:.2f}%; "
+      "peso geometrico: 50% dentro, 50% fuori (quando presenti).", flush=True)
+if SAVE:
+    np.savez(output_directory / "soi_normalization.npz", **soi_normalization)
+    with (output_directory / "analysis.log").open("a", encoding="utf-8") as log:
+        log.write(f"SOI radius={M_SOI/d:.12g} LU; regional samples per branch={SOI_POINTS_PER_REGION}\n")
+        log.write(f"Original samples inside SOI: {100*inside_fraction:.6f}%\n")
+        log.write(f"Fixed normalization: {SOI_NORMALIZATION_FILE}; reference N={int(soi_normalization['reference_count'])}\n")
+        log.write("Regional MSE: 50% inside / 50% outside; position/tangent 50/50; available branches share each region equally.\n")
+        log.write("Regional samples selected in curvature order without interpolation; absent branches/regions kept in separate groups.\n")
+        log.write(f"Present trajectories [back/in, back/out, forward/in, forward/out]: {soi_presence.sum(axis=0).tolist()}\n")
+        log.write(f"Fixed regional pair scatter scales: {soi_normalization['scales'].tolist()}\n")
+        log.write(f"Fixed original pointwise scales: {soi_normalization['pointwise_scales'].tolist()}\n")
 
 
 
 
 
-# GA_16-style candidate splitting and fusion on the unchanged geometric features.
-STD_MEAN_LIMIT = 0.1                  # Max distance from mean for EVERY normalized XY/tangent pair
+# GA_16-style candidate splitting and fusion on SOI-balanced geometric features.
+STD_MEAN_LIMIT = 0.1                  # Max deviation of ALL original pairs, using fixed reference scales
 MIN_CLUSTER_SIZE = 50
 MAX_CLUSTERS = max(1, len(clustering_features) // 100)
 MAX_SIGMA = 2.5                        # Distance / RMS radius in the full geometric space
@@ -1085,18 +1233,20 @@ OUTLIER_SIGMA = 3.0
 BASE_CLUSTER_COUNTS = (32, 64)
 FUSION_SEEDS = (42, 7, 123)
 FUSION_TIME_LIMIT = 30.
-FUSION_CACHE_FILE = Path(__file__).resolve().parent / "Clusters/BC_2_geometric_fusion_candidates.npz"
+FUSION_CACHE_FILE = Path(__file__).resolve().parent / "Clusters/BC_2_soi_balanced_fusion_candidates.npz"
 
 validator = GeometricClusterConstraint(
     clustering_features, STD_MEAN_LIMIT, MIN_CLUSTER_SIZE, MAX_SIGMA,
     dip_alpha=DIP_ALPHA, gap_fraction=GAP_FRACTION,
     strong_gap_fraction=STRONG_GAP_FRACTION, outlier_sigma=OUTLIER_SIGMA,
+    region_presence=soi_presence, pointwise_deviation=pointwise_check,
 )
-fingerprint = fusion_fingerprint(source_ids, clustering_features)
+fingerprint = fusion_fingerprint(source_ids, clustering_features, soi_presence,
+                                 soi_normalization["signature"], soi_normalization["pointwise_scales"])
 constraints_key = fusion_fingerprint(
     np.r_[STD_MEAN_LIMIT, MIN_CLUSTER_SIZE, MAX_CLUSTERS, MAX_SIGMA,
           DIP_ALPHA, GAP_FRACTION, STRONG_GAP_FRACTION, OUTLIER_SIGMA],
-    np.frombuffer(b"bc-geometric-pointwise-xy-max-pca-gap-v2", dtype=np.uint8),
+    np.frombuffer(b"bc-soi-balanced-original-pointwise-v1", dtype=np.uint8),
 )
 candidates, previous_labels = load_fusion_cache(
     FUSION_CACHE_FILE, fingerprint, len(clustering_features), constraints_key=constraints_key,
@@ -1109,9 +1259,9 @@ if SAVE:
         log.write(description + "\n")
         log.write(f"Forma geometrica: DIP_ALPHA={DIP_ALPHA}, GAP_FRACTION={GAP_FRACTION}, "
                   f"STRONG_GAP_FRACTION={STRONG_GAP_FRACTION}, OUTLIER_SIGMA={OUTLIER_SIGMA}\n")
-        log.write("Limite su ogni coppia XY di posizioni e tangenti normalizzate, in entrambi i rami.\n")
-        log.write("Confronto allo stesso indice del campionamento in curvatura, non allo stesso tempo.\n")
-        log.write("STD RMS solo diagnostica; sigma e KMeans usano tutte le feature; PCA individua vuoti.\n")
+        log.write("Limite puntuale su TUTTI i campioni originali in curvatura, con scale fisse e senza pesi SOI.\n")
+        log.write("KMeans/sigma/PCA: campioni regionali bilanciati; confronto in progressione di curvatura, non temporale.\n")
+        log.write("STD RMS bilanciata solo diagnostica; PCA individua vuoti.\n")
 
 labels, fusion_candidates = refine_geometric_clustering(
     clustering_features, validator, BASE_CLUSTER_COUNTS, FUSION_SEEDS, MAX_CLUSTERS,
@@ -1169,10 +1319,18 @@ if SAVE:
         labels=labels,
         representative_ids=representative_ids,
         source_ids=source_ids,
+        source_files=data["source_files"],
+        source_offsets=data["source_offsets"],
         cluster_stds=cluster_stds,
         cluster_max_deviations=cluster_max_deviations,
         constraint_metric="max_pointwise_xy_distance_from_mean",
         constraint_units="normalized",
+        clustering_metric="soi_balanced_regional_mse",
+        soi_radius_lu=M_SOI/d,
+        soi_presence=soi_presence,
+        soi_counts=soi_counts,
+        soi_points_per_region=SOI_POINTS_PER_REGION,
+        pointwise_reference_scales=soi_normalization["pointwise_scales"],
         std_mean_limit=STD_MEAN_LIMIT,
         min_cluster_size=MIN_CLUSTER_SIZE,
         max_clusters=MAX_CLUSTERS,
@@ -1255,24 +1413,9 @@ if SAVE:
 # Save representative trajectories to file
 if SAVE and len(representative_ids):
 
-    output_file = (output_directory / f"{Path(DATA_FILE).stem}_medoids.txt")
-
-    wanted_ids = set(representative_source_ids)
-
-    with open(DATA_FILE, encoding="utf-8-sig") as src, \
-        output_file.open("w", encoding="utf-8") as dst:
-
-        for line in src:
-            values = line.split()
-
-            if not values:
-                continue
-
-            selected = (values if len(values) == 1
-                        
-                else [values[i] for i in representative_source_ids])
-            
-            dst.write(" ".join(selected) + "\n")
+    output_file = output_directory / f"{DATA_NAME}_medoids.txt"
+    selected = np.searchsorted(data["column_indices"], representative_source_ids)
+    np.savetxt(output_file, np.array([data[name][selected] for name in DATABASE_FIELDS]), fmt="%.17g")
     
     print(f"Medoidi salvati in: {output_file}")
 

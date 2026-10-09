@@ -945,6 +945,33 @@ def plot_unassigned_trajectories(trajectories, labels, mu):
 
 
 
+def save_cluster_exit_velocities(path, labels, source_ids, velocities, source_file,
+                                 position_angles_deg):
+    """Export every assigned trajectory's geocentric inertial velocity at Earth SOI exit."""
+    ids = np.flatnonzero(labels >= 0)
+    ids = ids[np.argsort(labels[ids], kind="stable")]
+    velocity = velocities[ids]
+    speed = np.linalg.norm(velocity, axis=1)
+    angle = np.degrees(np.arctan2(velocity[:, 1], velocity[:, 0])) % 360.0
+    angle[np.hypot(velocity[:, 0], velocity[:, 1]) == 0] = np.nan
+
+    table = np.column_stack((labels[ids], source_ids[ids], speed, angle,
+                             np.asarray(position_angles_deg)[ids] % 360.0))
+    header = (
+        "cluster_id source_id v_soi_km_s exit_angle_deg position_angle_deg\n"
+        "One row per assigned trajectory; sorted by cluster_id; unassigned trajectories excluded.\n"
+        f"Source database: {source_file}\n"
+        "source_id: zero-based numeric row index in the source database (header excluded).\n"
+        "v_soi_km_s: geocentric inertial speed at Earth SOI exit, not extrapolated to infinity.\n"
+        "exit_angle_deg: atan2(vy, vx) in [0, 360), from +x toward +y in the inertial xy plane; "
+        "NaN if the xy projection is zero.\n"
+        "position_angle_deg: geocentric SOI exit position angle in [0, 360), "
+        "in the same inertial xy frame as exit_angle_deg."
+    )
+    np.savetxt(path, table, fmt=("%d", "%d", "%.17e", "%.17e", "%.17e"), header=header)
+    print(f"Velocita' di uscita salvate: {len(ids)} traiettorie in {path}", flush=True)
+
+
 def print_clustering_summary(labels):
 
     unassigned = np.count_nonzero(labels < 0)
@@ -1079,7 +1106,7 @@ print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 # Clustering limits are based on all retained trajectories, including unassigned points.
 STD_LIMITS = np.array([0.04, 0.05, 12])
-MIN_CLUSTER_SIZE = 50
+MIN_CLUSTER_SIZE = 20
 MAX_CLUSTERS = max(1, n_kept // 100)    # floor(1% of the total), at least one
 BASE_MIN_CLUSTER_SIZE = 200
 MAX_SIGMA = 2.5
@@ -1171,6 +1198,15 @@ escape_stats = []
 
 output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_16_plots_K{len(np.unique(labels[labels >= 0]))}")
 output_directory.mkdir(parents=True, exist_ok=True)
+
+save_cluster_exit_velocities(
+    output_directory / "cluster_exit_velocities.txt",
+    labels, source_ids, event_features[:, 3:6], DATA_FILE,
+    position_angles_deg=np.degrees(
+        np.arctan2(X_curvature[:, 1, -1], X_curvature[:, 0, -1] + mu)
+        + trajectory_time_bounds[:, 1]
+    ) % 360.0,
+)
 
 if SAVE or PLOT_CLUSTERS:
     plot_unassigned_trajectories(X_curvature, labels, mu)

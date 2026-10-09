@@ -1,0 +1,40 @@
+{
+  "complete": true,
+  "fingerprint": "08679acdb7d14dc57e4724c33630d8a7ff78d4186354ae54bc4aaf6757b2ebe8",
+  "cluster_id": 52,
+  "input_trajectories": 149,
+  "propagated_trajectories": 5364,
+  "full_horizon": 5300,
+  "sun_collisions": 0,
+  "earth_collisions": 64,
+  "max_jacobi_error": 6.050937528812028e-11,
+  "elapsed_seconds": 21.537139921999824,
+  "settings": {
+    "angle_step_deg": 10.0,
+    "samples": 1000,
+    "rtol": 1e-10,
+    "atol": 1e-12,
+    "max_step": 0.05,
+    "final_time": 12.566370614359172,
+    "mu": 3.003510335359104e-06,
+    "soi_radius": 0.00618090650126487,
+    "lu_km": 149600000.0,
+    "tu_seconds": 5021997.413455106,
+    "sun_radius": 0.0046504010695187165,
+    "earth_radius": 4.2633689839572194e-05,
+    "coverage_resolution": 700,
+    "save_trajectories": false,
+    "reference_position_deg": null
+  },
+  "frame": "Heliocentric inertial axes, Sun at origin; x/y in LU, time in TU",
+  "LU_km": 149600000.0,
+  "TU_seconds": 5021997.413455106,
+  "VU_km_s": 29.78894405624077,
+  "status_codes": {
+    "0": "Final time reached (default 4*pi, two Earth periods)",
+    "1": "Sun collision",
+    "2": "Earth collision"
+  },
+  "sampling": "Per-trajectory time = sample_fractions * end_times[i]; includes the exact final/collision point.",
+  "coverage_method": "Union of finite, linearly interpolated trajectory segments; half-cell raster sampling; disk closing radius 2 cells; disk dilation radius 1 cell; no convex hull or global hole filling"
+}
