@@ -12,7 +12,6 @@ from matplotlib.collections import LineCollection
 from matplotlib.backends.backend_pdf import PdfPages
 from scipy.optimize import Bounds, LinearConstraint, milp
 from scipy.sparse import coo_matrix, csr_matrix, vstack
-from scipy.sparse.csgraph import connected_components
 from scipy.spatial import cKDTree
 from scipy.special import ndtri
 from sklearn.cluster import KMeans
@@ -362,12 +361,35 @@ class ConnectivityShapeConstraint:
         ordered = np.sort(ids)
         key = hashlib.sha256(ordered.tobytes()).digest()
         if key not in self.cache:
-            pairs = cKDTree(self.features[ordered]).query_pairs(self.radius, output_type="ndarray")
-            graph = csr_matrix(
-                (np.ones(len(pairs), dtype=bool), (pairs[:, 0], pairs[:, 1])),
-                shape=(len(ordered), len(ordered)),
-            )
-            count, components = connected_components(graph, directed=False)
+            # Discover components without materializing all neighboring pairs.
+            tree = cKDTree(self.features[ordered])
+            components = np.full(len(ordered), -1, dtype=np.int32)
+            count = 0
+            remaining = len(ordered)
+
+            for seed in range(len(ordered)):
+                if components[seed] >= 0:
+                    continue
+
+                components[seed] = count
+                remaining -= 1
+                stack = [seed]
+
+                while stack and remaining:
+                    node = stack.pop()
+                    neighbors = tree.query_ball_point(
+                        tree.data[node], self.radius, eps=0.0,
+                    )
+                    for neighbor in neighbors:
+                        if components[neighbor] < 0:
+                            components[neighbor] = count
+                            remaining -= 1
+                            stack.append(neighbor)
+
+                count += 1
+                if remaining == 0:
+                    break
+
             # Bound memory during candidate-union checks; connected groups store no labels.
             if len(self.cache) >= 4096:
                 self.cache.pop(next(iter(self.cache)))
@@ -503,7 +525,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
             k = min(len(ids), max(1, round(n_base * len(ids) / len(features))))
             model = KMeans(n_clusters=k, n_init=5, random_state=42,
                            max_iter=500, tol=1e-9, algorithm="lloyd")
-            base_labels[ids] = model.fit_predict(features[ids, :4]) + offset
+            base_labels[ids] = model.fit_predict(features[ids]) + offset
             offset += k
 
     # Intersections let us refine the preceding solution without losing it.
@@ -514,8 +536,8 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
 
     blocks = [np.flatnonzero(base_labels == c) for c in np.unique(base_labels)]
     counts = np.array([len(ids) for ids in blocks])
-    means = np.array([features[ids, :4].mean(axis=0) for ids in blocks])
-    residuals = [np.sum((features[ids, :4] - center)**2, axis=1)
+    means = np.array([features[ids].mean(axis=0) for ids in blocks])
+    residuals = [np.sum((features[ids] - center)**2, axis=1)
                  for ids, center in zip(blocks, means)]
     sse = np.array([values.sum() for values in residuals])
     radii = np.array([np.sqrt(values.max()) for values in residuals])
@@ -563,7 +585,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
             if not valid_group(members):
                 raise RuntimeError("La partizione precedente non rispetta i vincoli.")
             spec = tuple(j for j, ids in enumerate(blocks) if previous_labels[ids[0]] == c)
-            data = features[members, :4]
+            data = features[members]
             cost = float(np.sum((data - data.mean(axis=0))**2))
             previous_cost += cost
             if spec not in existing:
@@ -606,7 +628,7 @@ def constrained_clustering(features, directions, n_base, min_size=1000,
         if not valid_group(members):
             raise RuntimeError("Cluster finale non ammissibile.")
         labels[members] = c
-        data = features[members, :4]
+        data = features[members]
         total_cost += np.sum((data - data.mean(axis=0))**2)
 
     if previous_labels is not None and total_cost >= previous_cost:
@@ -673,7 +695,7 @@ def split_messy_clusters(labels, physical_features, std_limits, min_size, max_cl
         data[:, :2] / scale[:2],
         np.cos(angles) / np.deg2rad(scale[2]),
         np.sin(angles) / np.deg2rad(scale[2]),
-        features[:, 3:],  # Include the normalized ETD-to-SOI time in ordinary splits.
+        features,  # Include the normalized ETD-to-SOI time in ordinary splits.
     ))
 
     with threadpool_limits(limits=2):
@@ -1234,7 +1256,7 @@ mu_earth = G * m1
 
 
 # Input
-DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Generation/Escape_initial_conditions_CR3BP.txt"
+DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Generation/Escape_initial_conditions_CR3BP_x.txt"
 
 database = np.atleast_2d(np.loadtxt(DATA_FILE, skiprows=1))
 
@@ -1275,7 +1297,7 @@ T_max_b = -4 * np.pi
 dt_b = -0.001
 
 event_features = []
-N_PLOT = 500
+N_PLOT = 50
 
 
 
@@ -1353,13 +1375,26 @@ event_times_days = (trajectory_time_bounds - T_min) * TU / day
 w = np.deg2rad(event_features[:, 2])
 angular_features = np.column_stack((np.cos(w), np.sin(w)))
 
+
+# Posizioni geocentriche inerziali alle uscite SOI, in km.
+x_soi = X_curvature[:, 0, -1] + mu
+y_soi = X_curvature[:, 1, -1]
+phi_soi = trajectory_time_bounds[:, 1]
+
+positions_soi = d * np.column_stack((
+    np.cos(phi_soi) * x_soi - np.sin(phi_soi) * y_soi,
+    np.sin(phi_soi) * x_soi + np.cos(phi_soi) * y_soi,
+))
+
+
 clustering_features = np.column_stack((
    # normalize_block(event_features[:, 0:1]),                          # eps
    # normalize_block(event_features[:, 1:2]),                          # e
    # normalize_block(angular_features),                                # w
    # 100 *normalize_block(event_features[:, 6:7]),                     # verso al perigeo
-    normalize_block(event_features[:, 3:6]),                          # v_SOI
-    TIME_WEIGHT * normalize_block(event_times_days[:, 1:2]),          # ETD -> SOI
+    normalize_block(positions_soi),                                    # r_SOI
+    normalize_block(event_features[:, 3:6]),                           # v_SOI
+    TIME_WEIGHT * normalize_block(event_times_days[:, 1:2]),           # ETD -> SOI
 ))
 
 
@@ -1431,17 +1466,6 @@ escape_stats = []
 
 output_directory = (Path(__file__).resolve().parent / f"Clusters/GA_16_plots_vinf_time_K{len(np.unique(labels[labels >= 0]))}")
 output_directory.mkdir(parents=True, exist_ok=True)
-
-
-# Posizioni geocentriche inerziali alle uscite SOI, in km.
-x_soi = X_curvature[:, 0, -1] + mu
-y_soi = X_curvature[:, 1, -1]
-phi_soi = trajectory_time_bounds[:, 1]
-
-positions_soi = d * np.column_stack((
-    np.cos(phi_soi) * x_soi - np.sin(phi_soi) * y_soi,
-    np.sin(phi_soi) * x_soi + np.cos(phi_soi) * y_soi,
-))
 
 
 save_cluster_velocity_statistics(

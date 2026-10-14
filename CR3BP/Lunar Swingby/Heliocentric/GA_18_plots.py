@@ -1,6 +1,6 @@
 """Mappe delle orbite terrestri, senza ricalcolare Lambert.
 
-Ogni file selezionato rappresenta uno scenario: il nome numerico dell'asteroide
+Ogni file caricato rappresenta uno scenario: il nome numerico dell'asteroide
 non identifica necessariamente la stessa orbita in esecuzioni diverse.
 I risultati del modello medio di un cluster sono attribuiti ai suoi membri.
 """
@@ -12,21 +12,18 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-# Configurazione: selezionare esplicitamente uno scenario per asteroide.
+# Scansione delle cartelle asteroide_<numero>, ordinate numericamente.
 BASE_DIR = Path(__file__).resolve().parent
-TRANSFER_FILES = [
-    "GA18_plots/asteroide_2_20261009_181844/transfers_rendezvous.txt",
-    "GA18_plots/asteroide_3_20261009_182925/transfers_rendezvous.txt",
-    "GA18_plots/asteroide_5_20261009_174623/transfers_rendezvous.txt",
-    "GA18_plots/asteroide_6_20261009_170938/transfers_rendezvous.txt",
-    "GA18_plots/asteroide_7_20261009_190925/transfers_rendezvous.txt",
-    "GA18_plots/asteroide_67_20261009_183646/transfers_rendezvous.txt",
-]
+TRANSFER_FILES = sorted(
+    (path for path in (BASE_DIR / "GA18_plots").glob("asteroide_*/transfers_rendezvous.txt")
+     if path.is_file() and path.parent.name.removeprefix("asteroide_").isdigit()),
+    key=lambda path: int(path.parent.name.removeprefix("asteroide_")),
+)
 OUTPUT_DIR = BASE_DIR / "GA18_parking_plots"
 MAX_DV_KM_S = None             # Solo rendez-vous all'arrivo; None = nessun limite.
 MAX_DURATION_DAYS = None       # Perigeo MEDIO -> arrivo; None = nessun limite.
 ONLY_BOUND_PARKING = True      # eps < 0, 0 <= e < 1, perigeo sopra la superficie.
-N_BINS = 30                    # Stessa griglia eps-e per le tre mappe.
+N_BINS = 500                   # Celle per asse nelle mappe eps-e ed eps-omega.
 MU_EARTH = 6.67430e-20 * 5.974e24
 R_EARTH_KM = 6378.0
 
@@ -117,8 +114,10 @@ def cluster_metrics(table, stats, max_dv=None, max_duration_days=None):
     return minimum, counts, int(keep.sum())
 
 
-def parking_maps(members, stats, minimum, counts, only_bound=True, n_bins=30):
+def parking_maps(members, stats, minimum, counts, only_bound=True, n_bins=30, y_variable="e"):
     """Denominatore di ogni cella: tutti i membri assegnati ammessi, anche senza hit."""
+    if y_variable not in ("e", "omega"):
+        raise ValueError("y_variable deve essere 'e' oppure 'omega'.")
     assigned = members[:, 1] >= 0
     eps, ecc = members[:, 9], members[:, 10]
     keep = assigned.copy()
@@ -130,8 +129,14 @@ def parking_maps(members, stats, minimum, counts, only_bound=True, n_bins=30):
     if not keep.any():
         raise ValueError("Nessuna orbita di parcheggio supera la selezione del catalogo.")
     rows = np.searchsorted(stats[:, 0], members[keep, 1])
-    x, y = eps[keep], ecc[keep]
-    edges_x, edges_y = np.histogram_bin_edges(x, n_bins), np.histogram_bin_edges(y, n_bins)
+    x = eps[keep]
+    edges_x = np.histogram_bin_edges(x, n_bins)
+    if y_variable == "omega":
+        y = np.mod(members[keep, 11], 360.0)
+        edges_y = np.linspace(0.0, 360.0, n_bins + 1)
+    else:
+        y = ecc[keep]
+        edges_y = np.histogram_bin_edges(y, n_bins)
     ix = np.minimum(np.searchsorted(edges_x, x, side="right") - 1, n_bins - 1)
     iy = np.minimum(np.searchsorted(edges_y, y, side="right") - 1, n_bins - 1)
     cell = ix * n_bins + iy
@@ -166,11 +171,17 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
     maps = parking_maps(members, stats, minimum, counts, only_bound, n_bins)
     scenario_maps = [parking_maps(members, stats, minimum[i:i+1], counts[i:i+1], only_bound, n_bins)
                      for i in range(len(paths))]
+    omega_maps = parking_maps(members, stats, minimum, counts, only_bound, n_bins, y_variable="omega")
+    omega_scenario_maps = [
+        parking_maps(members, stats, minimum[i:i+1], counts[i:i+1], only_bound, n_bins, y_variable="omega")
+        for i in range(len(paths))
+    ]
     output = Path(OUTPUT_DIR if output_dir is None else output_dir)
     output.mkdir(parents=True, exist_ok=True)
     dv_label = "nessun limite" if max_dv is None else f"<= {max_dv:g} km/s"
     duration_label = "nessun limite" if max_duration_days is None else f"<= {max_duration_days:g} giorni"
-    report = [f"Catalogo: {catalog}", f"Scenari caricati: {len(paths)} (solo i file esplicitamente selezionati)",
+    report = [f"Catalogo: {catalog}", f"Scenari caricati: {len(paths)}",
+              "Mappe eps-e ed eps-omega; omega al perigeo negli assi del catalogo, modulo 360 gradi.",
               f"Orbita di parcheggio: {'legata, perigeo sopra la superficie' if only_bound else 'nessun filtro fisico'}",
               f"Membri assegnati analizzati: {maps['selected']}; non assegnati esclusi: {maps['unassigned']}; altri esclusi: {maps['excluded']}",
               f"DV rendez-vous: {dv_label}; durata perigeo MEDIO -> arrivo: {duration_label}",
@@ -192,36 +203,43 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
         ("mean_etds", "02_opportunita_etd.png", "Opportunita temporali delle orbite di parcheggio", "ETD distinte compatibili per orbita (media nella cella)", "viridis"),
         ("coverage", "03_copertura_scenari.png", "Accesso agli scenari selezionati", "Scenari raggiungibili per orbita [% medio]", "viridis"),
     ]
-    for key, filename, title, color_label, cmap in figures:
-        panels = [maps] if key == "coverage" else scenario_maps
-        ncols = min(3, len(panels))
-        nrows = (len(panels) + ncols - 1) // ncols
-        fig, axes = plt.subplots(nrows, ncols, figsize=(7 * ncols, 6 * nrows),
-                                 squeeze=False, layout="constrained", sharex=True, sharey=True)
-        for i, panel in enumerate(panels):
-            # Scala indipendente per asteroide; copertura aggregata sempre 0-100%.
-            finite = panel[key][np.isfinite(panel[key])]
-            low = float(finite.min()) if key != "coverage" and finite.size else 0.0
-            high = 100.0 if key == "coverage" else float(finite.max()) if finite.size else 1.0
-            if high <= low:
-                high = low + max(1e-6, 0.01 * abs(low))
-            ax = axes.flat[i]
-            ax.set_facecolor("0.92")
-            mesh = ax.pcolormesh(panel["edges_x"], panel["edges_y"], np.ma.masked_invalid(panel[key].T),
-                                 shading="flat", cmap=cmap, vmin=low, vmax=high)
-            ax.set(xlabel=r"$\varepsilon$ al perigeo [km$^2$/s$^2$]", ylabel="e al perigeo [-]")
-            ax.set_title(f"{len(paths)} scenari caricati" if key == "coverage" else paths[i].parent.name, fontsize=10)
-            if key == "best_dv" and not np.isfinite(panel[key]).any():
-                ax.text(0.5, 0.5, "Nessun trasferimento sotto soglia", transform=ax.transAxes, ha="center")
-            fig.colorbar(mesh, ax=ax, label=color_label, shrink=0.85)
-        for ax in axes.flat[len(panels):]:
-            ax.set_visible(False)
-        fig.suptitle(f"{title}\n{maps['selected']} orbite — prestazioni del modello medio dei cluster", fontsize=12)
-        fig.supxlabel(f"DV: {dv_label}; durata perigeo medio -> arrivo: {duration_label}", fontsize=9)
-        fig.savefig(output / filename, dpi=180)
-        plt.close(fig)
-    print(f"Tre mappe salvate in: {output}")
-    return dict(maps=maps, scenario_maps=scenario_maps, minimum=minimum, counts=counts, metrics=metrics, output_dir=output)
+    projections = [
+        (maps, scenario_maps, "", "e al perigeo [-]"),
+        (omega_maps, omega_scenario_maps, "_eps_omega", r"$\omega$ al perigeo [deg]"),
+    ]
+    for aggregate, scenarios, suffix, y_label in projections:
+        for key, filename, title, color_label, cmap in figures:
+            panels = [aggregate] if key == "coverage" else scenarios
+            ncols = min(9, len(panels))
+            nrows = (len(panels) + ncols - 1) // ncols
+            fig, axes = plt.subplots(nrows, ncols, figsize=(7 * ncols, 6 * nrows),
+                                     squeeze=False, layout="constrained", sharex=True, sharey=True)
+            for i, panel in enumerate(panels):
+                # Scala indipendente per asteroide; copertura aggregata sempre 0-100%.
+                finite = panel[key][np.isfinite(panel[key])]
+                low = float(finite.min()) if key != "coverage" and finite.size else 0.0
+                high = 100.0 if key == "coverage" else float(finite.max()) if finite.size else 1.0
+                if high <= low:
+                    high = low + max(1e-6, 0.01 * abs(low))
+                ax = axes.flat[i]
+                ax.set_facecolor("0.92")
+                mesh = ax.pcolormesh(panel["edges_x"], panel["edges_y"], np.ma.masked_invalid(panel[key].T),
+                                     shading="flat", cmap=cmap, vmin=low, vmax=high)
+                ax.set(xlabel=r"$\varepsilon$ al perigeo [km$^2$/s$^2$]", ylabel=y_label)
+                ax.set_title(f"{len(paths)} scenari caricati" if key == "coverage" else paths[i].parent.name, fontsize=10)
+                if key == "best_dv" and not np.isfinite(panel[key]).any():
+                    ax.text(0.5, 0.5, "Nessun trasferimento sotto soglia", transform=ax.transAxes, ha="center")
+                fig.colorbar(mesh, ax=ax, label=color_label, shrink=0.85)
+            for ax in axes.flat[len(panels):]:
+                ax.set_visible(False)
+            fig.suptitle(f"{title}\n{aggregate['selected']} orbite — prestazioni del modello medio dei cluster", fontsize=12)
+            fig.supxlabel(f"DV: {dv_label}; durata perigeo medio -> arrivo: {duration_label}", fontsize=9)
+            fig.savefig(output / f"{Path(filename).stem}{suffix}.png", dpi=180)
+            plt.close(fig)
+    print(f"Sei mappe salvate (eps-e ed eps-omega) in: {output}")
+    return dict(maps=maps, scenario_maps=scenario_maps, omega_maps=omega_maps,
+                omega_scenario_maps=omega_scenario_maps, minimum=minimum, counts=counts,
+                metrics=metrics, output_dir=output)
 
 
 if __name__ == "__main__":

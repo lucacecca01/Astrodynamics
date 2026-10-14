@@ -1,7 +1,8 @@
-Catalogo: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_vinf_time_K605/cluster_velocity_statistics.txt
-Scenari caricati: 6 (solo i file esplicitamente selezionati)
+Catalogo: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_vinf_time_K798/cluster_velocity_statistics.txt
+Scenari caricati: 42
+Mappe eps-e ed eps-omega; omega al perigeo negli assi del catalogo, modulo 360 gradi.
 Orbita di parcheggio: legata, perigeo sopra la superficie
-Membri assegnati analizzati: 97711; non assegnati esclusi: 1894; altri esclusi: 708
+Membri assegnati analizzati: 5584568; non assegnati esclusi: 213; altri esclusi: 38913
 DV rendez-vous: nessun limite; durata perigeo MEDIO -> arrivo: nessun limite
 Ogni membro eredita le prestazioni del modello medio del proprio cluster.
 Min DV per cella, per scenario: migliore trasferimento tra i cluster rappresentati nella cella.
@@ -11,9 +12,45 @@ Il denominatore include anche i membri senza trasferimenti sotto soglia.
 La griglia completa delle ETD non e salvata: i conteggi non sono probabilita o frazioni delle partenze provate.
 Finestre e passi temporali diversi fra scenari possono influenzare i conteggi di ETD.
 Il DV include solo il rendez-vous, non il costo di partenza dall'orbita terrestre.
-asteroide_2_20261009_181844: 447 trasferimenti caricati; 447 sotto soglia; 146 cluster raggiungibili
-asteroide_3_20261009_182925: 1513 trasferimenti caricati; 1513 sotto soglia; 223 cluster raggiungibili
-asteroide_5_20261009_174623: 3142 trasferimenti caricati; 3142 sotto soglia; 246 cluster raggiungibili
-asteroide_6_20261009_170938: 23891 trasferimenti caricati; 23891 sotto soglia; 605 cluster raggiungibili
-asteroide_7_20261009_190925: 5315 trasferimenti caricati; 5315 sotto soglia; 601 cluster raggiungibili
-asteroide_67_20261009_183646: 4748 trasferimenti caricati; 4748 sotto soglia; 596 cluster raggiungibili
+asteroide_0: 3607 trasferimenti caricati; 3607 sotto soglia; 573 cluster raggiungibili
+asteroide_1: 3646 trasferimenti caricati; 3646 sotto soglia; 371 cluster raggiungibili
+asteroide_2: 1469 trasferimenti caricati; 1469 sotto soglia; 374 cluster raggiungibili
+asteroide_3: 12526 trasferimenti caricati; 12526 sotto soglia; 777 cluster raggiungibili
+asteroide_4: 16 trasferimenti caricati; 16 sotto soglia; 2 cluster raggiungibili
+asteroide_5: 8456 trasferimenti caricati; 8456 sotto soglia; 474 cluster raggiungibili
+asteroide_6: 41770 trasferimenti caricati; 41770 sotto soglia; 779 cluster raggiungibili
+asteroide_7: 10371 trasferimenti caricati; 10371 sotto soglia; 774 cluster raggiungibili
+asteroide_12: 4118 trasferimenti caricati; 4118 sotto soglia; 760 cluster raggiungibili
+asteroide_13: 4227 trasferimenti caricati; 4227 sotto soglia; 758 cluster raggiungibili
+asteroide_14: 5251 trasferimenti caricati; 5251 sotto soglia; 771 cluster raggiungibili
+asteroide_15: 5201 trasferimenti caricati; 5201 sotto soglia; 730 cluster raggiungibili
+asteroide_16: 5611 trasferimenti caricati; 5611 sotto soglia; 772 cluster raggiungibili
+asteroide_17: 264 trasferimenti caricati; 264 sotto soglia; 26 cluster raggiungibili
+asteroide_18: 7147 trasferimenti caricati; 7147 sotto soglia; 460 cluster raggiungibili
+asteroide_19: 992 trasferimenti caricati; 992 sotto soglia; 566 cluster raggiungibili
+asteroide_20: 572 trasferimenti caricati; 572 sotto soglia; 146 cluster raggiungibili
+asteroide_26: 172 trasferimenti caricati; 172 sotto soglia; 30 cluster raggiungibili
+asteroide_29: 1508 trasferimenti caricati; 1508 sotto soglia; 324 cluster raggiungibili
+asteroide_30: 4330 trasferimenti caricati; 4330 sotto soglia; 760 cluster raggiungibili
+asteroide_31: 6288 trasferimenti caricati; 6288 sotto soglia; 768 cluster raggiungibili
+asteroide_33: 4443 trasferimenti caricati; 4443 sotto soglia; 773 cluster raggiungibili
+asteroide_34: 4994 trasferimenti caricati; 4994 sotto soglia; 772 cluster raggiungibili
+asteroide_35: 4105 trasferimenti caricati; 4105 sotto soglia; 697 cluster raggiungibili
+asteroide_36: 4472 trasferimenti caricati; 4472 sotto soglia; 768 cluster raggiungibili
+asteroide_37: 28 trasferimenti caricati; 28 sotto soglia; 6 cluster raggiungibili
+asteroide_38: 8737 trasferimenti caricati; 8737 sotto soglia; 772 cluster raggiungibili
+asteroide_40: 7107 trasferimenti caricati; 7107 sotto soglia; 763 cluster raggiungibili
+asteroide_41: 27769 trasferimenti caricati; 27769 sotto soglia; 779 cluster raggiungibili
+asteroide_43: 11021 trasferimenti caricati; 11021 sotto soglia; 775 cluster raggiungibili
+asteroide_44: 5042 trasferimenti caricati; 5042 sotto soglia; 255 cluster raggiungibili
+asteroide_47: 27607 trasferimenti caricati; 27607 sotto soglia; 777 cluster raggiungibili
+asteroide_48: 2548 trasferimenti caricati; 2548 sotto soglia; 283 cluster raggiungibili
+asteroide_50: 10145 trasferimenti caricati; 10145 sotto soglia; 777 cluster raggiungibili
+asteroide_52: 17702 trasferimenti caricati; 17702 sotto soglia; 777 cluster raggiungibili
+asteroide_54: 5801 trasferimenti caricati; 5801 sotto soglia; 769 cluster raggiungibili
+asteroide_57: 102 trasferimenti caricati; 102 sotto soglia; 6 cluster raggiungibili
+asteroide_58: 21298 trasferimenti caricati; 21298 sotto soglia; 776 cluster raggiungibili
+asteroide_59: 3235 trasferimenti caricati; 3235 sotto soglia; 748 cluster raggiungibili
+asteroide_60: 14691 trasferimenti caricati; 14691 sotto soglia; 777 cluster raggiungibili
+asteroide_62: 2919 trasferimenti caricati; 2919 sotto soglia; 726 cluster raggiungibili
+asteroide_64: 3451 trasferimenti caricati; 3451 sotto soglia; 687 cluster raggiungibili
