@@ -23,7 +23,7 @@ OUTPUT_DIR = BASE_DIR / "GA18_parking_plots"
 MAX_DV_KM_S = None             # Solo rendez-vous all'arrivo; None = nessun limite.
 MAX_DURATION_DAYS = None       # Perigeo MEDIO -> arrivo; None = nessun limite.
 ONLY_BOUND_PARKING = True      # eps < 0, 0 <= e < 1, perigeo sopra la superficie.
-N_BINS = 500                   # Celle per asse nelle mappe eps-e ed eps-omega.
+N_BINS = 100                   # Celle per asse nelle mappe eps-e ed eps-omega.
 MU_EARTH = 6.67430e-20 * 5.974e24
 R_EARTH_KM = 6378.0
 
@@ -210,7 +210,7 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
     for aggregate, scenarios, suffix, y_label in projections:
         for key, filename, title, color_label, cmap in figures:
             panels = [aggregate] if key == "coverage" else scenarios
-            ncols = min(9, len(panels))
+            ncols = min(15, len(panels))
             nrows = (len(panels) + ncols - 1) // ncols
             fig, axes = plt.subplots(nrows, ncols, figsize=(7 * ncols, 6 * nrows),
                                      squeeze=False, layout="constrained", sharex=True, sharey=True)

@@ -12,6 +12,7 @@ from scipy.optimize import root, differential_evolution
 import spiceypy as spice
 import time
 import gc
+from joblib import Parallel, delayed, parallel_config
 
 
 start_time = time.perf_counter()
@@ -171,10 +172,10 @@ R_MAX_AU = 1.4
 
 # Input
 DATA_FILE = "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt"
-#EXCLUDED_CLUSTER_IDS = np.arange(779, 798)
+EXCLUDED_CLUSTER_IDS = np.arange(763, 780)
 
 data = np.loadtxt(DATA_FILE, ndmin=2)
-#data = data[~np.isin(data[:, 0].astype(int), EXCLUDED_CLUSTER_IDS)]
+data = data[~np.isin(data[:, 0].astype(int), EXCLUDED_CLUSTER_IDS)]
 
 spice.furnsh(pk.udpla.de440s.kernel_file())
 
@@ -259,9 +260,12 @@ for _ in range(N_SAMPLE):
 
 
 # Compute heliocentric velocities
+
+member_catalog = None
+
 for i in range(len(asteroid_elements)):
 
-    TARGET_ID = i + 66
+    TARGET_ID = i + 981
 
     elements = asteroid_elements[TARGET_ID]
     a_ast, e_ast, _, _, _, M0_ast = elements
@@ -316,7 +320,19 @@ for i in range(len(asteroid_elements)):
     n_lambert = 0
 
 
-    for i_etd, jd_etd in enumerate(jd_etd_grid):
+    def solve_etd(i_etd, jd_etd):
+
+        out = [[] for _ in range(10)]
+        
+        (
+            matches, tof_days_grid, lambert_velocities,
+            lambert_compatible, lambert_cluster_rows,
+            lambert_departures, lambert_arrivals,
+            lambert_etd_indices, lambert_target_indices,
+            rendezvous_dv,
+        ) = out
+
+        n_lambert = 0
 
         jd_soi_current = jd_etd + t_soi
 
@@ -351,7 +367,9 @@ for i in range(len(asteroid_elements)):
 
                 v_lambert = np.asarray(lambert.v0[0])
 
-                distance_squared = np.sum((vinf_current[c] - v_lambert[:2])**2)
+                dx = vinf_current[c, 0] - v_lambert[0]
+                dy = vinf_current[c, 1] - v_lambert[1]
+                distance_squared = dx * dx + dy * dy
                 compatible = distance_squared <= radius_v[c]**2
 
                 if not compatible:
@@ -369,6 +387,43 @@ for i in range(len(asteroid_elements)):
                 lambert_arrivals.append(r_target.copy())
                 lambert_etd_indices.append(i_etd)
                 lambert_target_indices.append(j)
+
+
+        return n_lambert, out
+
+
+
+    collected = (
+        matches, tof_days_grid, lambert_velocities,
+        lambert_compatible, lambert_cluster_rows,
+        lambert_departures, lambert_arrivals,
+        lambert_etd_indices, lambert_target_indices,
+        rendezvous_dv,
+    )
+
+
+
+    with parallel_config(
+        backend="loky",
+        n_jobs=-1,
+        inner_max_num_threads=1,
+        initializer=spice.furnsh,
+        initargs=(pk.udpla.de440s.kernel_file(),),
+    ):
+        results = Parallel(
+            return_as="generator",
+            batch_size=1,
+            pre_dispatch="n_jobs",
+        )(
+            delayed(solve_etd)(i_etd, jd_etd)
+            for i_etd, jd_etd in enumerate(jd_etd_grid)
+        )
+
+        for count, parts in results:
+            n_lambert += count
+            for destination, part in zip(collected, parts):
+                destination.extend(part)
+
 
 
     tof_days_grid = np.asarray(tof_days_grid)
@@ -391,6 +446,7 @@ for i in range(len(asteroid_elements)):
 
     elapsed_time = time.perf_counter() - start_time
     print(f"Execution time: {elapsed_time:.2f} s\n")
+
 
 
 
@@ -478,20 +534,31 @@ for i in range(len(asteroid_elements)):
                 output_dir.mkdir(parents=True, exist_ok=True)
 
             # Members are read only for the new orbital-distribution plots.
-            member_file = Path(DATA_FILE).with_name("trajectory_exit_catalog.txt")
-            member_catalog = np.loadtxt(member_file, ndmin=2)
-            member_catalog = member_catalog[~np.isin(member_catalog[:, 1].astype(int), EXCLUDED_CLUSTER_IDS)]
-            if member_catalog.shape[1] < 12:
-                raise ValueError("Per i nuovi plot serve il catalogo GA16 esteso a 12 colonne.")
-            members = member_catalog[member_catalog[:, 1] >= 0]
-            member_ids, member_counts = np.unique(members[:, 1].astype(int), return_counts=True)
-            if (not np.array_equal(member_ids, cluster_ids)
-                    or not np.array_equal(member_counts, cluster_sizes)
-                    or len(np.unique(members[:, 0])) != len(members)):
-                raise ValueError("Catalogo dei membri e statistiche dei cluster non coerenti.")
-            member_cluster_rows = np.searchsorted(cluster_ids, members[:, 1].astype(int))
-            member_orbits = members[:, 9:12].copy()
-            member_orbits[:, 2] %= 360.0
+            if member_catalog is None:
+                member_file = Path(DATA_FILE).with_name("trajectory_exit_catalog.txt")
+                member_catalog = np.loadtxt(member_file, ndmin=2)
+                member_catalog = member_catalog[
+                    ~np.isin(member_catalog[:, 1].astype(int), EXCLUDED_CLUSTER_IDS)
+                ]
+
+                if member_catalog.shape[1] < 12:
+                    raise ValueError("Per i nuovi plot serve il catalogo GA16 esteso a 12 colonne.")
+
+                members = member_catalog[member_catalog[:, 1] >= 0]
+                member_ids, member_counts = np.unique(
+                    members[:, 1].astype(int), return_counts=True
+                )
+
+                if (not np.array_equal(member_ids, cluster_ids)
+                        or not np.array_equal(member_counts, cluster_sizes)
+                        or len(np.unique(members[:, 0])) != len(members)):
+                    raise ValueError("Catalogo dei membri e statistiche dei cluster non coerenti.")
+
+                member_cluster_rows = np.searchsorted(
+                    cluster_ids, members[:, 1].astype(int)
+                )
+                member_orbits = members[:, 9:12].copy()
+                member_orbits[:, 2] %= 360.0
 
             # Minimum rendez-vous DV per cluster; no repeated members in the union.
             global_cluster_dv = np.full(len(cluster_ids), np.inf)
@@ -526,217 +593,219 @@ for i in range(len(asteroid_elements)):
                             f"Catalog: {DATA_FILE}"),
                 )
 
-            # Scala TOF comune a tutte le immagini
-            tof_cmap = plt.get_cmap("viridis")
-            tof_min = float(tof_days_grid[lambert_compatible].min())
-            tof_max = float(tof_days_grid[lambert_compatible].max())
+            if False:
 
-            if tof_min == tof_max:
-                tof_min -= 0.5
-                tof_max += 0.5
+                # Scala TOF comune a tutte le immagini
+                tof_cmap = plt.get_cmap("viridis")
+                tof_min = float(tof_days_grid[lambert_compatible].min())
+                tof_max = float(tof_days_grid[lambert_compatible].max())
 
-            tof_norm = plt.Normalize(tof_min, tof_max)
+                if tof_min == tof_max:
+                    tof_min -= 0.5
+                    tof_max += 0.5
 
-            # Geometria di sfondo, calcolata una sola volta
-            orbit_points = np.array([pk.par2ic([*asteroid_elements[TARGET_ID][:5], nu], mu_sun)[0] for nu in np.linspace(0, 2 * np.pi, 500)])
+                tof_norm = plt.Normalize(tof_min, tof_max)
 
-            earth_orbit = earth_moon_geometry(np.linspace(JD_START, JD_END, 400))[0]
+                # Geometria di sfondo, calcolata una sola volta
+                orbit_points = np.array([pk.par2ic([*asteroid_elements[TARGET_ID][:5], nu], mu_sun)[0] for nu in np.linspace(0, 2 * np.pi, 500)])
 
-            angles = np.linspace(0, 2 * np.pi, 200)
+                earth_orbit = earth_moon_geometry(np.linspace(JD_START, JD_END, 400))[0]
 
-            for i_etd in successful_etds:
+                angles = np.linspace(0, 2 * np.pi, 200)
 
-                JD_ETD = float(jd_etd_grid[i_etd])
+                for i_etd in successful_etds:
 
-                # Tutte le soluzioni compatibili associate a questo ETD
-                selected = (lambert_compatible & (lambert_etd_indices == i_etd))
+                    JD_ETD = float(jd_etd_grid[i_etd])
 
-                hit_indices = np.flatnonzero(selected)
-                compatible_rows = np.unique(lambert_cluster_rows[selected])
-                target_indices = np.unique(lambert_target_indices[selected])
+                    # Tutte le soluzioni compatibili associate a questo ETD
+                    selected = (lambert_compatible & (lambert_etd_indices == i_etd))
 
-                # Medie dei cluster nella geometria di questo ETD
-                r_earth_etd, _, _, theta_moon_etd = earth_moon_geometry(JD_ETD)
+                    hit_indices = np.flatnonzero(selected)
+                    compatible_rows = np.unique(lambert_cluster_rows[selected])
+                    target_indices = np.unique(lambert_target_indices[selected])
 
-                v_earth_soi = earth_moon_geometry(JD_ETD + t_soi)[1]
+                    # Medie dei cluster nella geometria di questo ETD
+                    r_earth_etd, _, _, theta_moon_etd = earth_moon_geometry(JD_ETD)
 
-                mean_v_heliocentric = escape_velocity_to_heliocentric(
-                    mean_v_soi, v_earth_soi, theta_moon_etd
-                )
+                    v_earth_soi = earth_moon_geometry(JD_ETD + t_soi)[1]
 
-                fig, axes = plt.subplots(1, 2, figsize=(16, 9), layout="constrained")
+                    mean_v_heliocentric = escape_velocity_to_heliocentric(
+                        mean_v_soi, v_earth_soi, theta_moon_etd
+                    )
 
-                fig.suptitle(
-                    f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB\n"
-                    f"{hit_indices.size} trasferimenti — "
-                    f"{target_indices.size} epoche di arrivo compatibili"
-                )
+                    fig, axes = plt.subplots(1, 2, figsize=(16, 9), layout="constrained")
 
-                # PANNELLO SINISTRO: velocità e cluster
-                ax = axes[0]
+                    fig.suptitle(
+                        f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB\n"
+                        f"{hit_indices.size} trasferimenti — "
+                        f"{target_indices.size} epoche di arrivo compatibili"
+                    )
 
-                for c, (center, radius) in enumerate(
-                    zip(mean_v_heliocentric, radius_v)
-                ):
-                    active = c in compatible_rows
+                    # PANNELLO SINISTRO: velocità e cluster
+                    ax = axes[0]
 
-                    ax.add_patch(plt.Circle(
-                        center, radius,
-                        fill=False,
-                        edgecolor="tab:red" if active else "0.75",
-                        linewidth=1.5 if active else 0.8,
-                        alpha=1.0 if active else 0.7,
-                    ))
+                    for c, (center, radius) in enumerate(
+                        zip(mean_v_heliocentric, radius_v)
+                    ):
+                        active = c in compatible_rows
 
-                    if active:
-                        ax.annotate(
-                            str(cluster_ids[c]),
-                            (center[0], center[1] + radius),
-                            xytext=(0, 4),
-                            textcoords="offset points",
-                            ha="center",
-                            color="darkred",
-                            fontsize=9,
+                        ax.add_patch(plt.Circle(
+                            center, radius,
+                            fill=False,
+                            edgecolor="tab:red" if active else "0.75",
+                            linewidth=1.5 if active else 0.8,
+                            alpha=1.0 if active else 0.7,
+                        ))
+
+                        if active:
+                            ax.annotate(
+                                str(cluster_ids[c]),
+                                (center[0], center[1] + radius),
+                                xytext=(0, 4),
+                                textcoords="offset points",
+                                ha="center",
+                                color="darkred",
+                                fontsize=9,
+                            )
+
+                    ax.scatter(
+                        mean_v_heliocentric[:, 0],
+                        mean_v_heliocentric[:, 1],
+                        color="0.35", marker="x", s=20,
+                        label="Medie dei cluster",
+                    )
+
+                    ax.scatter(
+                        lambert_velocities[selected, 0],
+                        lambert_velocities[selected, 1],
+                        c=tof_days_grid[selected],
+                        cmap=tof_cmap, norm=tof_norm,
+                        s=30, edgecolors="black", linewidths=0.4,
+                        label="Soluzioni compatibili", zorder=5,
+                    )
+
+                    ax.set(
+                        xlabel="vx eliocentrica [km/s]",
+                        ylabel="vy eliocentrica [km/s]",
+                        title="Regioni di compatibilità",
+                    )
+                    ax.set_box_aspect(1)
+                    ax.set_aspect("equal", adjustable="datalim")
+                    ax.grid(alpha=0.2)
+                    ax.legend(loc="upper left", fontsize="small")
+
+                    # PANNELLO DESTRO: tutti i trasferimenti di questo ETD
+                    ax = axes[1]
+
+                    ax.plot(
+                        orbit_points[:, 0], orbit_points[:, 1],
+                        color="tab:purple", linewidth=1.5,
+                        label="Orbita asteroide",
+                    )
+
+                    ax.plot(
+                        earth_orbit[:, 0], earth_orbit[:, 1],
+                        color="tab:red", linewidth=1,
+                        label="Traiettoria Terra",
+                    )
+
+                    for radius_au in (R_MIN_AU, R_MAX_AU):
+                        ax.plot(
+                            radius_au * d_E * np.cos(angles),
+                            radius_au * d_E * np.sin(angles),
+                            "k--", linewidth=1,
                         )
 
-                ax.scatter(
-                    mean_v_heliocentric[:, 0],
-                    mean_v_heliocentric[:, 1],
-                    color="0.35", marker="x", s=20,
-                    label="Medie dei cluster",
-                )
-
-                ax.scatter(
-                    lambert_velocities[selected, 0],
-                    lambert_velocities[selected, 1],
-                    c=tof_days_grid[selected],
-                    cmap=tof_cmap, norm=tof_norm,
-                    s=30, edgecolors="black", linewidths=0.4,
-                    label="Soluzioni compatibili", zorder=5,
-                )
-
-                ax.set(
-                    xlabel="vx eliocentrica [km/s]",
-                    ylabel="vy eliocentrica [km/s]",
-                    title="Regioni di compatibilità",
-                )
-                ax.set_box_aspect(1)
-                ax.set_aspect("equal", adjustable="datalim")
-                ax.grid(alpha=0.2)
-                ax.legend(loc="upper left", fontsize="small")
-
-                # PANNELLO DESTRO: tutti i trasferimenti di questo ETD
-                ax = axes[1]
-
-                ax.plot(
-                    orbit_points[:, 0], orbit_points[:, 1],
-                    color="tab:purple", linewidth=1.5,
-                    label="Orbita asteroide",
-                )
-
-                ax.plot(
-                    earth_orbit[:, 0], earth_orbit[:, 1],
-                    color="tab:red", linewidth=1,
-                    label="Traiettoria Terra",
-                )
-
-                for radius_au in (R_MIN_AU, R_MAX_AU):
-                    ax.plot(
-                        radius_au * d_E * np.cos(angles),
-                        radius_au * d_E * np.sin(angles),
-                        "k--", linewidth=1,
-                    )
-
-                ax.plot(0, 0, "o", color="tab:orange", label="Sole")
-
-                ax.plot(
-                    r_earth_etd[0], r_earth_etd[1],
-                    "o", color="tab:red", markersize=4,
-                    label="Terra a ETD",
-                )
-
-                ax.scatter(
-                    lambert_departures[selected, 0],
-                    lambert_departures[selected, 1],
-                    s=12, color="tab:green",
-                    label="Partenze alla SOI", zorder=4,
-                )
-
-                # Propaga ciascun arco dalla propria partenza salvata
-                extent = R_MAX_AU * d_E
-
-                for idx in hit_indices:
-                    states = pk.propagate_lagrangian_grid(
-                        rv=[
-                            lambert_departures[idx],
-                            lambert_velocities[idx],
-                        ],
-                        tofs=np.linspace(0, tof_days_grid[idx] * day, 250),
-                        mu=mu_sun,
-                    )
-
-                    positions = np.asarray(states)[:, 0, :]
-
-                    extent = max(extent, float(np.abs(positions[:, :2]).max()))
+                    ax.plot(0, 0, "o", color="tab:orange", label="Sole")
 
                     ax.plot(
-                        positions[:, 0], positions[:, 1],
-                        color=tof_cmap(tof_norm(tof_days_grid[idx])),
-                        linewidth=1, alpha=0.75, zorder=3,
+                        r_earth_etd[0], r_earth_etd[1],
+                        "o", color="tab:red", markersize=4,
+                        label="Terra a ETD",
                     )
 
-                # Tutti i punti di arrivo associati a questo ETD
-                ax.scatter(
-                    lambert_arrivals[selected, 0],
-                    lambert_arrivals[selected, 1],
-                    c=tof_days_grid[selected],
-                    cmap=tof_cmap, norm=tof_norm,
-                    marker="*", s=85,
-                    edgecolors="black", linewidths=0.5,
-                    label="Arrivi compatibili", zorder=6,
-                )
+                    ax.scatter(
+                        lambert_departures[selected, 0],
+                        lambert_departures[selected, 1],
+                        s=12, color="tab:green",
+                        label="Partenze alla SOI", zorder=4,
+                    )
 
-                ax.set(
-                    xlabel="x [km]",
-                    ylabel="y [km]",
-                    title="Trasferimenti e punti di arrivo",
-                    xlim=(-1.1 * extent, 1.1 * extent),
-                    ylim=(-1.1 * extent, 1.1 * extent),
-                )
-                ax.set_aspect("equal", adjustable="box")
-                ax.grid(alpha=0.3)
-                ax.legend(fontsize="small")
+                    # Propaga ciascun arco dalla propria partenza salvata
+                    extent = R_MAX_AU * d_E
 
-                fig.colorbar(
-                    plt.cm.ScalarMappable(norm=tof_norm, cmap=tof_cmap),
-                    ax=axes.tolist(),
-                    label="TOF dalla SOI [giorni]",
-                    shrink=0.85,
-                )
+                    for idx in hit_indices:
+                        states = pk.propagate_lagrangian_grid(
+                            rv=[
+                                lambert_departures[idx],
+                                lambert_velocities[idx],
+                            ],
+                            tofs=np.linspace(0, tof_days_grid[idx] * day, 250),
+                            mu=mu_sun,
+                        )
 
-                if SAVE:
-                    filename = output_dir / (f"ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png")
-                    fig.savefig(filename, dpi=180)
-                    fig.clear()
-                    plt.close(fig)
-                    gc.collect()
-                else:
-                    plt.show()
+                        positions = np.asarray(states)[:, 0, :]
 
-                cluster_dv = np.full(len(cluster_ids), np.inf)
-                np.minimum.at(cluster_dv, lambert_cluster_rows[selected], rendezvous_dv[selected])
-                orbital_fig = plot_accepted_orbits(
-                    member_orbits, member_cluster_rows, cluster_dv,
-                    title=f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB",
-                    dv_norm=dv_norm, dv_cmap=dv_cmap, bins=orbital_bins,
-                )
-                if SAVE:
-                    orbital_fig.savefig(output_dir / f"orbite_ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png", dpi=180)
-                    orbital_fig.clear()
-                    plt.close(orbital_fig)
-                    gc.collect()
-                else:
-                    plt.show()
+                        extent = max(extent, float(np.abs(positions[:, :2]).max()))
+
+                        ax.plot(
+                            positions[:, 0], positions[:, 1],
+                            color=tof_cmap(tof_norm(tof_days_grid[idx])),
+                            linewidth=1, alpha=0.75, zorder=3,
+                        )
+
+                    # Tutti i punti di arrivo associati a questo ETD
+                    ax.scatter(
+                        lambert_arrivals[selected, 0],
+                        lambert_arrivals[selected, 1],
+                        c=tof_days_grid[selected],
+                        cmap=tof_cmap, norm=tof_norm,
+                        marker="*", s=85,
+                        edgecolors="black", linewidths=0.5,
+                        label="Arrivi compatibili", zorder=6,
+                    )
+
+                    ax.set(
+                        xlabel="x [km]",
+                        ylabel="y [km]",
+                        title="Trasferimenti e punti di arrivo",
+                        xlim=(-1.1 * extent, 1.1 * extent),
+                        ylim=(-1.1 * extent, 1.1 * extent),
+                    )
+                    ax.set_aspect("equal", adjustable="box")
+                    ax.grid(alpha=0.3)
+                    ax.legend(fontsize="small")
+
+                    fig.colorbar(
+                        plt.cm.ScalarMappable(norm=tof_norm, cmap=tof_cmap),
+                        ax=axes.tolist(),
+                        label="TOF dalla SOI [giorni]",
+                        shrink=0.85,
+                    )
+
+                    if SAVE:
+                        filename = output_dir / (f"ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png")
+                        fig.savefig(filename, dpi=180)
+                        fig.clear()
+                        plt.close(fig)
+                        gc.collect()
+                    else:
+                        plt.show()
+
+                    cluster_dv = np.full(len(cluster_ids), np.inf)
+                    np.minimum.at(cluster_dv, lambert_cluster_rows[selected], rendezvous_dv[selected])
+                    orbital_fig = plot_accepted_orbits(
+                        member_orbits, member_cluster_rows, cluster_dv,
+                        title=f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB",
+                        dv_norm=dv_norm, dv_cmap=dv_cmap, bins=orbital_bins,
+                    )
+                    if SAVE:
+                        orbital_fig.savefig(output_dir / f"orbite_ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png", dpi=180)
+                        orbital_fig.clear()
+                        plt.close(orbital_fig)
+                        gc.collect()
+                    else:
+                        plt.show()
 
             final_orbital_fig = plot_accepted_orbits(
                 member_orbits, member_cluster_rows, global_cluster_dv,
