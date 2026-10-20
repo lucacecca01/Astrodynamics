@@ -265,7 +265,7 @@ member_catalog = None
 
 for i in range(len(asteroid_elements)):
 
-    TARGET_ID = i + 981
+    TARGET_ID = i + 3114
 
     elements = asteroid_elements[TARGET_ID]
     a_ast, e_ast, _, _, _, M0_ast = elements
@@ -530,7 +530,7 @@ for i in range(len(asteroid_elements)):
 
         else:
             if SAVE:
-                output_dir = (Path(__file__).resolve().parent / "GA18_plots" / f"asteroide_{TARGET_ID}")
+                output_dir = (Path(__file__).resolve().parent / "GA18_plots_2" / f"asteroide_{TARGET_ID}")
                 output_dir.mkdir(parents=True, exist_ok=True)
 
             # Members are read only for the new orbital-distribution plots.
