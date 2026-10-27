@@ -1,0 +1,11 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2016 XQ1); SPK-ID: 50765631
+# Elements epoch JD TDB: 2461200.5; orbit solution: 9
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50765631, "full_name": "       (2016 XQ1)", "epoch": "2461200.5", "a": "2.533262406578767", "e": ".6037170828809261", "i": ".7625164513313009", "om": "84.29778666968389", "w": "325.8568173811453", "ma": "132.8267498314651", "equinox": "J2000", "orbit_id": "9"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46184850000000000e+06 102 2.46205650000000000e+06 2.08000000000000000e+02 1.48554686768338602e+01
+2.46184850000000000e+06 102 2.46205700000000000e+06 2.08500000000000000e+02 1.47621039077528646e+01
