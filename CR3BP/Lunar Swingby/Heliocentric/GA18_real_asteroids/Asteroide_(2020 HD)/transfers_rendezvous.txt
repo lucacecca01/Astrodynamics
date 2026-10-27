@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2020 HD); SPK-ID: 54016543
+# Elements epoch JD TDB: 2458957.5; orbit solution: JPL 4
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54016543, "full_name": "       (2020 HD)", "epoch": "2458957.5", "a": "2.357931099923868", "e": ".5347849025045711", "i": "4.251083081330708", "om": "355.9263243457356", "w": "222.2230261359049", "ma": "356.8336264954905", "equinox": "J2000", "orbit_id": "JPL 4"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46134650000000000e+06 64 2.46166750000000000e+06 3.21000000000000000e+02 1.41869931310911497e+01
+2.46134650000000000e+06 70 2.46166850000000000e+06 3.22000000000000000e+02 1.42495264243957731e+01
+2.46134750000000000e+06 64 2.46167150000000000e+06 3.24000000000000000e+02 1.44441231605154350e+01

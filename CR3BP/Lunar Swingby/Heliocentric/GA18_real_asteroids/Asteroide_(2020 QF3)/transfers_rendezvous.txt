@@ -1,0 +1,14 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2020 QF3); SPK-ID: 54051299
+# Elements epoch JD TDB: 2459079.5; orbit solution: JPL 6
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54051299, "full_name": "       (2020 QF3)", "epoch": "2459079.5", "a": "1.389217318252573", "e": ".3922054797476692", "i": "4.547152406075647", "om": "332.1036309361978", "w": "279.8383591488292", "ma": "35.36769210465484", "equinox": "J2000", "orbit_id": "JPL 6"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46152350000000000e+06 70 2.46196150000000000e+06 4.38000000000000000e+02 8.61754191089966959e+00
+2.46152350000000000e+06 101 2.46196150000000000e+06 4.38000000000000000e+02 8.61597078136856354e+00
+2.46152450000000000e+06 64 2.46196050000000000e+06 4.36000000000000000e+02 8.30657757874697644e+00
+2.46155350000000000e+06 64 2.46194950000000000e+06 3.96000000000000000e+02 7.09617026582498411e+00
+2.46155350000000000e+06 70 2.46194950000000000e+06 3.96000000000000000e+02 7.09141140513941082e+00
