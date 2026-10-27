@@ -1,0 +1,10 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2007 FP3); SPK-ID: 50372236
+# Elements epoch JD TDB: 2454180.5; orbit solution: JPL 7
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50372236, "full_name": "       (2007 FP3)", "epoch": "2454180.5", "a": "1.413571576199725", "e": ".403612852709373", "i": ".2374132356943081", "om": "352.4333176925595", "w": "119.5632805128418", "ma": "30.24355315305205", "equinox": "J2000", "orbit_id": "JPL 7"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46179850000000000e+06 64 2.46205700000000000e+06 2.58500000000000000e+02 1.09847464192589275e+01

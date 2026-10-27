@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2004 YD5); SPK-ID: 50264572
+# Elements epoch JD TDB: 2453360.5; orbit solution: JPL 7
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50264572, "full_name": "       (2004 YD5)", "epoch": "2453360.5", "a": "2.272022380413376", "e": ".7826044297048294", "i": "3.60964688544111", "om": "88.45890208980722", "w": "262.0629356618292", "ma": "12.99505420865654", "equinox": "J2000", "orbit_id": "JPL 7"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46161350000000000e+06 105 2.46202150000000000e+06 4.08000000000000000e+02 2.15486082999993265e+01
+2.46164150000000000e+06 64 2.46201750000000000e+06 3.76000000000000000e+02 2.04288308869228779e+01
+2.46164250000000000e+06 70 2.46201550000000000e+06 3.73000000000000000e+02 2.01094430983038919e+01
