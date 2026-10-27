@@ -1,0 +1,14 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2026 UO); SPK-ID: 54665595
+# Elements epoch JD TDB: 2461200.5; orbit solution: JPL 2
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54665595, "full_name": "       (2026 UO)", "epoch": "2461200.5", "a": "2.63454230345543", "e": ".6280741329747458", "i": "2.03553103069647", "om": "209.9743259915818", "w": "154.1706022633199", "ma": "333.3658838893911", "equinox": "J2000", "orbit_id": "JPL 2"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46132650000000000e+06 352 2.46133250000000000e+06 6.00000000000000000e+00 8.99641520291715224e+00
+2.46132650000000000e+06 358 2.46133250000000000e+06 6.00000000000000000e+00 9.01660104810150997e+00
+2.46132650000000000e+06 162 2.46133350000000000e+06 7.00000000000000000e+00 8.34668638066353985e+00
+2.46132750000000000e+06 351 2.46133150000000000e+06 4.00000000000000000e+00 9.65462251559440254e+00
+2.46132850000000000e+06 247 2.46133250000000000e+06 4.00000000000000000e+00 8.79292688355426755e+00

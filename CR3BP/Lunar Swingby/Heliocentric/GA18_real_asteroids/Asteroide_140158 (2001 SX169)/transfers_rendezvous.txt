@@ -1,0 +1,13 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: 140158 (2001 SX169); SPK-ID: 20140158
+# Elements epoch JD TDB: 2461200.5; orbit solution: JPL 203
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 20140158, "full_name": "140158 (2001 SX169)", "epoch": "2461200.5", "a": "1.347374880121816", "e": ".4608938764576644", "i": "2.517472108819844", "om": "126.7834985250755", "w": "42.72014533664729", "ma": "112.5492423375655", "equinox": "J2000", "orbit_id": "JPL 203"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46134650000000000e+06 64 2.46167850000000000e+06 3.32000000000000000e+02 1.65444633939067671e+01
+2.46134650000000000e+06 70 2.46167950000000000e+06 3.33000000000000000e+02 1.64780213076467028e+01
+2.46134650000000000e+06 102 2.46168050000000000e+06 3.34000000000000000e+02 1.64200263180977082e+01
+2.46134750000000000e+06 70 2.46168250000000000e+06 3.35000000000000000e+02 1.62958389573600897e+01
