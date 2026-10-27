@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2009 UF2); SPK-ID: 50471740
+# Elements epoch JD TDB: 2461200.5; orbit solution: 17
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50471740, "full_name": "       (2009 UF2)", "epoch": "2461200.5", "a": "2.821180953415228", "e": ".6367918545352683", "i": "2.507373003913782", "om": "161.1305486765329", "w": "253.9269168732494", "ma": "175.8849659971648", "equinox": "J2000", "orbit_id": "17"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46185550000000000e+06 105 2.46205700000000000e+06 2.01500000000000000e+02 1.17908551167208806e+01
+2.46188450000000000e+06 64 2.46205700000000000e+06 1.72500000000000000e+02 1.21538012354094143e+01
+2.46188450000000000e+06 102 2.46205700000000000e+06 1.72500000000000000e+02 1.21537982257455219e+01
