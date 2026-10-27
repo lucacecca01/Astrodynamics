@@ -1,0 +1,13 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: 6239 Minos (1989 QF); SPK-ID: 20006239
+# Elements epoch JD TDB: 2461200.5; orbit solution: JPL 334
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 20006239, "full_name": "  6239 Minos (1989 QF)", "epoch": "2461200.5", "a": "1.150937466176167", "e": ".4123646091949216", "i": "3.941399682117143", "om": "344.4790088212572", "w": "239.7946514517377", "ma": "343.4059062843492", "equinox": "J2000", "orbit_id": "JPL 334"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46134650000000000e+06 64 2.46174450000000000e+06 3.98000000000000000e+02 1.61720403535619930e+01
+2.46134650000000000e+06 105 2.46174550000000000e+06 3.99000000000000000e+02 1.62220355999039967e+01
+2.46134750000000000e+06 64 2.46174650000000000e+06 3.99000000000000000e+02 1.62829934575630411e+01
+2.46137650000000000e+06 70 2.46175550000000000e+06 3.79000000000000000e+02 1.62958827787059448e+01
