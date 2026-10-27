@@ -1,0 +1,11 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2024 QL1); SPK-ID: 54467193
+# Elements epoch JD TDB: 2461200.5; orbit solution: 13
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54467193, "full_name": "       (2024 QL1)", "epoch": "2461200.5", "a": ".8849594693226315", "e": ".1710486424267872", "i": "4.185303428923442", "om": "332.7195474370192", "w": "205.6070347371159", "ma": "197.3003469383186", "equinox": "J2000", "orbit_id": "13"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46166750000000000e+06 64 2.46205700000000000e+06 3.89500000000000000e+02 4.79756424801535886e+00
+2.46166750000000000e+06 70 2.46205700000000000e+06 3.89500000000000000e+02 4.80043650885229845e+00
