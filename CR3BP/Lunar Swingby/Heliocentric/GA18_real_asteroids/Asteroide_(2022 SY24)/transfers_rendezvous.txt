@@ -1,0 +1,15 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2022 SY24); SPK-ID: 54310122
+# Elements epoch JD TDB: 2461200.5; orbit solution: JPL 5
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54310122, "full_name": "       (2022 SY24)", "epoch": "2461200.5", "a": "1.263111543412396", "e": ".3820435537436305", "i": ".1953688141856819", "om": "2.125728981084878", "w": "282.6887403608096", "ma": "256.9103112815079", "equinox": "J2000", "orbit_id": "JPL 5"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46153850000000000e+06 102 2.46181250000000000e+06 2.74000000000000000e+02 1.28460965494123194e+01
+2.46153950000000000e+06 102 2.46181350000000000e+06 2.74000000000000000e+02 1.32969366113695031e+01
+2.46156850000000000e+06 64 2.46181750000000000e+06 2.49000000000000000e+02 1.42366781209698008e+01
+2.46156850000000000e+06 70 2.46181750000000000e+06 2.49000000000000000e+02 1.42434065723352052e+01
+2.46156850000000000e+06 101 2.46181750000000000e+06 2.49000000000000000e+02 1.42432066553608774e+01
+2.46156850000000000e+06 102 2.46181850000000000e+06 2.50000000000000000e+02 1.43915094168839595e+01

@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2022 AS2); SPK-ID: 54235667
+# Elements epoch JD TDB: 2461200.5; orbit solution: 2
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54235667, "full_name": "       (2022 AS2)", "epoch": "2461200.5", "a": "1.266866964836407", "e": ".2155450493264394", "i": ".9752144195463376", "om": "104.1568830313539", "w": ".1855487427055379", "ma": "36.86955790931509", "equinox": "J2000", "orbit_id": "2"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46187850000000000e+06 64 2.46205550000000000e+06 1.77000000000000000e+02 7.10485604499795631e+00
+2.46187850000000000e+06 64 2.46205650000000000e+06 1.78000000000000000e+02 7.01914077936437319e+00
+2.46187850000000000e+06 64 2.46205700000000000e+06 1.78500000000000000e+02 6.97660503902767193e+00
