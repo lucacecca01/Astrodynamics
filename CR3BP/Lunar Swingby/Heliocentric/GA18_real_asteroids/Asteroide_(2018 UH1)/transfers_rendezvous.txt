@@ -1,0 +1,10 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2018 UH1); SPK-ID: 50831917
+# Elements epoch JD TDB: 2458410.5; orbit solution: JPL 5
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50831917, "full_name": "       (2018 UH1)", "epoch": "2458410.5", "a": "1.766715021631648", "e": ".539377461656173", "i": "4.228838851028185", "om": "201.0265765614411", "w": "251.532458804613", "ma": "339.8359386997216", "equinox": "J2000", "orbit_id": "JPL 5"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46149450000000000e+06 70 2.46193350000000000e+06 4.39000000000000000e+02 1.44722171810028595e+01

@@ -1,0 +1,11 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2017 XR60); SPK-ID: 50791362
+# Elements epoch JD TDB: 2461200.5; orbit solution: 10
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50791362, "full_name": "       (2017 XR60)", "epoch": "2461200.5", "a": "1.825199038664797", "e": ".4520565885890456", "i": "2.093814431439958", "om": "57.88852362254843", "w": "19.54190547424989", "ma": "159.0333169034678", "equinox": "J2000", "orbit_id": "10"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46141650000000000e+06 64 2.46169950000000000e+06 2.83000000000000000e+02 7.47747092095258026e+00
+2.46141650000000000e+06 64 2.46170050000000000e+06 2.84000000000000000e+02 7.46910739934691925e+00
