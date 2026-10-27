@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2023 AD); SPK-ID: 54338280
+# Elements epoch JD TDB: 2459961.5; orbit solution: JPL 5
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54338280, "full_name": "       (2023 AD)", "epoch": "2459961.5", "a": "2.844141081694303", "e": ".6555327516187154", "i": "3.017695953977277", "om": "300.6615259758348", "w": "143.7329847423053", "ma": "5.298622919384666", "equinox": "J2000", "orbit_id": "JPL 5"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46139150000000000e+06 64 2.46168150000000000e+06 2.90000000000000000e+02 1.07032743009811515e+01
+2.46139150000000000e+06 70 2.46168150000000000e+06 2.90000000000000000e+02 1.07109820625966119e+01
+2.46139150000000000e+06 102 2.46168150000000000e+06 2.90000000000000000e+02 1.06905918121892363e+01
