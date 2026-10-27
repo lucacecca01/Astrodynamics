@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2019 FT1); SPK-ID: 50840746
+# Elements epoch JD TDB: 2461200.5; orbit solution: 9
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 50840746, "full_name": "       (2019 FT1)", "epoch": "2461200.5", "a": "2.042769032602798", "e": ".5528657861555106", "i": "4.528554137838793", "om": "183.1539702287805", "w": "316.7794309644212", "ma": "179.6792904491043", "equinox": "J2000", "orbit_id": "9"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46142050000000000e+06 70 2.46170750000000000e+06 2.87000000000000000e+02 1.16740974029497480e+01
+2.46145050000000000e+06 64 2.46171150000000000e+06 2.61000000000000000e+02 1.24214002276418878e+01
+2.46145050000000000e+06 102 2.46171150000000000e+06 2.61000000000000000e+02 1.24183233103212416e+01
