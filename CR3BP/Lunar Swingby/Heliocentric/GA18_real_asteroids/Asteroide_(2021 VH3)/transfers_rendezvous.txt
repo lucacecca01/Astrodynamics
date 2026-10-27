@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2021 VH3); SPK-ID: 54216333
+# Elements epoch JD TDB: 2459521.5; orbit solution: JPL 3
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54216333, "full_name": "       (2021 VH3)", "epoch": "2459521.5", "a": "1.840502742584373", "e": ".4502975007515128", "i": "4.063859204536352", "om": "31.23676973128119", "w": "2.061253831844704", "ma": "2.110839523415916", "equinox": "J2000", "orbit_id": "JPL 3"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46132650000000000e+06 156 2.46133850000000000e+06 1.20000000000000000e+01 5.70886735369770726e+00
+2.46132650000000000e+06 142 2.46133950000000000e+06 1.30000000000000000e+01 5.44991098242937611e+00
+2.46132650000000000e+06 131 2.46134050000000000e+06 1.40000000000000000e+01 5.21890762703825040e+00

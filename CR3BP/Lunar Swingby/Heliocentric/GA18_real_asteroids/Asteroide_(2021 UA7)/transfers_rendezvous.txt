@@ -1,0 +1,12 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2021 UA7); SPK-ID: 54214722
+# Elements epoch JD TDB: 2459515.5; orbit solution: JPL 1
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54214722, "full_name": "       (2021 UA7)", "epoch": "2459515.5", "a": "2.144806355565267", "e": ".8134002936005825", "i": ".8354116194774405", "om": "35.36273528835996", "w": "248.8244795494539", "ma": "13.97656901866309", "equinox": "J2000", "orbit_id": "JPL 1"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46137650000000000e+06 105 2.46181050000000000e+06 4.34000000000000000e+02 2.99412265354556411e+01
+2.46140550000000000e+06 64 2.46181250000000000e+06 4.07000000000000000e+02 3.06794550222113926e+01
+2.46140650000000000e+06 64 2.46181350000000000e+06 4.07000000000000000e+02 3.08175997073117500e+01

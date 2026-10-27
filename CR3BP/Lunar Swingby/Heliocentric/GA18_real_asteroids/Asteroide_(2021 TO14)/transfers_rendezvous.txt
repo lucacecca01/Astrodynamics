@@ -1,0 +1,13 @@
+# jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s
+# tof_from_soi_days dv_rendezvous_km_s
+# Arrival impulse only; departures use cluster mean states.
+# Asteroid: (2021 TO14); SPK-ID: 54209308
+# Elements epoch JD TDB: 2461200.5; orbit solution: 4
+# Asteroid model: planar Keplerian surrogate; i=0; omega=Omega_original+omega_original.
+# Original elements: {"spkid": 54209308, "full_name": "       (2021 TO14)", "epoch": "2461200.5", "a": "1.468609964145119", "e": ".5476790710251215", "i": "1.459652322733676", "om": "242.9503304846659", "w": "229.3304237280994", "ma": "189.722698941602", "equinox": "J2000", "orbit_id": "4"}
+# Asteroid input: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb.json
+# Catalog: /home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt
+2.46134550000000000e+06 64 2.46159550000000000e+06 2.50000000000000000e+02 1.60750082278568485e+01
+2.46134550000000000e+06 70 2.46159650000000000e+06 2.51000000000000000e+02 1.59407892562606666e+01
+2.46134650000000000e+06 64 2.46159950000000000e+06 2.53000000000000000e+02 1.55586946198364497e+01
+2.46134650000000000e+06 70 2.46160050000000000e+06 2.54000000000000000e+02 1.54304572834275522e+01
