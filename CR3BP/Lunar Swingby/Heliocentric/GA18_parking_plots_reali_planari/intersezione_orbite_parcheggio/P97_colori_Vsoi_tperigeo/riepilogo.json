@@ -1,0 +1,18 @@
+{
+  "source_selection": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/intersezione_orbite_parcheggio/P97_selezione.npz",
+  "trajectories": 137,
+  "clusters": 5,
+  "alpha": 0.4,
+  "line_width": 1.0,
+  "samples_per_trajectory": 201,
+  "v_soi_definition": "Norma delle componenti 2:5 del membro: velocit\u00e0 geocentrica inerziale alla SOI, km/s",
+  "time_definition": "Colonna 5 del membro: giorni con segno rispetto a ETD=0, non rispetto alla SOI",
+  "v_soi_range_km_s": [
+    1.9500280238513084,
+    2.1661636551837997
+  ],
+  "t_perigee_range_days": [
+    -51.058864100572954,
+    -2.2159115367596467
+  ]
+}

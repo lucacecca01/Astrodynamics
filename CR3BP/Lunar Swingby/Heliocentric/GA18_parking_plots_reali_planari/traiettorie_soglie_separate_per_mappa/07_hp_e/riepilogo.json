@@ -1,0 +1,15 @@
+{
+  "label": "quota\u2013eccentricita",
+  "maximum_occurrences": 1871,
+  "color_min": 1200.0,
+  "color_max": 1871.0,
+  "thresholds": {
+    "1200": 2313,
+    "1400": 899,
+    "1600": 899,
+    "1800": 899,
+    "2000": 0,
+    "2200": 0,
+    "2400": 0
+  }
+}

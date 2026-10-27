@@ -1,0 +1,94 @@
+{
+  "source": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/traiettorie_soglie_assolute_celle_1200_2400",
+  "samples_per_trajectory": 201,
+  "selection": "Soglia applicata solo alla cella della singola mappa, nessuna aggregazione fra mappe",
+  "thresholds": [
+    1200,
+    1400,
+    1600,
+    1800,
+    2000,
+    2200,
+    2400
+  ],
+  "same_axes_opacity": true,
+  "color_scale_scope": "per_map",
+  "same_color_scale_across_thresholds": true,
+  "maps": {
+    "08_hp_omega": {
+      "label": "quota\u2013omega",
+      "maximum_occurrences": 2405,
+      "color_min": 1200.0,
+      "color_max": 2405.0,
+      "thresholds": {
+        "1200": 25321,
+        "1400": 17284,
+        "1600": 11093,
+        "1800": 9323,
+        "2000": 7949,
+        "2200": 4065,
+        "2400": 1262
+      }
+    },
+    "10_eps_theta": {
+      "label": "energia\u2013theta",
+      "maximum_occurrences": 2733,
+      "color_min": 1200.0,
+      "color_max": 2733.0,
+      "thresholds": {
+        "1200": 16359,
+        "1400": 11763,
+        "1600": 6619,
+        "1800": 4110,
+        "2000": 2092,
+        "2200": 1854,
+        "2400": 1854
+      }
+    },
+    "07_hp_e": {
+      "label": "quota\u2013eccentricita",
+      "maximum_occurrences": 1871,
+      "color_min": 1200.0,
+      "color_max": 1871.0,
+      "thresholds": {
+        "1200": 2313,
+        "1400": 899,
+        "1600": 899,
+        "1800": 899,
+        "2000": 0,
+        "2200": 0,
+        "2400": 0
+      }
+    },
+    "06_eps_omega": {
+      "label": "energia\u2013omega",
+      "maximum_occurrences": 2276,
+      "color_min": 1200.0,
+      "color_max": 2276.0,
+      "thresholds": {
+        "1200": 23900,
+        "1400": 15445,
+        "1600": 7587,
+        "1800": 7587,
+        "2000": 6292,
+        "2200": 2661,
+        "2400": 0
+      }
+    },
+    "05_eps_e": {
+      "label": "energia\u2013eccentricita",
+      "maximum_occurrences": 1881,
+      "color_min": 1200.0,
+      "color_max": 1881.0,
+      "thresholds": {
+        "1200": 2861,
+        "1400": 1300,
+        "1600": 1300,
+        "1800": 1300,
+        "2000": 0,
+        "2200": 0,
+        "2400": 0
+      }
+    }
+  }
+}

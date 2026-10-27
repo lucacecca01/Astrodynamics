@@ -1,0 +1,30 @@
+{
+  "sections": 1,
+  "section_height_km": 260000.0,
+  "trajectories": 113,
+  "bounds_xy_km": [
+    -140000,
+    100000,
+    -350000,
+    -90000
+  ],
+  "numbering": "1 in alto, ultima fascia in basso",
+  "definition": "Tempi dei soli perigei nella fascia, rispetto a ETD",
+  "std_ddof": 0,
+  "records": [
+    {
+      "section": 1,
+      "y_min_km": -350000.0,
+      "y_max_km": -90000.0,
+      "count": 113,
+      "t_min_days": -51.058864100572954,
+      "t_max_days": -20.029784185991453,
+      "span_days": 31.0290799145815,
+      "mean_days": -32.358784882489736,
+      "median_days": -31.7995935932541,
+      "std_population_days": 6.1625622034254715,
+      "coverage_max": 884,
+      "v_soi_span_km_s": 0.2015074313801941
+    }
+  ]
+}

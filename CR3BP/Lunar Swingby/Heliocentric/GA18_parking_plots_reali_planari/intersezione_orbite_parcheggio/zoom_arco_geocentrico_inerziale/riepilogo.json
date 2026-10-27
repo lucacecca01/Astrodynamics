@@ -1,0 +1,30 @@
+{
+  "source_selection": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/intersezione_orbite_parcheggio/P97_selezione.npz",
+  "bounds_xy_km": [
+    -140000,
+    100000,
+    -350000,
+    -90000
+  ],
+  "trajectories": 113,
+  "clusters": 4,
+  "selection": "Perigeo geocentrico inerziale dentro il riquadro",
+  "frame": "Geocentrico inerziale, assi allineati al sinodico a ETD",
+  "alpha": 0.4,
+  "samples_per_trajectory": 401,
+  "dense_cache": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/b8f77ee1a2e391d0b749",
+  "color_ranges": {
+    "01_copertura": [
+      175.0,
+      884.0
+    ],
+    "02_V_soi": [
+      1.9646562238036056,
+      2.1661636551837997
+    ],
+    "03_t_perigeo": [
+      -51.058864100572954,
+      -20.029784185991453
+    ]
+  }
+}

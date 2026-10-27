@@ -1,0 +1,15 @@
+{
+  "region_xy_km": [
+    -100000.0,
+    100000.0,
+    -350000.0,
+    -150000.0
+  ],
+  "selected_perigees": 87,
+  "earliest_source_id": 181017,
+  "latest_source_id": 320405,
+  "minimum_t_perigee_days": -44.076431232118104,
+  "maximum_t_perigee_days": -20.029784185991453,
+  "span_days": 24.04664704612665,
+  "interpretation": "Dispersione fra tempi di perigeo relativi a ETD delle traiettorie nella regione evidenziata"
+}

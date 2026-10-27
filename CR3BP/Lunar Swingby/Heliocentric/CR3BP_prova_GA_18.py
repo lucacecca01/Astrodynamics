@@ -12,6 +12,7 @@ from scipy.optimize import root, differential_evolution
 import spiceypy as spice
 import time
 import gc
+import json
 from joblib import Parallel, delayed, parallel_config
 
 
@@ -36,7 +37,8 @@ day = 86400                  # Seconds in a day
 E_SOI = (m1 / ms)**(2/5) * d_E
 M_SOI = (m2 / m1)**(2/5) * d
 mu_earth = G * m1
-mu_sun = G * ms
+mu_sun = pk.MU_SUN / 1e9       # km^3/s^2
+AU_KM = pk.AU / 1000           # km
 n_earth = np.sqrt(mu_sun / d_E**3)
 n_moon = n
 
@@ -74,12 +76,16 @@ def earth_moon_geometry(jd):
 # Define function to convert escape velocities to heliocentric frame
 def escape_velocity_to_heliocentric(velocities_catalog, v_earth, theta_moon):
 
-    angle = theta_moon
+    rotated = []
 
-    rotation = np.array([[np.cos(angle), -np.sin(angle)],
-                         [np.sin(angle),  np.cos(angle)]])
+    for velocity, theta in zip(velocities_catalog, theta_moon):
 
-    return (velocities_catalog @ rotation.T + np.asarray(v_earth)[..., :2])
+        rotation = np.array([[np.cos(theta), -np.sin(theta)],
+                            [np.sin(theta),  np.cos(theta)]])
+
+        rotated.append(rotation @ velocity)
+
+    return np.array(rotated) + np.asarray(v_earth)[..., :2]
 
 
 
@@ -185,11 +191,11 @@ cluster_sizes = data[:, 1].astype(int)
 mean_v_soi = data[:, 2:4]
 std_v_soi = data[:, 4:6] 
 
-t_perigee = data[:, 6]
-std_t_perigee = data[:, 8]
+t_etd = -data[:, 7]
+std_t_etd = data[:, 9]
 
-t_soi = data[:, 7]
-std_t_soi = data[:, 9]
+t_perigee = data[:, 6] + t_etd
+std_t_perigee = data[:, 8] + std_t_etd
 
 mean_r_soi = data[:, 10:12]
 std_r_soi = data[:, 12:14]
@@ -207,82 +213,99 @@ if PRINT:
 
 
 
-# Generate asteroid orbital elements
-N_SAMPLE = 10000
-TARGET_STEP = 0.01
-
+# Load real asteroids and construct planar Keplerian surrogates
 transformations = Transformations()
 
-t_targets_days = []
-nu_targets = []
-r_targets = []
+# Original catalogue order is preserved; new asteroids are appended.
+ASTEROID_FILE = (Path(__file__).resolve().parent / "asteroids_sbdb_all_i5.json")
+
+MAX_ASTEROIDS = None
+I_MAX_DEG = 5.0
+
+with ASTEROID_FILE.open() as f:
+    asteroid_catalog = json.load(f)
+
 asteroid_elements = []
+asteroid_records = []
 
-rng = np.random.default_rng(SEED)
+for values in asteroid_catalog["data"]:
 
-for _ in range(N_SAMPLE):
-    a = rng.uniform(0.1, 10) * d_E            # Semimajor axis [km]
-    e = rng.uniform(0.01, 0.9)                # Eccentricity []
-    i = 0                                     # Inclination [rad]
-    W = 0                                     # Ascending node [rad]
-    w = rng.uniform(0, 2 * np.pi)             # Argument of perihelion [rad]
-    M0 = rng.uniform(0, 2 * np.pi)            # Mean anomaly [rad]
+    record = dict(zip(asteroid_catalog["fields"], values))
 
-    rp = a * (1 - e)
-    ra = a * (1 + e)
+    numbers = np.array([
+        record["epoch"],
+        record["a"],
+        record["e"],
+        record["i"],
+        record["om"],
+        record["w"],
+        record["ma"],
+    ], dtype=float)
 
-    if ra < R_MIN_AU * d_E or rp > R_MAX_AU * d_E:
+    if not np.isfinite(numbers).all():
         continue
 
-    elements_ast = [a, e, i, W, w, M0]
+    epoch, a_au, e, i, W, w, M0 = numbers
 
-    nu_in = np.arccos(np.clip((a * (1 - e**2) / (R_MIN_AU * d_E) - 1) / e, -1, 1))
-    nu_out = np.arccos(np.clip((a * (1 - e**2) / (R_MAX_AU * d_E) - 1) / e, -1, 1))
-
-    nu_target = np.concatenate((np.arange(nu_in, nu_out, TARGET_STEP), np.arange(2*np.pi - nu_out, 2*np.pi - nu_in, TARGET_STEP),))
-
-    if nu_target.size == 0:
+    if a_au <= 0 or not 0 <= e < 1 or i >= I_MAX_DEG:
         continue
 
-    nu_0 = 0
+    if record["equinox"] != "J2000":
+        raise ValueError("Il catalogo deve usare il riferimento J2000.")
 
-    M_target = transformations.M_from_TA(nu_target, e)
-    n_ast = np.sqrt(mu_sun / a**3)
-    time_target_days = np.mod(M_target - M0, 2*np.pi) / n_ast / day
+    if (a_au * (1 - e) > R_MAX_AU or a_au * (1 + e) < R_MIN_AU):
+        continue
 
-    nu_targets.append(nu_target)
-    r_targets.append(np.array([pk.par2ic([*elements_ast[:5], nu], mu_sun)[0] for nu in nu_target]))
-    asteroid_elements.append(elements_ast)
-    t_targets_days.append(time_target_days)
+    a = a_au * AU_KM
+    omega_planar = np.deg2rad((W + w) % 360)
+    M0 = np.deg2rad(M0 % 360)
 
+    asteroid_elements.append([a, e, 0, 0, omega_planar, M0])
+    asteroid_records.append(record)
 
+    if (MAX_ASTEROIDS is not None and len(asteroid_elements) >= MAX_ASTEROIDS):
+        break
 
+if not asteroid_elements:
+    raise ValueError("Nessun asteroide soddisfa i filtri scelti.")
 
-
-# Compute heliocentric velocities
+print(f"Asteroidi caricati: {len(asteroid_elements)} — modello planare")
 
 member_catalog = None
 
-for i in range(len(asteroid_elements)):
 
-    TARGET_ID = i + 3114
+
+
+# Loop over each asteroid target
+START_ASTEROID = 13053
+
+for i in range(START_ASTEROID, len(asteroid_elements)):
+
+    TARGET_ID = i
+
+    target_record = asteroid_records[TARGET_ID]
+
+    TARGET_SPKID = str(target_record["spkid"])
+    TARGET_NAME = target_record["full_name"].strip()
 
     elements = asteroid_elements[TARGET_ID]
     a_ast, e_ast, _, _, _, M0_ast = elements
+
     n_ast = np.sqrt(mu_sun / a_ast**3)
 
-    JD0 = 2461041.5                  # Epoca di riferimento: 1 gennaio 2026, 00:00 TDB
+    JD0 = float(target_record["epoch"])
+
     JD_START = 2461326.5
-    JD_END = JD_START + 4 * np.pi / n_ast / day
+    JD_END = JD_START + 2 * 365.25
 
     transfer_window = JD_END - JD_START
 
-    STEP_ETD_DAYS = 1
+    STEP_SOI_DAYS = 1
     STEP_ARRIVAL_DAYS = 1
 
-    jd_etd_grid = JD_START + np.append(np.arange(0, transfer_window, STEP_ETD_DAYS), transfer_window)
+    jd_soi_grid = JD_START + np.append(np.arange(0, transfer_window, STEP_SOI_DAYS), transfer_window)
     jd_arr_grid = JD_START + np.append(np.arange(0, transfer_window, STEP_ARRIVAL_DAYS), transfer_window)
-    
+
 
 
 
@@ -294,12 +317,15 @@ for i in range(len(asteroid_elements)):
     arrival_targets = np.array([pk.par2ic([*elements[:5], float(nu)], mu_sun)[0] for nu in nu_arr])
     radii = np.linalg.norm(arrival_targets, axis=1)
 
-    inside = ((radii >= R_MIN_AU*d_E) & (radii <= R_MAX_AU*d_E))
+    inside = ((radii >= R_MIN_AU * AU_KM) & (radii <= R_MAX_AU * AU_KM))
     jd_targets = jd_arr_grid[inside]
     arrival_targets = arrival_targets[inside]
 
-    arrival_velocities = np.array([pk.par2ic([*elements[:5], float(nu)], mu_sun)[1] for nu in nu_arr[inside]])
+    if jd_targets.size == 0:
+        print(f"{TARGET_NAME}: nessun arrivo nella corona nel periodo scelto.")
+        continue
 
+    arrival_velocities = np.array([pk.par2ic([*elements[:5], float(nu)], mu_sun)[1] for nu in nu_arr[inside]])
 
 
 
@@ -313,14 +339,14 @@ for i in range(len(asteroid_elements)):
 
     lambert_departures = []
     lambert_arrivals = []
-    lambert_etd_indices = []
+    lambert_soi_indices = []
     lambert_target_indices = []
     rendezvous_dv = []
 
     n_lambert = 0
 
 
-    def solve_etd(i_etd, jd_etd):
+    def solve_soi(i_soi, jd_soi):
 
         out = [[] for _ in range(10)]
         
@@ -328,38 +354,45 @@ for i in range(len(asteroid_elements)):
             matches, tof_days_grid, lambert_velocities,
             lambert_compatible, lambert_cluster_rows,
             lambert_departures, lambert_arrivals,
-            lambert_etd_indices, lambert_target_indices,
+            lambert_soi_indices, lambert_target_indices,
             rendezvous_dv,
         ) = out
 
         n_lambert = 0
 
-        jd_soi_current = jd_etd + t_soi
+        r_earth, v_earth, _, theta_moon = earth_moon_geometry(jd_soi)
 
-        theta_current = earth_moon_geometry(jd_etd)[3]
-        r_earth_current, v_earth_current = earth_moon_geometry(jd_soi_current)[:2]
+        departures = []
 
-        rotation_current = np.array([[np.cos(theta_current), -np.sin(theta_current)],
-                                    [np.sin(theta_current),  np.cos(theta_current)]])
+        theta_catalog = earth_moon_geometry(jd_soi + t_etd)[3]
 
-        departures_current = r_earth_current.copy()
-        departures_current[:, :2] += mean_r_soi @ rotation_current.T
+        for position, total_angle in zip(mean_r_soi, theta_catalog):
 
-        vinf_current = escape_velocity_to_heliocentric(mean_v_soi, v_earth_current, theta_current,)
+            rotation = np.array([[np.cos(total_angle), -np.sin(total_angle)],
+                                 [np.sin(total_angle),  np.cos(total_angle)]])
+
+            departure = r_earth.copy()
+            departure[:2] += rotation @ position
+            departures.append(departure)
+
+        departures = np.array(departures)
+        vinf = escape_velocity_to_heliocentric(mean_v_soi, v_earth, theta_catalog)
 
         for j, (jd_arrival, r_target) in enumerate(zip(jd_targets, arrival_targets)):
-            
-            tofs = jd_arrival - jd_soi_current
 
-            for c in np.flatnonzero(tofs > 0):
+            tof = jd_arrival - jd_soi
 
-                tof_days = float(tofs[c])
+            if tof <= 0:
+                continue
+
+            for c in range(len(cluster_ids)):
+
                 n_lambert += 1
-    
+
                 lambert = pk.lambert_problem(
-                    r0=departures_current[c],
+                    r0=departures[c],
                     r1=r_target,
-                    tof=tof_days * day,
+                    tof=tof * day,
                     mu=mu_sun,
                     cw=False,
                     multi_revs=0,
@@ -367,8 +400,8 @@ for i in range(len(asteroid_elements)):
 
                 v_lambert = np.asarray(lambert.v0[0])
 
-                dx = vinf_current[c, 0] - v_lambert[0]
-                dy = vinf_current[c, 1] - v_lambert[1]
+                dx = vinf[c, 0] - v_lambert[0]
+                dy = vinf[c, 1] - v_lambert[1]
                 distance_squared = dx * dx + dy * dy
                 compatible = distance_squared <= radius_v[c]**2
 
@@ -376,16 +409,16 @@ for i in range(len(asteroid_elements)):
                     continue
 
                 rendezvous_dv.append(np.linalg.norm(arrival_velocities[j] - np.asarray(lambert.v1[0])))
-                matches.append((float(tof_days), int(cluster_ids[c])))
+                matches.append((float(tof), int(cluster_ids[c])))
 
-                tof_days_grid.append(tof_days)
+                tof_days_grid.append(tof)
                 lambert_velocities.append(v_lambert)
                 lambert_compatible.append(compatible)
                 lambert_cluster_rows.append(c)
 
-                lambert_departures.append(departures_current[c].copy())
+                lambert_departures.append(departures[c].copy())
                 lambert_arrivals.append(r_target.copy())
-                lambert_etd_indices.append(i_etd)
+                lambert_soi_indices.append(i_soi)
                 lambert_target_indices.append(j)
 
 
@@ -397,7 +430,7 @@ for i in range(len(asteroid_elements)):
         matches, tof_days_grid, lambert_velocities,
         lambert_compatible, lambert_cluster_rows,
         lambert_departures, lambert_arrivals,
-        lambert_etd_indices, lambert_target_indices,
+        lambert_soi_indices, lambert_target_indices,
         rendezvous_dv,
     )
 
@@ -415,8 +448,8 @@ for i in range(len(asteroid_elements)):
             batch_size=1,
             pre_dispatch="n_jobs",
         )(
-            delayed(solve_etd)(i_etd, jd_etd)
-            for i_etd, jd_etd in enumerate(jd_etd_grid)
+            delayed(solve_soi)(i_soi, jd_soi)
+            for i_soi, jd_soi in enumerate(jd_soi_grid)
         )
 
         for count, parts in results:
@@ -432,7 +465,7 @@ for i in range(len(asteroid_elements)):
     lambert_cluster_rows = np.asarray(lambert_cluster_rows, dtype=int)
     lambert_departures = np.asarray(lambert_departures).reshape(-1, 3)
     lambert_arrivals = np.asarray(lambert_arrivals).reshape(-1, 3)
-    lambert_etd_indices = np.asarray(lambert_etd_indices, dtype=int)
+    lambert_soi_indices = np.asarray(lambert_soi_indices, dtype=int)
     lambert_target_indices = np.asarray(lambert_target_indices, dtype=int)
     rendezvous_dv = np.asarray(rendezvous_dv)
 
@@ -461,7 +494,7 @@ for i in range(len(asteroid_elements)):
 
             Inputs contain one row per unique member, with (eps, e, omega_deg) in the
             common catalogue frame and its zero-based cluster row. Finite cluster DVs
-            are accepted. Reuse fixed dv_norm and bins['eps'/'e'/'omega'] for all ETDs
+            are accepted. Reuse fixed dv_norm and bins['eps'/'e'/'omega'] for all SOIs
             and the global figure. Identical elements can represent distinct members.
             total_orbits includes unassigned members for the grey catalogue background.
             Returns None if no members are accepted; otherwise returns the figure.
@@ -523,14 +556,15 @@ for i in range(len(asteroid_elements)):
             return fig
 
 
-        successful_etds = np.unique(lambert_etd_indices[lambert_compatible])
 
-        if successful_etds.size == 0:
-            print("Nessun ETD compatibile: nessuna immagine da generare.")
+        successful_sois = np.unique(lambert_soi_indices[lambert_compatible])
+
+        if successful_sois.size == 0:
+            print("Nessun SOI compatibile: nessuna immagine da generare.")
 
         else:
             if SAVE:
-                output_dir = (Path(__file__).resolve().parent / "GA18_plots_2" / f"asteroide_{TARGET_ID}")
+                output_dir = (Path(__file__).resolve().parent / "GA18_plots_2" / f"Asteroide_{TARGET_NAME}")
                 output_dir.mkdir(parents=True, exist_ok=True)
 
             # Members are read only for the new orbital-distribution plots.
@@ -582,15 +616,32 @@ for i in range(len(asteroid_elements)):
                 np.savetxt(
                     output_dir / "transfers_rendezvous.txt",
                     np.column_stack((
-                        jd_etd_grid[lambert_etd_indices[lambert_compatible]],
+                        jd_soi_grid[lambert_soi_indices[lambert_compatible]],
                         cluster_ids[lambert_cluster_rows[lambert_compatible]],
                         jd_targets[lambert_target_indices[lambert_compatible]],
                         tof_days_grid[lambert_compatible], rendezvous_dv[lambert_compatible],
                     )),
                     fmt=("%.17e", "%d", "%.17e", "%.17e", "%.17e"),
-                    header=("jd_etd_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s\n"
+                    header=("jd_soi_tdb cluster_id jd_arrival_tdb tof_from_soi_days dv_rendezvous_km_s\n"
+                            "tof_from_soi_days dv_rendezvous_km_s\n"
+
                             "Arrival impulse only; departures use cluster mean states.\n"
-                            f"Catalog: {DATA_FILE}"),
+
+                            f"Asteroid: {TARGET_NAME}; SPK-ID: {TARGET_SPKID}\n"
+
+                            f"Elements epoch JD TDB: {JD0}; "
+                            f"orbit solution: {target_record['orbit_id']}\n"
+
+                            "Asteroid model: planar Keplerian surrogate; "
+                            "i=0; omega=Omega_original+omega_original.\n"
+
+                            f"Original elements: "
+                            f"{json.dumps(target_record, ensure_ascii=True)}\n"
+
+                            f"Asteroid input: {ASTEROID_FILE}\n"
+
+                            f"Catalog: {DATA_FILE}"
+                        ),
                 )
 
             if False:
@@ -613,30 +664,29 @@ for i in range(len(asteroid_elements)):
 
                 angles = np.linspace(0, 2 * np.pi, 200)
 
-                for i_etd in successful_etds:
+                for i_soi in successful_sois:
 
-                    JD_ETD = float(jd_etd_grid[i_etd])
+                    JD_SOI = float(jd_soi_grid[i_soi])
 
-                    # Tutte le soluzioni compatibili associate a questo ETD
-                    selected = (lambert_compatible & (lambert_etd_indices == i_etd))
+                    # Tutte le soluzioni compatibili associate a questo SOI
+                    selected = (lambert_compatible & (lambert_soi_indices == i_soi))
 
                     hit_indices = np.flatnonzero(selected)
                     compatible_rows = np.unique(lambert_cluster_rows[selected])
                     target_indices = np.unique(lambert_target_indices[selected])
 
-                    # Medie dei cluster nella geometria di questo ETD
-                    r_earth_etd, _, _, theta_moon_etd = earth_moon_geometry(JD_ETD)
-
-                    v_earth_soi = earth_moon_geometry(JD_ETD + t_soi)[1]
+                    # Medie dei cluster nella geometria di questo SOI
+                    r_earth_soi, v_earth_soi, _, theta_moon_soi = earth_moon_geometry(JD_SOI)
+                    theta_vinf_soi = earth_moon_geometry(JD_SOI + t_etd)[3]
 
                     mean_v_heliocentric = escape_velocity_to_heliocentric(
-                        mean_v_soi, v_earth_soi, theta_moon_etd
+                        mean_v_soi, v_earth_soi, theta_vinf_soi
                     )
 
                     fig, axes = plt.subplots(1, 2, figsize=(16, 9), layout="constrained")
 
                     fig.suptitle(
-                        f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB\n"
+                        f"Asteroide {TARGET_NAME} — SOI JD {JD_SOI:.6f} TDB\n"
                         f"{hit_indices.size} trasferimenti — "
                         f"{target_indices.size} epoche di arrivo compatibili"
                     )
@@ -694,7 +744,7 @@ for i in range(len(asteroid_elements)):
                     ax.grid(alpha=0.2)
                     ax.legend(loc="upper left", fontsize="small")
 
-                    # PANNELLO DESTRO: tutti i trasferimenti di questo ETD
+                    # PANNELLO DESTRO: tutti i trasferimenti di questo SOI
                     ax = axes[1]
 
                     ax.plot(
@@ -711,17 +761,17 @@ for i in range(len(asteroid_elements)):
 
                     for radius_au in (R_MIN_AU, R_MAX_AU):
                         ax.plot(
-                            radius_au * d_E * np.cos(angles),
-                            radius_au * d_E * np.sin(angles),
+                            radius_au * AU_KM * np.cos(angles),
+                            radius_au * AU_KM * np.sin(angles),
                             "k--", linewidth=1,
                         )
 
                     ax.plot(0, 0, "o", color="tab:orange", label="Sole")
 
                     ax.plot(
-                        r_earth_etd[0], r_earth_etd[1],
+                        r_earth_soi[0], r_earth_soi[1],
                         "o", color="tab:red", markersize=4,
-                        label="Terra a ETD",
+                        label="Terra a SOI",
                     )
 
                     ax.scatter(
@@ -732,7 +782,7 @@ for i in range(len(asteroid_elements)):
                     )
 
                     # Propaga ciascun arco dalla propria partenza salvata
-                    extent = R_MAX_AU * d_E
+                    extent = R_MAX_AU * AU_KM
 
                     for idx in hit_indices:
                         states = pk.propagate_lagrangian_grid(
@@ -754,7 +804,7 @@ for i in range(len(asteroid_elements)):
                             linewidth=1, alpha=0.75, zorder=3,
                         )
 
-                    # Tutti i punti di arrivo associati a questo ETD
+                    # Tutti i punti di arrivo associati a questo SOI
                     ax.scatter(
                         lambert_arrivals[selected, 0],
                         lambert_arrivals[selected, 1],
@@ -784,7 +834,7 @@ for i in range(len(asteroid_elements)):
                     )
 
                     if SAVE:
-                        filename = output_dir / (f"ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png")
+                        filename = output_dir / (f"SOI_{i_soi:05d}_JD_{JD_SOI:.8f}.png")
                         fig.savefig(filename, dpi=180)
                         fig.clear()
                         plt.close(fig)
@@ -796,11 +846,11 @@ for i in range(len(asteroid_elements)):
                     np.minimum.at(cluster_dv, lambert_cluster_rows[selected], rendezvous_dv[selected])
                     orbital_fig = plot_accepted_orbits(
                         member_orbits, member_cluster_rows, cluster_dv,
-                        title=f"Asteroide {TARGET_ID} — ETD JD {JD_ETD:.6f} TDB",
+                        title=f"Asteroide {TARGET_ID} — SOI JD {JD_SOI:.6f} TDB",
                         dv_norm=dv_norm, dv_cmap=dv_cmap, bins=orbital_bins,
                     )
                     if SAVE:
-                        orbital_fig.savefig(output_dir / f"orbite_ETD_{i_etd:05d}_JD_{JD_ETD:.8f}.png", dpi=180)
+                        orbital_fig.savefig(output_dir / f"orbite_SOI_{i_soi:05d}_JD_{JD_SOI:.8f}.png", dpi=180)
                         orbital_fig.clear()
                         plt.close(orbital_fig)
                         gc.collect()
@@ -809,16 +859,16 @@ for i in range(len(asteroid_elements)):
 
             final_orbital_fig = plot_accepted_orbits(
                 member_orbits, member_cluster_rows, global_cluster_dv,
-                title=f"Asteroide {TARGET_ID} — tutte le ETD compatibili",
+                title=f"Asteroide {TARGET_ID} — tutte le SOI compatibili",
                 dv_norm=dv_norm, dv_cmap=dv_cmap, bins=orbital_bins,
                 total_orbits=member_catalog[:, 9:12],
             )
             if SAVE:
-                final_orbital_fig.savefig(output_dir / "orbite_tutte_le_ETD.png", dpi=180)
+                final_orbital_fig.savefig(output_dir / "orbite_tutte_le_SOI.png", dpi=180)
                 final_orbital_fig.clear()
                 plt.close(final_orbital_fig)
                 gc.collect()
-                print(f"Salvate {2 * successful_etds.size + 1} immagini e transfers_rendezvous.txt in: {output_dir}\n")
+                print(f"Salvate {2 * successful_sois.size + 1} immagini e transfers_rendezvous.txt in: {output_dir}\n")
             else:
                 plt.show()
 

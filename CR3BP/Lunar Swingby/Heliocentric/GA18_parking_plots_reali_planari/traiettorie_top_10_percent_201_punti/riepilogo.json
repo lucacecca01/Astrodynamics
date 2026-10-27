@@ -1,0 +1,50 @@
+{
+  "threshold": null,
+  "top_percent_of_each_map_scale": 10,
+  "dense_cache": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/28274101ebfcc6c6b535",
+  "mode": "asteroids",
+  "n_bins": 100,
+  "report": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/riepilogo.txt",
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/trajectory_exit_catalog.txt",
+  "cache": "/home/lucacecca/Astrodynamics/.cache/ga16_plot_recovery/GA_16_plots_vinf_time_K798/orbits",
+  "unique_union": 21749,
+  "samples_per_trajectory": 201,
+  "maps": {
+    "05": {
+      "threshold": 1693,
+      "trajectories": 1300,
+      "cells": 2,
+      "maximum_occurrences": 1881
+    },
+    "06": {
+      "threshold": 2049,
+      "trajectories": 2898,
+      "cells": 3,
+      "maximum_occurrences": 2276
+    },
+    "07": {
+      "threshold": 1684,
+      "trajectories": 899,
+      "cells": 1,
+      "maximum_occurrences": 1871
+    },
+    "08": {
+      "threshold": 2165,
+      "trajectories": 7326,
+      "cells": 5,
+      "maximum_occurrences": 2405
+    },
+    "09": {
+      "threshold": 872,
+      "trajectories": 9561,
+      "cells": 54,
+      "maximum_occurrences": 968
+    },
+    "10": {
+      "threshold": 2460,
+      "trajectories": 1854,
+      "cells": 1,
+      "maximum_occurrences": 2733
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "method": "clusters",
+  "definition": "Asteroidi che scelgono il cluster della traiettoria",
+  "percentage": 10,
+  "population_count": 2132563,
+  "selected_count": 213257,
+  "cutoff": 7,
+  "maximum": 884,
+  "ties_at_cutoff": 144277,
+  "selected_ties": 53779,
+  "tie_break": "source_id crescente",
+  "samples_per_trajectory": 201,
+  "report": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/riepilogo.txt",
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/trajectory_exit_catalog.txt",
+  "dense_cache": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/05fe8cc98f2cfd01742b",
+  "frames": [
+    "sinodico",
+    "geocentrico inerziale",
+    "lunocentrico con assi inerziali"
+  ],
+  "lunar_zoom_km": [
+    -100000,
+    100000
+  ],
+  "drawing_order": "punteggio crescente: traiettorie con pi\u00f9 asteroidi disegnate per ultime"
+}

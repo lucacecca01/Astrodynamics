@@ -1,0 +1,26 @@
+{
+  "percentile": 99.5,
+  "rule": "AND delle sei mappe, nessun filtro sul punteggio individuale",
+  "trajectories": 52,
+  "clusters": 7,
+  "members_by_cluster": {
+    "44": 1,
+    "45": 1,
+    "49": 1,
+    "64": 1,
+    "70": 5,
+    "76": 41,
+    "92": 2
+  },
+  "input_counts": {
+    "05_eps_e": 17934,
+    "06_eps_omega": 26984,
+    "07_hp_e": 11085,
+    "08_hp_omega": 34497,
+    "09_hp_theta": 9388,
+    "10_eps_theta": 12141
+  },
+  "trajectories_above_100": 6,
+  "dense_cache": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/30bdb05597ea6ce2af40",
+  "samples_per_trajectory": 201
+}

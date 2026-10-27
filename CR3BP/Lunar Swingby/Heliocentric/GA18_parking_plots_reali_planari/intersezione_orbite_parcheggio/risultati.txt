@@ -1,0 +1,11 @@
+Intersezione delle orbite di parcheggio
+
+>100 asteroidi vincenti per cluster AND soglia su tutte le sei mappe.
+
+P97: 137 traiettorie, 5 cluster, 2606 asteroidi distinti.
+P99: 36 traiettorie, 2 cluster, 1752 asteroidi distinti.
+P99.5: 6 traiettorie, 2 cluster, 1752 asteroidi distinti.
+P99.75: 0 traiettorie, 0 cluster, 0 asteroidi distinti.
+
+La più restrittiva non vuota è P99.5: cinque membri del cluster 70 e uno del cluster 64.
+Le candidate ereditano le prestazioni del modello medio del cluster. Occorre una verifica individuale per certificarne il ΔV.

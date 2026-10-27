@@ -1,0 +1,15 @@
+{
+  "label": "energia\u2013eccentricita",
+  "maximum_occurrences": 1881,
+  "color_min": 1200.0,
+  "color_max": 1881.0,
+  "thresholds": {
+    "1200": 2861,
+    "1400": 1300,
+    "1600": 1300,
+    "1800": 1300,
+    "2000": 0,
+    "2200": 0,
+    "2400": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "cluster_percentage": 1,
+  "cluster_population": 2132563,
+  "cluster_selected": 21326,
+  "cluster_cutoff": 15,
+  "tie_break": "source_id crescente",
+  "cell_percentage_of_each_map_scale": 10,
+  "cell_selected": 21749,
+  "common_sources": 204,
+  "samples_per_trajectory": 201,
+  "cluster_parent": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/traiettorie_combinate_top_10_percent_clusters_201_punti",
+  "cell_parent": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/traiettorie_top_10_percent_201_punti",
+  "same_rendering_parameters": true,
+  "colors": "cluster",
+  "axes_identical": true
+}

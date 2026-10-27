@@ -1,0 +1,89 @@
+{
+  "definition": "Membro in almeno una cella con >= N asteroidi, unione delle mappe 05-10",
+  "report": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/riepilogo.txt",
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/trajectory_exit_catalog.txt",
+  "n_bins": 100,
+  "population_count": 2132563,
+  "samples_per_trajectory": 201,
+  "dense_cache": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/1c92dde7bc3e2ce7ba25",
+  "identical_axes_colors_opacity": true,
+  "thresholds": {
+    "1200": {
+      "trajectories": 53570,
+      "per_map_members": {
+        "05": 2861,
+        "06": 23900,
+        "07": 2313,
+        "08": 25321,
+        "09": 0,
+        "10": 16359
+      }
+    },
+    "1400": {
+      "trajectories": 36566,
+      "per_map_members": {
+        "05": 1300,
+        "06": 15445,
+        "07": 899,
+        "08": 17284,
+        "09": 0,
+        "10": 11763
+      }
+    },
+    "1600": {
+      "trajectories": 22918,
+      "per_map_members": {
+        "05": 1300,
+        "06": 7587,
+        "07": 899,
+        "08": 11093,
+        "09": 0,
+        "10": 6619
+      }
+    },
+    "1800": {
+      "trajectories": 19274,
+      "per_map_members": {
+        "05": 1300,
+        "06": 7587,
+        "07": 899,
+        "08": 9323,
+        "09": 0,
+        "10": 4110
+      }
+    },
+    "2000": {
+      "trajectories": 14339,
+      "per_map_members": {
+        "05": 0,
+        "06": 6292,
+        "07": 0,
+        "08": 7949,
+        "09": 0,
+        "10": 2092
+      }
+    },
+    "2200": {
+      "trajectories": 7612,
+      "per_map_members": {
+        "05": 0,
+        "06": 2661,
+        "07": 0,
+        "08": 4065,
+        "09": 0,
+        "10": 1854
+      }
+    },
+    "2400": {
+      "trajectories": 3113,
+      "per_map_members": {
+        "05": 0,
+        "06": 0,
+        "07": 0,
+        "08": 1262,
+        "09": 0,
+        "10": 1854
+      }
+    }
+  }
+}

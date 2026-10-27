@@ -1,0 +1,2 @@
+section,y_min_km,y_max_km,count,t_min_days,t_max_days,span_days,mean_days,median_days,std_population_days,coverage_max,v_soi_span_km_s
+1,-350000.0,-90000.0,113,-51.058864100572954,-20.029784185991453,31.0290799145815,-32.358784882489736,-31.7995935932541,6.1625622034254715,884,0.2015074313801941
