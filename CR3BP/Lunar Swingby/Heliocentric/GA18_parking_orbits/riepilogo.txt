@@ -3,9 +3,9 @@ Scenari caricati: 4886
 Mappe individuali in formato 16:9, massimo 144 pannelli e 16 colonne per pagina.
 Mappe eps-e ed eps-omega; omega al perigeo negli assi del catalogo, modulo 360 gradi.
 Mappe aggiuntive 07-10: hp-e, hp-omega, hp-theta, eps-theta; hp = rp - 6378 km dalla superficie terrestre.
+Mappe 11-12: eps-phi e hp-phi; azimut ECLIPJ2000 con fase lunare all'ETD del miglior trasferimento per asteroide.
 Theta = (senso_perigeo * omega - n_moon * t_perigee) mod 360; antiorario dalla Luna al perigeo.
-Verso recuperato al perigeo salvato da un rappresentante per cluster GA16, omogenei per verso.
-Theta verificato con atan2(y_perigeo, x_perigeo) nel sinodico, sulla posizione dei rappresentanti.
+Verso al perigeo letto dai dati salvati; per i vecchi cataloghi, recuperato da un rappresentante per cluster GA16 omogeneo per verso.
 Un porkchop per asteroide: partenza e arrivo TDB, minimo DV tra cluster per ogni coppia esatta di date.
 Celle porkchop larghe al massimo 1 giorni, senza interpolazione o riempimento delle lacune.
 Porkchop: tutti i trasferimenti salvati che rispettano le soglie DV/durata, senza filtro sugli elementi delle orbite di parcheggio.

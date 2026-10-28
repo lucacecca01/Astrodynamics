@@ -10,6 +10,9 @@ from collections.abc import Sequence
 import gc
 import warnings
 
+import pykep as pk
+import spiceypy as spice
+
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import dates as mdates
@@ -60,14 +63,17 @@ class ScenarioMaps(Sequence):
         return maps_from_geometry(self.geometry, self.minimum[index:index+1], self.counts[index:index+1])
 
 
-def load_table(path, n_columns):
+def load_table(path, n_columns, *, allow_extra=False):
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="loadtxt: input contained no data")
         values = np.loadtxt(path, ndmin=2)
     if values.size == 0:
         return np.empty((0, n_columns))
-    if values.shape[1] != n_columns or not np.isfinite(values).all():
-        raise ValueError(f"{path}: richieste {n_columns} colonne finite.")
+    wrong_columns = (values.shape[1] < n_columns if allow_extra
+                     else values.shape[1] != n_columns)
+    if wrong_columns or not np.isfinite(values[:, :n_columns]).all():
+        qualifier = "almeno " if allow_extra else ""
+        raise ValueError(f"{path}: richieste {qualifier}{n_columns} colonne finite.")
     return values
 
 
@@ -137,8 +143,11 @@ def load_inputs(transfer_files):
     if len(set(catalog_paths)) != 1:
         raise ValueError("Cataloghi diversi: non si possono unire i soli cluster_id.")
     catalog_path = catalog_paths[0]
-    stats = load_table(catalog_path, 14)
-    members = load_table(catalog_path.with_name("trajectory_exit_catalog.txt"), 12)
+    stats = load_table(catalog_path, 14, allow_extra=True)
+    if stats.shape[1] > 14 and not np.isin(stats[:, 14], (-1, 1)).all():
+        raise ValueError("direction_perigee nelle statistiche deve essere +1 o -1.")
+    members = load_table(catalog_path.with_name("trajectory_exit_catalog.txt"), 12,
+                         allow_extra=True)
     if not len(stats) or not len(members):
         raise ValueError("Il catalogo o le statistiche sono vuoti.")
     stats = stats[np.argsort(stats[:, 0])]
@@ -157,6 +166,8 @@ def load_inputs(transfer_files):
             raise ValueError(f"Cluster {int(row[0])}: conteggio dei membri incoerente.")
         if not np.allclose(group[:, 5:7].mean(axis=0), row[6:8], rtol=0, atol=1e-8):
             raise ValueError(f"Cluster {int(row[0])}: tempi medi del catalogo incoerenti.")
+        if len(row) > 14 and group.shape[1] > 12 and not np.all(group[:, 12] == row[14]):
+            raise ValueError(f"Cluster {int(row[0])}: versi al perigeo dei membri incoerenti con le statistiche.")
     for path, table, info in zip(paths, tables, metadata):
         labels_t = integer_ids(table[:, 1], f"cluster_id in {path}")
         if not np.isin(labels_t, ids).all():
@@ -264,10 +275,14 @@ def plot_best_transfer_occurrences(data, y_label, vmax, only_bound=True, x_label
                 if data["mode"] == "asteroids" else
                 "Ogni membro conta una volta per asteroide che seleziona il suo cluster.")
     parking = "Orbite legate con perigeo sopra la superficie." if only_bound else "Tutti i membri dei cluster vincenti."
+    frame_note = data.get(
+        "frame_note",
+        "Elementi dei membri del cluster vincente nel riferimento del catalogo; prestazioni del modello medio.",
+    )
     fig.supxlabel(
         "Un solo trasferimento a minimo ΔV di rendez-vous per asteroide, tra quelli ammessi dalle soglie.\n"
         f"{counting} {parking}\n"
-        "Elementi dei membri del cluster vincente nel riferimento del catalogo; prestazioni del modello medio.",
+        f"{frame_note}",
         fontsize=9,
     )
     return fig
@@ -338,14 +353,14 @@ def plot_occurrence_percentiles(data, x_label, y_label):
 
 
 def save_occurrence_percentiles(map_items, output):
-    """Salva sei figure, PDF multipagina, griglie e statistiche verificabili."""
+    """Salva le figure, il PDF multipagina, le griglie e le statistiche verificabili."""
     import json
     from matplotlib.backends.backend_pdf import PdfPages
 
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     summaries = {}
-    with PdfPages(output / "mappe_percentili_05_10.pdf") as pdf:
+    with PdfPages(output / "mappe_percentili.pdf") as pdf:
         for data, filename, xlabel, ylabel in map_items:
             stem = Path(filename).stem
             fig, records, masks = plot_occurrence_percentiles(data, xlabel, ylabel)
@@ -564,8 +579,9 @@ def winning_cluster_directions(members, catalog_path):
 
 
 def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
-                                  only_bound=True, n_bins=100, mode="asteroids", occurrence_threshold=None, occurrence_fraction=None, return_member_occurrences=False):
-    """Four additional projections of the same winning-cluster members as 05/06."""
+                                  only_bound=True, n_bins=200, mode="asteroids", occurrence_threshold=None, occurrence_fraction=None, return_member_occurrences=False,
+                                  winner_phases_deg=None):
+    """Catalogue projections and optional inertial azimuth maps of winning-cluster members."""
     winner_rows = np.asarray(winner_rows, dtype=int)
     winning = np.unique(winner_rows[winner_rows >= 0])
     subset = members[np.isin(members[:, 1], stats[winning, 0])]
@@ -577,8 +593,15 @@ def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
     if only_bound:
         valid &= (eps < 0) & (ecc >= 0) & (ecc < 1) & (rp > R_EARTH_KM)
     subset, rp = subset[valid], rp[valid]
-    print("Recupero verso al perigeo dei cluster vincenti...", flush=True)
-    directions = winning_cluster_directions(subset, catalog_path) if len(subset) else np.empty(0)
+    if stats.shape[1] > 14:
+        directions = stats[np.searchsorted(stats[:, 0], subset[:, 1]), 14]
+    elif subset.shape[1] > 12:
+        directions = subset[:, 12]
+    else:
+        print("Recupero verso al perigeo dei cluster vincenti...", flush=True)
+        directions = winning_cluster_directions(subset, catalog_path) if len(subset) else np.empty(0)
+    if not np.isin(directions, (-1, 1)).all():
+        raise ValueError("direction_perigee deve essere +1 o -1.")
     omega = subset[:, 11] % 360
     theta = (directions * omega - MOON_RATE_DEG_DAY * subset[:, 5]) % 360
     altitude = rp - R_EARTH_KM
@@ -611,6 +634,60 @@ def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
             data["member_source_ids"] = subset[:, 0].astype(np.int64)
             data["member_occurrences"] = data["occurrences"].ravel()[cell]
         result.append((data, filename, xlabel, ylabel))
+
+    if winner_phases_deg is not None:
+
+        winner_phases_deg = np.asarray(winner_phases_deg, dtype=float)
+
+        if (winner_phases_deg.shape != winner_rows.shape or not np.isfinite(winner_phases_deg[winner_rows >= 0]).all()):
+            raise ValueError("Manca la fase ETD di un asteroide vincente.")
+
+        phi_catalog = (directions * omega) % 360
+
+        groups = {c: np.flatnonzero(rows == c) for c in np.unique(rows)}
+
+        for filename, x, xlabel in (("11_migliori_transfer_occorrenze_eps_phi.png", subset[:, 9], EPS_LABEL), ("12_migliori_transfer_occorrenze_hp_phi.png", altitude, HP_LABEL)):
+            edges_x = np.histogram_bin_edges(x, n_bins)
+            edges_y = np.linspace(0, 360, n_bins + 1)
+            occurrences = np.zeros((n_bins, n_bins), dtype=np.int64)
+
+            for c, phase in zip(winner_rows, winner_phases_deg):
+                take = groups.get(c)
+
+                if take is None:
+                    continue
+
+                phi = (phi_catalog[take] + phase) % 360
+
+                H = np.histogram2d(x[take], phi, bins=(edges_x, edges_y))[0]
+
+                if mode == "asteroids":
+                    occurrences += H > 0
+                else:
+                    occurrences += H.astype(np.int64)
+
+            data = {
+                key: result[0][0][key]
+                for key in (
+                    "mode", "selected_asteroids", "represented_asteroids",
+                    "winning_clusters", "represented_clusters",
+                    "distinct_members",
+                )
+            }
+
+            data.update(
+                occurrences=occurrences,
+                edges_x=edges_x,
+                edges_y=edges_y,
+                frame_note=(
+                    "Azimut del perigeo in ECLIPJ2000; "
+                    "fase lunare all'ETD del miglior trasferimento. "
+                    "Prestazioni del modello medio."
+                ),
+            )
+
+            result.append((data, filename, xlabel, r"$\phi_p$ ECLIPJ2000 [deg]"))
+
     return result
 
 
@@ -678,11 +755,32 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
         for table, index in zip(tables, best_indices)
     ], dtype=int)
     print("Preparazione delle celle eps-e ed eps-omega (una volta per proiezione)...", flush=True)
+
+    spice.furnsh(pk.udpla.de440s.kernel_file())
+
+    winner_phases_deg = np.full(len(tables), np.nan)
+
+    for k, (table, best, c, info) in enumerate(zip(tables, best_indices, winner_rows, metadata)):
+        if best < 0:
+            continue
+
+        jd_etd = table[best, 0]
+
+        if info["epoch_reference"] == "SOI":
+            jd_etd -= stats[c, 7]
+
+        et = (jd_etd - 2451545.0) * 86400.0
+
+        moon = spice.spkezr("MOON", et, "ECLIPJ2000", "NONE", "EARTH")[0]
+
+        winner_phases_deg[k] = np.degrees(np.arctan2(moon[1], moon[0]))
+
+
     geometry = prepare_parking_geometry(members, stats, only_bound, n_bins)
     omega_geometry = prepare_parking_geometry(members, stats, only_bound, n_bins, y_variable="omega")
     additional_maps = additional_best_transfer_maps(
         members, stats, winner_rows, catalog.with_name("trajectory_exit_catalog.txt"),
-        only_bound, n_bins, best_occurrence_mode)
+        only_bound, n_bins, best_occurrence_mode, winner_phases_deg=winner_phases_deg)
     del members
     best_maps = best_transfer_occurrences(geometry, winner_rows, len(stats), best_occurrence_mode)
     best_omega_maps = best_transfer_occurrences(omega_geometry, winner_rows, len(stats), best_occurrence_mode)
@@ -698,9 +796,9 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
               f"Mappe individuali in formato 16:9, massimo {panels_per_page} pannelli e {plot_columns} colonne per pagina.",
               "Mappe eps-e ed eps-omega; omega al perigeo negli assi del catalogo, modulo 360 gradi.",
               "Mappe aggiuntive 07-10: hp-e, hp-omega, hp-theta, eps-theta; hp = rp - 6378 km dalla superficie terrestre.",
+              "Mappe 11-12: eps-phi e hp-phi; azimut ECLIPJ2000 con fase lunare all'ETD del miglior trasferimento per asteroide.",
               "Theta = (senso_perigeo * omega - n_moon * t_perigee) mod 360; antiorario dalla Luna al perigeo.",
-              "Verso recuperato al perigeo salvato da un rappresentante per cluster GA16, omogenei per verso.",
-              "Theta verificato con atan2(y_perigeo, x_perigeo) nel sinodico, sulla posizione dei rappresentanti.",
+              "Verso al perigeo letto dai dati salvati; per i vecchi cataloghi, recuperato da un rappresentante per cluster GA16 omogeneo per verso.",
               "Un porkchop per asteroide: partenza e arrivo TDB, minimo DV tra cluster per ogni coppia esatta di date.",
               f"Celle porkchop larghe al massimo {porkchop_cell_days:g} giorni, senza interpolazione o riempimento delle lacune.",
               "Porkchop: tutti i trasferimenti salvati che rispettano le soglie DV/durata, senza filtro sugli elementi delle orbite di parcheggio.",

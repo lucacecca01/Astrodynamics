@@ -1180,13 +1180,20 @@ def print_clustering_summary(labels):
 
 
 
-def save_cluster_velocity_statistics(path, labels, velocities, times_days, catalog_name, positions):
-    """Save population statistics of SOI vx/vy and signed event times from ETD."""
+def save_cluster_velocity_statistics(path, labels, velocities, times_days, catalog_name, positions,
+                                     directions):
+    """Save SOI/time statistics and the common perigee sense of each cluster."""
+    directions = np.asarray(directions)
+    if directions.shape != labels.shape or not np.isin(directions, (-1, 1)).all():
+        raise ValueError("Serve un verso al perigeo (+1 o -1) per ogni traiettoria.")
     cluster_ids = np.unique(labels[labels >= 0])
-    table = np.empty((len(cluster_ids), 14), dtype=float)
+    table = np.empty((len(cluster_ids), 15), dtype=float)
 
     for i, cluster_id in enumerate(cluster_ids):
         mask = labels == cluster_id
+        cluster_directions = np.unique(directions[mask])
+        if len(cluster_directions) != 1:
+            raise ValueError(f"Cluster {cluster_id}: presenti versi al perigeo diversi.")
         velocity_xy = velocities[mask, :2]
         event_times = times_days[mask]
 
@@ -1202,6 +1209,7 @@ def save_cluster_velocity_statistics(path, labels, velocities, times_days, catal
             event_times.std(axis=0, ddof=0),
             positions[mask, :2].mean(axis=0),
             positions[mask, :2].std(axis=0, ddof=0),
+            cluster_directions[0],
         ]
 
     header = (
@@ -1210,7 +1218,7 @@ def save_cluster_velocity_statistics(path, labels, velocities, times_days, catal
         "mean_t_perigee_days mean_t_soi_days "
         "std_t_perigee_days std_t_soi_days "
         "mean_x_soi_km mean_y_soi_km "
-        "std_x_soi_km std_y_soi_km\n"
+        "std_x_soi_km std_y_soi_km direction_perigee\n"
         f"Catalog: {catalog_name}\n"
         "Frame: geocentric inertial model axes.\n"
         "Velocities evaluated at Earth SOI exit; units: km/s.\n"
@@ -1219,12 +1227,14 @@ def save_cluster_velocity_statistics(path, labels, velocities, times_days, catal
         "STD: population standard deviation, ddof=0.\n"
         "Unassigned trajectories (cluster_id=-1) excluded.\\n"
         "Positions: geocentric inertial SOI exit positions; km.\n"
+        "direction_perigee: sign of geocentric inertial h_z at the selected perigee; "
+        "+1 prograde, -1 retrograde; equal for every member of the cluster.\n"
     )
 
     np.savetxt(
         path,
         table,
-        fmt=("%d", "%d") + ("%.17e",) * 12,
+        fmt=("%d", "%d") + ("%.17e",) * 12 + ("%d",),
         header=header,
     )
 
@@ -1475,6 +1485,7 @@ save_cluster_velocity_statistics(
     times_days=event_times_days,
     catalog_name=f"{Path(__file__).stem}_time",
     positions=positions_soi,
+    directions=event_features[:, 6],
 )
 
 np.savetxt(

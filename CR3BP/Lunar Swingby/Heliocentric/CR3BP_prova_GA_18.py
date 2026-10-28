@@ -200,6 +200,8 @@ std_t_perigee = data[:, 8] + std_t_etd
 mean_r_soi = data[:, 10:12]
 std_r_soi = data[:, 12:14]
 
+direction = data[:, 14]
+
 
 
 radius_v = N_SIGMA * np.linalg.norm(std_v_soi, axis=1)
@@ -350,8 +352,7 @@ for i in range(START_ASTEROID, len(asteroid_elements)):
 
         out = [[] for _ in range(10)]
         
-        (
-            matches, tof_days_grid, lambert_velocities,
+        (   matches, tof_days_grid, lambert_velocities,
             lambert_compatible, lambert_cluster_rows,
             lambert_departures, lambert_arrivals,
             lambert_soi_indices, lambert_target_indices,
@@ -364,9 +365,9 @@ for i in range(START_ASTEROID, len(asteroid_elements)):
 
         departures = []
 
-        theta_catalog = earth_moon_geometry(jd_soi + t_etd)[3]
+        phase_moon_etd = earth_moon_geometry(jd_soi + t_etd)[3]
 
-        for position, total_angle in zip(mean_r_soi, theta_catalog):
+        for position, total_angle in zip(mean_r_soi, phase_moon_etd):
 
             rotation = np.array([[np.cos(total_angle), -np.sin(total_angle)],
                                  [np.sin(total_angle),  np.cos(total_angle)]])
@@ -376,7 +377,7 @@ for i in range(START_ASTEROID, len(asteroid_elements)):
             departures.append(departure)
 
         departures = np.array(departures)
-        vinf = escape_velocity_to_heliocentric(mean_v_soi, v_earth, theta_catalog)
+        vinf = escape_velocity_to_heliocentric(mean_v_soi, v_earth, phase_moon_etd)
 
         for j, (jd_arrival, r_target) in enumerate(zip(jd_targets, arrival_targets)):
 

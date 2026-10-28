@@ -250,5 +250,89 @@
       "occupied_fraction": 0.0025290844714213456,
       "grid_fraction": 0.001
     }
+  ],
+  "11_migliori_transfer_occorrenze_eps_phi": [
+    {
+      "percentile": 97,
+      "threshold": 147.0,
+      "minimum_integer_count": 147,
+      "selected_cells": 288,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030716723549488054,
+      "grid_fraction": 0.0288
+    },
+    {
+      "percentile": 99,
+      "threshold": 165.0,
+      "minimum_integer_count": 165,
+      "selected_cells": 98,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.010452218430034129,
+      "grid_fraction": 0.0098
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 175.0,
+      "minimum_integer_count": 175,
+      "selected_cells": 48,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005119453924914676,
+      "grid_fraction": 0.0048
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 183.0,
+      "minimum_integer_count": 183,
+      "selected_cells": 26,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.002773037542662116,
+      "grid_fraction": 0.0026
+    }
+  ],
+  "12_migliori_transfer_occorrenze_hp_phi": [
+    {
+      "percentile": 97,
+      "threshold": 67.0,
+      "minimum_integer_count": 67,
+      "selected_cells": 299,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030260095132071653,
+      "grid_fraction": 0.0299
+    },
+    {
+      "percentile": 99,
+      "threshold": 76.0,
+      "minimum_integer_count": 76,
+      "selected_cells": 110,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.011132476469992915,
+      "grid_fraction": 0.011
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 81.0,
+      "minimum_integer_count": 81,
+      "selected_cells": 55,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0055662382349964575,
+      "grid_fraction": 0.0055
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 87.0,
+      "minimum_integer_count": 87,
+      "selected_cells": 26,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0026313126201801436,
+      "grid_fraction": 0.0026
+    }
   ]
 }
