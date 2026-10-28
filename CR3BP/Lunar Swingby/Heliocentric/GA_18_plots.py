@@ -19,9 +19,9 @@ from matplotlib.ticker import MaxNLocator
 
 # Stessa cartella di salvataggio usata da GA18; selezione dai metadati dei file.
 BASE_DIR = Path(__file__).resolve().parent
-TRANSFER_DIR = BASE_DIR / "GA18_plots_2"
+TRANSFER_DIR = BASE_DIR / "GA18_real_asteroids"  # Cartella con i risultati di GA18, per tutti gli asteroidi reali.
 TRANSFER_FILES = None          # None = tutti gli asteroidi reali; oppure lista di file.
-OUTPUT_DIR = BASE_DIR / "GA18_parking_plots_reali_planari"
+OUTPUT_DIR = BASE_DIR / "GA18_parking_orbits"
 MAX_DV_KM_S = None             # Solo rendez-vous all'arrivo; None = nessun limite.
 MAX_DURATION_DAYS = None       # Perigeo MEDIO -> arrivo; None = nessun limite.
 ONLY_BOUND_PARKING = True      # eps < 0, 0 <= e < 1, perigeo sopra la superficie.
