@@ -298,7 +298,7 @@ for i in range(START_ASTEROID, len(asteroid_elements)):
     JD0 = float(target_record["epoch"])
 
     JD_START = 2461326.5
-    JD_END = JD_START + 2 * 365.25
+    JD_END = JD_START + 10 * 365.25
 
     transfer_window = JD_END - JD_START
 
@@ -565,7 +565,7 @@ for i in range(START_ASTEROID, len(asteroid_elements)):
 
         else:
             if SAVE:
-                output_dir = (Path(__file__).resolve().parent / "GA18_plots_2" / f"Asteroide_{TARGET_NAME}")
+                output_dir = (Path(__file__).resolve().parent / "GA18_real_asteroids" / f"Asteroide_{TARGET_NAME}")
                 output_dir.mkdir(parents=True, exist_ok=True)
 
             # Members are read only for the new orbital-distribution plots.

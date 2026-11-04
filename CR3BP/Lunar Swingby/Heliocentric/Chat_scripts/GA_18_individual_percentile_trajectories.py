@@ -1,4 +1,4 @@
-"""Percentili delle singole traiettorie per numero di asteroidi col cluster vincente.
+"""Percentili della ricorrenza dei cluster, calcolati sulla popolazione dei membri.
 
 Ogni membro eredita le prestazioni del modello medio del cluster. Le parità
 alla soglia sono incluse; una sola selezione per percentile in tutte le mappe.
@@ -17,7 +17,7 @@ from matplotlib.colors import Normalize
 import GA_18_plots as plots
 import GA_18_high_occurrence_trajectories as high
 from GA_18_combined_trajectories import combined_scores, draw_combined, inertial_positions, trajectory_times
-from GA_18_percentile_trajectories import MAPS, package_pdf
+from GA_18_percentile_trajectories import ANGLE_CONVENTION, MAPS, package_pdf
 
 _RENDER_DATA = None
 
@@ -26,7 +26,7 @@ def prepare(output, percentiles=plots.OCCURRENCE_PERCENTILES):
     report_path = plots.OUTPUT_DIR / "riepilogo.txt"
     report = report_path.read_text()
     catalog = Path(re.search(r"^Catalogo: (.+)$", report, re.M)[1])
-    stats = plots.load_table(catalog, 14)
+    stats = plots.load_table(catalog, 14, allow_extra=True)
     stats = stats[np.argsort(stats[:, 0])]
     all_members = plots.load_table(catalog.with_name("trajectory_exit_catalog.txt"), 12)
     winner_ids = np.array([int(x) for x in re.findall(r"Miglior trasferimento: cluster (\d+)", report)])
@@ -54,11 +54,12 @@ def prepare(output, percentiles=plots.OCCURRENCE_PERCENTILES):
         print(f"P{percentile:g}: soglia {rec['minimum_count']}, {rec['trajectories']} traiettorie "
               f"({100*rec['trajectory_fraction']:.3f}%), {rec['clusters']} cluster", flush=True)
     eps, ecc = members[:, 9], members[:, 10]
-    hp = -plots.MU_EARTH/(2*eps)*(1-ecc)-plots.R_EARTH_KM
-    omega = members[:, 11] % 360
-    direction = plots.winning_cluster_directions(members, catalog.with_name("trajectory_exit_catalog.txt"))
-    theta = (direction*omega-plots.MOON_RATE_DEG_DAY*members[:, 5]) % 360
-    coordinates = ((eps,ecc),(eps,omega),(hp,ecc),(hp,omega),(hp,theta),(eps,theta))
+    hp = np.empty(len(members))
+    np.divide(-plots.MU_EARTH*(1-ecc), 2*eps, out=hp)
+    hp -= plots.R_EARTH_KM
+    phi_catalog = plots.catalog_perigee_azimuth(members, stats)
+    theta = (phi_catalog-plots.MOON_RATE_DEG_DAY*members[:, 5]) % 360
+    coordinates = ((eps,ecc),(eps,phi_catalog),(hp,ecc),(hp,phi_catalog),(hp,theta),(eps,theta))
     for column, ((key,stem,_), (x,y)) in enumerate(zip(MAPS,coordinates)):
         with np.load(plots.OUTPUT_DIR/"mappe_percentili"/f"{stem}_griglie.npz") as grid:
             counts, ex, ey = grid["occurrences"], grid["edges_x"], grid["edges_y"]
@@ -95,6 +96,7 @@ def prepare(output, percentiles=plots.OCCURRENCE_PERCENTILES):
                  score_histogram=np.bincount(scores).tolist(),
                  criterion="Numero di asteroidi il cui minimo DV sceglie il cluster della traiettoria",
                  percentile_population="Tutte le singole traiettorie ammissibili dei cluster vincenti",
+                 catalog_angle_convention=ANGLE_CONVENTION,
                  ties="Incluse tutte le traiettorie con punteggio uguale alla soglia",
                  model="Prestazioni del modello medio ereditate dai membri; non Lambert individuale",
                  grid="Copertura dei soli cluster selezionati, ogni asteroide al massimo una volta per cella")
@@ -112,7 +114,7 @@ def render_map(task):
         selected_grids=stored["selected_occurrences"]
     grid.update(xlabel=plots.EPS_LABEL if column in (0,1,5) else plots.HP_LABEL,
                 ylabel="e al perigeo [-]" if column in (0,2) else
-                r"$\omega$ al perigeo, catalogo [deg]" if column in (1,3) else plots.THETA_LABEL,
+                plots.PHI_CATALOG_LABEL if column in (1,3) else plots.THETA_LABEL,
                 normalization=Normalize(0,int(grid["occurrences"].max())),
                 selection_title="Celle con traiettorie selezionate",
                 selection_caption="Colore: copertura dei cluster selezionati · grigio: altre celle occupate",
@@ -125,7 +127,7 @@ def render_map(task):
         selected=np.flatnonzero(scores>=rec["threshold"])
         tag=f"P{rec['percentile']:g}".replace(".","_")
         grid["selected_occurrences"]=selected_grids[index]
-        title=(f"P{rec['percentile']:g} delle singole traiettorie — almeno {rec['minimum_count']} trasferimenti ottimali per cluster\n"
+        title=(f"P{rec['percentile']:g} della ricorrenza dei cluster (percentile sui membri) — almeno {rec['minimum_count']} asteroidi per cluster\n"
                f"{rec['trajectories']:,} traiettorie ({100*rec['trajectory_fraction']:.2f}%) · "
                f"{rec['clusters']} cluster · {rec['distinct_optimal_asteroids']} asteroidi · proiezione {label}")
         path=destination/f"{tag}_tre_riferimenti.png"
@@ -140,7 +142,7 @@ def render_map(task):
             fig=draw_combined(curves[selected],members[selected],scores[selected],
                           "Asteroidi il cui minimo ΔV sceglie il cluster della traiettoria",path,
                           summary["population_count"],title=title,normalization=Normalize(0,summary["maximum_individual_score"]),
-                          fixed_alpha=0.12,global_limits=limits,raster_chunks=True,perigee_markers=True,
+                          fixed_alpha=0.03,global_limits=limits,raster_chunks=True,perigee_markers=True,
                           selection_grid=grid,return_figure=True)
         previous_selected=selected
         previous_grid=selected_grids[index]

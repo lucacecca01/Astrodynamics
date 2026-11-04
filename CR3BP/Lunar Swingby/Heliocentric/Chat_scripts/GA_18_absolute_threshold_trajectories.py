@@ -15,6 +15,7 @@ from matplotlib.patches import Circle
 import GA_18_plots as plots
 import GA_18_high_occurrence_trajectories as high
 from GA_18_combined_trajectories import combined_scores, draw_combined, inertial_positions, trajectory_times
+from GA_18_percentile_trajectories import ANGLE_CONVENTION
 
 DEFAULT_THRESHOLDS = (1200, 1400, 1600, 1800, 2000, 2200, 2400)
 
@@ -41,7 +42,7 @@ def main():
     member_path = stats_path.with_name("trajectory_exit_catalog.txt")
     if not re.search(r"Occorrenze migliori trasferimenti: asteroids;", report):
         raise ValueError("Le soglie in asteroidi richiedono il conteggio asteroids, non trajectories.")
-    stats = plots.load_table(stats_path, 14)
+    stats = plots.load_table(stats_path, 14, allow_extra=True)
     stats = stats[np.argsort(stats[:, 0])]
     print("Calcolo conteggi delle sei celle per ciascun membro vincente...", flush=True)
     members = plots.load_table(member_path, 12)
@@ -53,6 +54,7 @@ def main():
     candidates, counts = combined_scores(members, stats, winner_rows, member_path, only_bound, plots.N_BINS)
     del members
     maximum, selections = threshold_selections(counts, thresholds)
+    map_maxima = counts.max(axis=0) if len(counts) else np.zeros(6, dtype=np.int64)
     for threshold, indices in selections.items():
         print(f"≥ {threshold} asteroidi per cella: {len(indices)} traiettorie uniche; "
               f"per mappa {np.count_nonzero(counts >= threshold, axis=0).tolist()}", flush=True)
@@ -89,6 +91,8 @@ def main():
     summary = dict(definition="Membro in almeno una cella con >= N asteroidi, unione delle mappe 05-10",
                    report=str(args.report.resolve()), catalog=str(member_path.resolve()), n_bins=plots.N_BINS,
                    population_count=population_count, samples_per_trajectory=2*n_plot-1,
+                   catalog_angle_convention=ANGLE_CONVENTION,
+                   maximum_occurrences_per_map=dict(zip(("05", "06", "07", "08", "09", "10"), map_maxima.tolist())),
                    dense_cache=str(dense_cache), identical_axes_colors_opacity=True, thresholds={})
     cmap = plt.get_cmap("viridis")
     for threshold, overview_ax in zip(thresholds, axes.ravel()):
@@ -101,12 +105,12 @@ def main():
         path = output/f"traiettorie_celle_ge_{threshold}_tre_riferimenti.png"
         draw_combined(curves, row_members, row_scores,
                       "Asteroidi nella cella (massimo sulle mappe 05–10)", path, population_count,
-                      title=title, normalization=normalization, fixed_alpha=0.12, global_limits=global_limits)
+                      title=title, normalization=normalization, fixed_alpha=0.03, global_limits=global_limits)
         order = np.argsort(row_scores, kind="stable")
         for start in range(0, count, 2048):
             chunk = order[start:start+2048]
             colors = cmap(normalization(row_scores[chunk]))
-            colors[:, 3] = 0.12
+            colors[:, 3] = 0.03
             overview_ax.add_collection(LineCollection(curves[chunk].transpose(0, 2, 1), colors=colors,
                                                       linewidths=0.25, rasterized=True))
         d = plots.EARTH_MOON_DISTANCE_KM
@@ -124,6 +128,7 @@ def main():
         overview_ax.set_title(f"≥ {threshold} asteroidi per cella\n{count:,} traiettorie".replace(",", "."))
         np.savez_compressed(output/f"selezione_ge_{threshold}.npz", members=row_members,
                             source_ids=row_members[:, 0].astype(np.int64),
+                            catalog_angle_convention=ANGLE_CONVENTION,
                             per_map_counts=per_map_counts[indices], maximum_cell_count=row_scores)
         per_map = np.count_nonzero(per_map_counts[indices] >= threshold, axis=0)
         summary["thresholds"][str(threshold)] = dict(trajectories=count,

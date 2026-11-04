@@ -28,7 +28,7 @@ OUTPUT_DIR = BASE_DIR / "GA18_parking_orbits"
 MAX_DV_KM_S = None             # Solo rendez-vous all'arrivo; None = nessun limite.
 MAX_DURATION_DAYS = None       # Perigeo MEDIO -> arrivo; None = nessun limite.
 ONLY_BOUND_PARKING = True      # eps < 0, 0 <= e < 1, perigeo sopra la superficie.
-N_BINS = 100                   # Celle per asse nelle mappe eps-e ed eps-omega.
+N_BINS = 200                   # Celle per asse nelle mappe eps-e ed eps-omega corretto del catalogo.
 PANELS_PER_PAGE = 144          # Pagine 16:9: griglia completa di 16 x 9 asteroidi.
 PLOT_COLUMNS = 16              # Massimo; la griglia si adatta nelle pagine parziali.
 PORKCHOP_CELL_DAYS = 1.0        # Larghezza massima delle celle grafiche, non interpolazione.
@@ -41,6 +41,11 @@ TIME_UNIT_S = np.sqrt(EARTH_MOON_DISTANCE_KM**3 / (MU_EARTH + 6.67430e-20 * MOON
 MOON_RATE_DEG_DAY = np.rad2deg(86400.0 / TIME_UNIT_S)
 EPS_LABEL = r"$\varepsilon$ al perigeo [km$^2$/s$^2$]"
 HP_LABEL = r"$h_p = r_p - R_\oplus$ sopra la superficie [km]"
+# Nomi interni mantenuti per compatibilita; qui non si aggiunge la fase lunare reale.
+PHI_CATALOG_LABEL = r"$\omega_{\mathrm{cat,corr}}$ al perigeo [deg]"
+PHI_CATALOG_NOTE = ("Omega del catalogo corretto per il verso: "
+                    "omega_corr = (senso_perigeo * omega_catalogo) mod 360; Luna su +x a ETD. "
+                    "Prestazioni del modello medio.")
 THETA_LABEL = r"$\theta$: Luna → perigeo al perigeo [deg]"
 OCCURRENCE_PERCENTILES = (97, 99, 99.5, 99.75)
 
@@ -239,7 +244,7 @@ def best_transfer_occurrences(geometry, winner_rows, n_clusters, mode="asteroids
     occurrences = np.zeros(geometry["population"].size, dtype=np.int64)
     np.add.at(occurrences, cells, weights)
     represented = frequency[np.unique(rows)]
-    return dict(
+    result = dict(
         occurrences=occurrences.reshape(geometry["population"].shape),
         edges_x=geometry["edges_x"], edges_y=geometry["edges_y"], mode=mode,
         selected_asteroids=len(winners), represented_asteroids=int(represented.sum()),
@@ -247,6 +252,9 @@ def best_transfer_occurrences(geometry, winner_rows, n_clusters, mode="asteroids
         represented_clusters=int(np.count_nonzero(represented)),
         distinct_members=int(geometry["pair_counts"][frequency[rows] > 0].sum()),
     )
+    if "frame_note" in geometry:
+        result["frame_note"] = geometry["frame_note"]
+    return result
 
 
 def plot_best_transfer_occurrences(data, y_label, vmax, only_bound=True, x_label=EPS_LABEL):
@@ -372,7 +380,8 @@ def save_occurrence_percentiles(map_items, output):
             np.savez_compressed(output / f"{stem}_griglie.npz",
                                 occurrences=data["occurrences"], edges_x=data["edges_x"],
                                 edges_y=data["edges_y"], percentiles=OCCURRENCE_PERCENTILES,
-                                thresholds=[r["threshold"] for r in records], masks=masks)
+                                thresholds=[r["threshold"] for r in records], masks=masks,
+                                x_label=xlabel, y_label=ylabel, frame_note=data.get("frame_note", ""))
             summaries[stem] = records
             print(f"Percentili salvati: {stem}", flush=True)
     (output / "riepilogo.json").write_text(json.dumps(summaries, indent=2) + "\n")
@@ -456,8 +465,25 @@ def plot_porkchop(table, stats, info, max_dv=None, max_duration_days=None,
     return fig
 
 
+def catalog_perigee_azimuth(members, stats):
+    """Azimut geometrico nel catalogo; omega classico rimane nei dati originali."""
+    if stats.shape[1] > 14:
+        rows = np.searchsorted(stats[:, 0], members[:, 1])
+        if np.any(rows >= len(stats)) or np.any(stats[rows, 0] != members[:, 1]):
+            raise ValueError("Cluster dei membri assente dalle statistiche.")
+        directions = stats[rows, 14]
+    elif members.shape[1] > 12:
+        directions = members[:, 12]
+    else:
+        raise ValueError("Per l'azimut del perigeo serve direction_perigee: "
+                         "colonna 15 delle statistiche o colonna 13 dei membri.")
+    if not np.isin(directions, (-1, 1)).all():
+        raise ValueError("direction_perigee deve essere +1 o -1.")
+    return (directions * members[:, 11]) % 360.0
+
+
 def prepare_parking_geometry(members, stats, only_bound=True, n_bins=30, y_variable="e"):
-    """Selezione e molteplicita cella-cluster, riutilizzabili per tutti gli scenari."""
+    """Selezione e molteplicita cella-cluster; 'omega' indica l'azimut del catalogo."""
     if y_variable not in ("e", "omega"):
         raise ValueError("y_variable deve essere 'e' oppure 'omega'.")
     assigned = members[:, 1] >= 0
@@ -474,7 +500,7 @@ def prepare_parking_geometry(members, stats, only_bound=True, n_bins=30, y_varia
     x = eps[keep]
     edges_x = np.histogram_bin_edges(x, n_bins)
     if y_variable == "omega":
-        y = np.mod(members[keep, 11], 360.0)
+        y = catalog_perigee_azimuth(members[keep], stats)
         edges_y = np.linspace(0.0, 360.0, n_bins + 1)
     else:
         y = ecc[keep]
@@ -484,10 +510,13 @@ def prepare_parking_geometry(members, stats, only_bound=True, n_bins=30, y_varia
     cell = ix * n_bins + iy
     population = np.bincount(cell, minlength=n_bins**2)
     pairs, pair_counts = np.unique(cell * len(stats) + rows, return_counts=True)
-    return dict(edges_x=edges_x, edges_y=edges_y, population=population.reshape(n_bins, n_bins),
-                pair_cells=pairs // len(stats), pair_rows=pairs % len(stats), pair_counts=pair_counts,
-                selected=int(keep.sum()), unassigned=int((~assigned).sum()),
-                excluded=int((assigned & ~keep).sum()))
+    geometry = dict(edges_x=edges_x, edges_y=edges_y, population=population.reshape(n_bins, n_bins),
+                    pair_cells=pairs // len(stats), pair_rows=pairs % len(stats), pair_counts=pair_counts,
+                    selected=int(keep.sum()), unassigned=int((~assigned).sum()),
+                    excluded=int((assigned & ~keep).sum()))
+    if y_variable == "omega":
+        geometry["frame_note"] = PHI_CATALOG_NOTE
+    return geometry
 
 
 def winning_cluster_directions(members, catalog_path):
@@ -579,7 +608,7 @@ def winning_cluster_directions(members, catalog_path):
 
 
 def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
-                                  only_bound=True, n_bins=200, mode="asteroids", occurrence_threshold=None, occurrence_fraction=None, return_member_occurrences=False,
+                                  only_bound=True, n_bins=100, mode="asteroids", occurrence_threshold=None, occurrence_fraction=None, return_member_occurrences=False,
                                   winner_phases_deg=None):
     """Catalogue projections and optional inertial azimuth maps of winning-cluster members."""
     winner_rows = np.asarray(winner_rows, dtype=int)
@@ -603,11 +632,12 @@ def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
     if not np.isin(directions, (-1, 1)).all():
         raise ValueError("direction_perigee deve essere +1 o -1.")
     omega = subset[:, 11] % 360
+    phi_catalog = (directions * omega) % 360
     theta = (directions * omega - MOON_RATE_DEG_DAY * subset[:, 5]) % 360
     altitude = rp - R_EARTH_KM
     projections = [
         ("07_migliori_transfer_occorrenze_rp_e.png", altitude, subset[:, 10], HP_LABEL, "e al perigeo [-]", False),
-        ("08_migliori_transfer_occorrenze_rp_omega.png", altitude, omega, HP_LABEL, r"$\omega$ al perigeo, catalogo [deg]", True),
+        ("08_migliori_transfer_occorrenze_rp_omega.png", altitude, phi_catalog, HP_LABEL, PHI_CATALOG_LABEL, True),
         ("09_migliori_transfer_occorrenze_rp_theta.png", altitude, theta, HP_LABEL, THETA_LABEL, True),
         ("10_migliori_transfer_occorrenze_eps_theta.png", subset[:, 9], theta, EPS_LABEL, THETA_LABEL, True),
     ]
@@ -624,6 +654,8 @@ def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
                         population=np.bincount(cell, minlength=n_bins**2).reshape(n_bins, n_bins),
                         pair_cells=pairs // len(stats), pair_rows=pairs % len(stats), pair_counts=pair_counts)
         data = best_transfer_occurrences(geometry, winner_rows, len(stats), mode)
+        if filename == "08_migliori_transfer_occorrenze_rp_omega.png":
+            data["frame_note"] = PHI_CATALOG_NOTE
         if occurrence_threshold is not None or occurrence_fraction is not None:
             threshold = (max(1, int(np.ceil(occurrence_fraction * data["occurrences"].max())))
                          if occurrence_fraction is not None else occurrence_threshold)
@@ -641,8 +673,6 @@ def additional_best_transfer_maps(members, stats, winner_rows, catalog_path,
 
         if (winner_phases_deg.shape != winner_rows.shape or not np.isfinite(winner_phases_deg[winner_rows >= 0]).all()):
             raise ValueError("Manca la fase ETD di un asteroide vincente.")
-
-        phi_catalog = (directions * omega) % 360
 
         groups = {c: np.flatnonzero(rows == c) for c in np.unique(rows)}
 
@@ -754,7 +784,7 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
         np.searchsorted(stats[:, 0], table[index, 1]) if index >= 0 else -1
         for table, index in zip(tables, best_indices)
     ], dtype=int)
-    print("Preparazione delle celle eps-e ed eps-omega (una volta per proiezione)...", flush=True)
+    print("Preparazione delle celle eps-e ed eps-phi del catalogo (una volta per proiezione)...", flush=True)
 
     spice.furnsh(pk.udpla.de440s.kernel_file())
 
@@ -794,15 +824,17 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
     duration_label = "nessun limite" if max_duration_days is None else f"<= {max_duration_days:g} giorni"
     report = [f"Catalogo: {catalog}", f"Scenari caricati: {len(paths)}",
               f"Mappe individuali in formato 16:9, massimo {panels_per_page} pannelli e {plot_columns} colonne per pagina.",
-              "Mappe eps-e ed eps-omega; omega al perigeo negli assi del catalogo, modulo 360 gradi.",
-              "Mappe aggiuntive 07-10: hp-e, hp-omega, hp-theta, eps-theta; hp = rp - 6378 km dalla superficie terrestre.",
+              "Mappe eps-e ed eps-omega del catalogo corretto per il verso.",
+              PHI_CATALOG_NOTE,
+              "Mappe aggiuntive 07-10: hp-e, hp-omega del catalogo corretto per il verso (file rp_omega), hp-theta, eps-theta; hp = rp - 6378 km dalla superficie terrestre.",
               "Mappe 11-12: eps-phi e hp-phi; azimut ECLIPJ2000 con fase lunare all'ETD del miglior trasferimento per asteroide.",
               "Theta = (senso_perigeo * omega - n_moon * t_perigee) mod 360; antiorario dalla Luna al perigeo.",
-              "Verso al perigeo letto dai dati salvati; per i vecchi cataloghi, recuperato da un rappresentante per cluster GA16 omogeneo per verso.",
+              "Verso al perigeo letto dai dati salvati; necessario anche per le mappe dell'azimut del catalogo.",
               "Un porkchop per asteroide: partenza e arrivo TDB, minimo DV tra cluster per ogni coppia esatta di date.",
               f"Celle porkchop larghe al massimo {porkchop_cell_days:g} giorni, senza interpolazione o riempimento delle lacune.",
               "Porkchop: tutti i trasferimenti salvati che rispettano le soglie DV/durata, senza filtro sugli elementi delle orbite di parcheggio.",
               "Mappe dei migliori trasferimenti: un solo minimo DV per asteroide, dopo i filtri DV/durata; parita per partenza, arrivo, cluster ID.",
+              "Scala colore delle occorrenze indipendente per ogni mappa: da zero al massimo della mappa.",
               f"Occorrenze migliori trasferimenti: {best_occurrence_mode}; "
               f"{best_maps['represented_asteroids']}/{best_maps['selected_asteroids']} asteroidi rappresentati, "
               f"{best_maps['represented_clusters']}/{best_maps['winning_clusters']} cluster vincenti rappresentati.",
@@ -838,17 +870,17 @@ def main(transfer_files=None, output_dir=None, max_dv=MAX_DV_KM_S,
     ]
     projections = [
         (maps, scenario_maps, "", "e al perigeo [-]"),
-        (omega_maps, omega_scenario_maps, "_eps_omega", r"$\omega$ al perigeo [deg]"),
+        (omega_maps, omega_scenario_maps, "_eps_omega", PHI_CATALOG_LABEL),
     ]
     generated_files = []
     best_occurrence_files = []
-    best_vmax = max(data["occurrences"].max() for data in [best_maps, best_omega_maps] + [item[0] for item in additional_maps])
     occurrence_items = [
         (best_maps, "05_migliori_transfer_occorrenze_eps_e.png", EPS_LABEL, "e al perigeo [-]"),
-        (best_omega_maps, "06_migliori_transfer_occorrenze_eps_omega.png", EPS_LABEL, r"$\omega$ al perigeo, catalogo [deg]"),
+        (best_omega_maps, "06_migliori_transfer_occorrenze_eps_omega.png", EPS_LABEL, PHI_CATALOG_LABEL),
     ] + additional_maps
     save_occurrence_percentiles(occurrence_items, output / "mappe_percentili")
     for data, filename, x_label, y_label in occurrence_items:
+        best_vmax = data["occurrences"].max()
         fig = plot_best_transfer_occurrences(data, y_label, best_vmax, only_bound, x_label)
         try:
             image_path = output / filename

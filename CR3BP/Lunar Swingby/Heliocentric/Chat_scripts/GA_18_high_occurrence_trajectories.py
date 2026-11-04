@@ -29,9 +29,9 @@ WORKSPACE = Path(__file__).resolve().parents[3]
 DEFAULT_CACHE = WORKSPACE / ".cache/ga16_plot_recovery/GA_16_plots_vinf_time_K798/orbits"
 TITLES = {
     "05": r"05: $\varepsilon$–$e$",
-    "06": r"06: $\varepsilon$–$\omega$",
+    "06": r"06: $\varepsilon$–$\phi_p$ (catalogo)",
     "07": r"07: $h_p$–$e$",
-    "08": r"08: $h_p$–$\omega$",
+    "08": r"08: $h_p$–$\phi_p$ (catalogo)",
     "09": r"09: $h_p$–$\theta$",
     "10": r"10: $\varepsilon$–$\theta$",
 }
@@ -55,7 +55,8 @@ def select_members(members, stats, winner_rows, catalog_path, threshold=None,
         geometry = plots.prepare_parking_geometry(members, stats, only_bound, n_bins, variable)
         data = plots.best_transfer_occurrences(geometry, winner_rows, len(stats), mode)
         x = admitted[:, 9]
-        y = admitted[:, 10] if variable == "e" else admitted[:, 11] % 360
+        y = (admitted[:, 10] if variable == "e" else
+             plots.catalog_perigee_azimuth(admitted, stats))
         ix = np.clip(np.searchsorted(data["edges_x"], x, side="right") - 1, 0, n_bins - 1)
         iy = np.clip(np.searchsorted(data["edges_y"], y, side="right") - 1, 0, n_bins - 1)
         cutoff = (max(1, int(np.ceil(fraction * data["occurrences"].max())))
@@ -369,7 +370,7 @@ def main():
     report = args.report.read_text()
     catalog_stats = Path(re.search(r"^Catalogo: (.+)$", report, re.M)[1])
     catalog_members = catalog_stats.with_name("trajectory_exit_catalog.txt")
-    stats = plots.load_table(catalog_stats, 14)
+    stats = plots.load_table(catalog_stats, 14, allow_extra=True)
     stats = stats[np.argsort(stats[:, 0])]
     members = plots.load_table(catalog_members, 12)
     winner_ids = np.array([int(x) for x in re.findall(r"Miglior trasferimento: cluster (\d+)", report)])

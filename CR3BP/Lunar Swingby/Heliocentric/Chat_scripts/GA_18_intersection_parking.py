@@ -24,7 +24,7 @@ def render_map(task):
     grid = dict(occurrences=counts, edges_x=ex, edges_y=ey,
                 xlabel=plots.EPS_LABEL if column in (0, 1, 5) else plots.HP_LABEL,
                 ylabel="e al perigeo [-]" if column in (0, 2) else
-                r"$\omega$ al perigeo, catalogo [deg]" if column in (1, 3) else plots.THETA_LABEL,
+                plots.PHI_CATALOG_LABEL if column in (1, 3) else plots.THETA_LABEL,
                 normalization=Normalize(0, int(counts.max())),
                 selection_title="Celle sopra soglia nella proiezione",
                 selection_caption="Colore: celle sopra soglia · punti bianchi: orbite nell’intersezione delle sei mappe")
@@ -70,12 +70,15 @@ def main():
         raise ValueError("Cache diversa dal catalogo delle candidate.")
     curves = np.load(cache/"curves.npy", mmap_mode="r")[positions]
     direction = np.load(cache/"features.npy", mmap_mode="r")[positions, 3]
+    stats = plots.load_table(Path(parent["catalog"]), 14, allow_extra=True)
+    stats = stats[np.argsort(stats[:, 0])]
     eps, ecc = members[:, 9], members[:, 10]
     hp = -plots.MU_EARTH/(2*eps)*(1-ecc)-plots.R_EARTH_KM
     omega = members[:, 11] % 360
-    theta = (direction*omega-plots.MOON_RATE_DEG_DAY*members[:, 5]) % 360
+    phi_catalog = plots.catalog_perigee_azimuth(members, stats)
+    theta = (phi_catalog-plots.MOON_RATE_DEG_DAY*members[:, 5]) % 360
     coordinates = [np.column_stack(pair) for pair in
-                   ((eps,ecc),(eps,omega),(hp,ecc),(hp,omega),(hp,theta),(eps,theta))]
+                   ((eps,ecc),(eps,phi_catalog),(hp,ecc),(hp,phi_catalog),(hp,theta),(eps,theta))]
     percentiles = plots.OCCURRENCE_PERCENTILES
     flags = np.zeros((len(percentiles),len(members),6), dtype=bool)
     cell_scores = np.empty((len(members),6), dtype=np.int64)
@@ -115,12 +118,13 @@ def main():
         fields = ["source_id","cluster_id","optimal_asteroids","hp_km","eps_km2_s2","e","omega_deg",
                   "theta_deg","t_perigee_days","sense","minimum_cell_percentile"]
         fields += [f"cell_count_{key}" for key,_,_ in MAPS]
+        fields += ["phi_catalog_deg"]
         order = np.lexsort((ids,-ranks.min(axis=1),-scores))
         with (output/f"{tag}_candidate.csv").open("w",newline="") as stream:
             writer=csv.writer(stream); writer.writerow(fields)
             for i in order[selected[order]]:
                 writer.writerow([ids[i],clusters[i],scores[i],hp[i],eps[i],ecc[i],omega[i],theta[i],
-                                 members[i,5],int(direction[i]),ranks[i].min(),*cell_scores[i]])
+                                 members[i,5],int(direction[i]),ranks[i].min(),*cell_scores[i],phi_catalog[i]])
         print(f"P{p:g}: {rec['trajectories']} orbite, cluster {rec['members_by_cluster']}",flush=True)
     summary=dict(baseline_count=len(members),baseline_rule="Punteggio individuale > 100 asteroidi vincenti",
                  cell_rule="AND delle sei mappe, separatamente per ciascun percentile",levels=levels,

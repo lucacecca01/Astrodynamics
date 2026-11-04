@@ -1,6 +1,11 @@
 """One figure showing the same selected trajectories in three reference frames."""
 
+import hashlib
+import json
 from pathlib import Path
+from tempfile import NamedTemporaryFile
+from zipfile import BadZipFile
+import zlib
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.collections import LineCollection
@@ -16,18 +21,23 @@ def trajectory_times(bounds_days, n_plot):
                            np.linspace(0, bounds[:, 1], n_plot, axis=1)[:, 1:]), axis=1)
 
 
-def inertial_positions(synodic_geocentric, times, lunar_origin=False):
+def inertial_positions(synodic_geocentric, times, lunar_origin=False, phase_rad=0):
     """Rotate axes at each sample; optionally translate to the moving Moon.
 
     Moon in rotating geocentric axes: (d, 0).
-    Moon in inertial geocentric axes: (d cos(t), d sin(t)).
-    Thus lunar inertial coordinates are R(t) @ (r_synodic - [d, 0]).
+    Moon in inertial geocentric axes: (d cos(t+phase), d sin(t+phase)).
+    Lunar inertial coordinates are R(t+phase) @ (r_synodic - [d, 0]).
+    phase_rad is a scalar or one ETD phase per trajectory, shaped (N,) or (N, 1).
     """
     x = synodic_geocentric[:, 0]
     y = synodic_geocentric[:, 1]
     if lunar_origin:
         x = x - plots.EARTH_MOON_DISTANCE_KM
-    cosine, sine = np.cos(times), np.sin(times)
+    phase = np.asarray(phase_rad)
+    if phase.ndim == 1:
+        phase = phase[:, None]
+    angle = times + phase
+    cosine, sine = np.cos(angle), np.sin(angle)
     out = np.empty_like(synodic_geocentric)
     out[:, 0] = cosine*x - sine*y
     out[:, 1] = sine*x + cosine*y
@@ -38,8 +48,26 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
                   percentage=10, chunk_size=2048, title=None, normalization=None,
                   fixed_alpha=None, global_limits=None, raster_chunks=False,
                   perigee_markers=False, selection_grid=None, return_figure=False, line_width=0.25,
-                  opacity_range=None, color_opacities=None):
-    """All selected polylines in three panels; same score color in each panel."""
+                  opacity_range=None, color_opacities=None, phase_etd_deg=None, curve_indices=None,
+                  third_frame="lunar", trajectory_layer_dir=None, trajectory_layer_token=None,
+                  trajectory_cmap="viridis", ordering_scores=None, footer_note=None):
+    """Draw each selected instance, optionally reusing a curve at different ETD phases."""
+    if third_frame not in ("lunar", "catalog"):
+        raise ValueError("third_frame deve essere 'lunar' oppure 'catalog'.")
+    if curve_indices is not None:
+        curve_indices = np.asarray(curve_indices)
+        if (curve_indices.shape != (len(members),)
+                or not np.issubdtype(curve_indices.dtype, np.integer)
+                or np.any(curve_indices < 0) or np.any(curve_indices >= len(synodic))):
+            raise ValueError("curve_indices deve associare ogni istanza a una curva valida.")
+    elif len(synodic) != len(members):
+        raise ValueError("Serve una curva per istanza, oppure curve_indices.")
+    phase_rad = None
+    if phase_etd_deg is not None:
+        phase_etd_deg = np.asarray(phase_etd_deg, dtype=float)
+        if phase_etd_deg.shape != (len(members),) or not np.isfinite(phase_etd_deg).all():
+            raise ValueError("Serve una fase ETD finita per ogni istanza.")
+        phase_rad = np.deg2rad(phase_etd_deg)
     n_plot = (synodic.shape[-1]+1)//2
     if selection_grid is None:
         fig, axes = plt.subplots(1, 3, figsize=(20, 7.5), layout="constrained")
@@ -51,9 +79,14 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
         original_grid_ax = fig.add_subplot(layout[1, 3:], sharex=grid_ax, sharey=grid_ax)
     if normalization is None:
         normalization = Normalize(vmin=int(np.min(scores)), vmax=max(int(np.max(scores)), int(np.min(scores))+1))
-    cmap = plt.get_cmap("viridis")
+    cmap = plt.get_cmap(trajectory_cmap)
+    if ordering_scores is not None:
+        ordering_scores = np.asarray(ordering_scores)
+        if ordering_scores.shape != (len(members),) or not np.isfinite(ordering_scores).all():
+            raise ValueError("ordering_scores deve fornire un valore finito per ogni istanza.")
     limits = np.array([[np.inf, np.inf], [-np.inf, -np.inf]])
     renderers = None
+    layer_path, layer_images = None, None
     if raster_chunks:
         from matplotlib.backends.backend_agg import RendererAgg
         from matplotlib.transforms import Affine2D, Bbox
@@ -64,19 +97,70 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
         raster_side = np.max(np.diff(global_limits, axis=0))*1.06
         full_extent = (raster_center[0]-raster_side/2, raster_center[0]+raster_side/2,
                        raster_center[1]-raster_side/2, raster_center[1]+raster_side/2)
-        extents = (full_extent, full_extent, (-100000, 100000, -100000, 100000))
+        extents = (full_extent, full_extent,
+                   full_extent if third_frame == "catalog" else (-100000, 100000, -100000, 100000))
         renderers = [RendererAgg(1200, 1200, 180) for _ in axes]
         transforms = [Affine2D().translate(-left, -bottom).scale(1200/(right-left), 1200/(top-bottom))
                       for left, right, bottom, top in extents]
+        if trajectory_layer_dir is not None:
+            if not trajectory_layer_token:
+                raise ValueError("Serve la provenienza verificata delle curve per riusare i livelli grafici.")
+            import matplotlib
+
+            # The caller supplies the verified integration signature, so curve
+            # indices cannot accidentally refer to another model or source.
+            # Hash every ordered drawing input as well: repeated ETDs and alpha
+            # blending must retain exactly the same order and pixel values.
+            signature = dict(version=1, curves=trajectory_layer_token,
+                             synodic_shape=list(synodic.shape), synodic_dtype=str(synodic.dtype),
+                             normalization=f"{type(normalization).__module__}.{type(normalization).__qualname__}",
+                             vmin=normalization.vmin, vmax=normalization.vmax, clip=normalization.clip,
+                             fixed_alpha=fixed_alpha, opacity_range=opacity_range,
+                             color_opacities=color_opacities, third_frame=third_frame,
+                             line_width=line_width, extents=extents, chunk_size=chunk_size,
+                             renderer=[1200, 1200, 180], matplotlib=matplotlib.__version__,
+                             style={name: str(matplotlib.rcParams[name]) for name in (
+                                 "agg.path.chunksize", "path.simplify", "path.simplify_threshold",
+                                 "lines.antialiased", "lines.solid_joinstyle", "lines.solid_capstyle")})
+            digest = hashlib.sha256(json.dumps(signature, sort_keys=True, default=str).encode())
+            for value in (members, scores, curve_indices, phase_etd_deg,
+                          normalization(scores), cmap(np.linspace(0, 1, 256))):
+                if value is None:
+                    digest.update(b"None")
+                else:
+                    array = np.ascontiguousarray(value)
+                    digest.update(str((array.shape, array.dtype.str)).encode())
+                    digest.update(array.tobytes())
+            if ordering_scores is not None:
+                ordered = np.ascontiguousarray(ordering_scores)
+                digest.update(b"ordering_scores")
+                digest.update(str((ordered.shape, ordered.dtype.str)).encode())
+                digest.update(ordered.tobytes())
+            layer_key = digest.hexdigest()
+            layer_dir = Path(trajectory_layer_dir)
+            layer_dir.mkdir(parents=True, exist_ok=True)
+            layer_path = layer_dir / f"{layer_key}.npz"
+            if layer_path.is_file():
+                try:
+                    with np.load(layer_path, allow_pickle=False) as saved:
+                        pixels = saved["images"]
+                        if (str(saved["signature"]) == layer_key
+                                and pixels.shape == (3, 1200, 1200, 4) and pixels.dtype == np.uint8):
+                            layer_images = pixels
+                except (OSError, ValueError, KeyError, EOFError, BadZipFile, zlib.error):
+                    pass  # An incomplete or invalid graphic product is redrawn.
     # Higher-score curves are drawn last so the dense background does not hide them.
-    draw_order = np.argsort(scores, kind="stable")
-    for start in range(0, len(members), chunk_size):
+    draw_order = np.argsort(scores if ordering_scores is None else ordering_scores, kind="stable")
+    for start in range(0, len(members) if layer_images is None else 0, chunk_size):
         stop = min(start+chunk_size, len(members))
         indices = draw_order[start:stop]
         times = trajectory_times(members[indices, 5:7], n_plot)
-        chunk = synodic[indices]
-        frames = (chunk, inertial_positions(chunk, times),
-                  inertial_positions(chunk, times, lunar_origin=True))
+        source_indices = indices if curve_indices is None else curve_indices[indices]
+        chunk = synodic[source_indices]
+        phase = 0 if phase_rad is None else phase_rad[indices, None]
+        third = (inertial_positions(chunk, times) if third_frame == "catalog" else
+                 inertial_positions(chunk, times, lunar_origin=True, phase_rad=phase))
+        frames = (chunk, inertial_positions(chunk, times, phase_rad=phase), third)
         colors = cmap(normalization(scores[indices]))
         colors[:, 3] = (0.004 + 0.296*normalization(scores[indices])
                         if fixed_alpha is None else fixed_alpha)
@@ -100,29 +184,48 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
                 collection.set_clip_box(Bbox.from_bounds(0, 0, 1200, 1200))
                 collection.set_figure(fig)
                 collection.draw(renderers[j])
-            if j < 2 and global_limits is None:
+            if (j < 2 or third_frame == "catalog") and global_limits is None:
                 points = curve.transpose(0, 2, 1).reshape(-1, 2)
                 limits[0] = np.minimum(limits[0], points.min(axis=0))
                 limits[1] = np.maximum(limits[1], points.max(axis=0))
     if global_limits is not None:
         limits = np.asarray(global_limits)
     if renderers is not None:
-        for ax, renderer, extent in zip(axes, renderers, extents):
-            ax.imshow(np.asarray(renderer.buffer_rgba()).copy(), extent=extent,
+        if layer_images is None:
+            layer_images = np.stack([np.asarray(renderer.buffer_rgba()) for renderer in renderers])
+            if layer_path is not None:
+                temporary = None
+                try:
+                    with NamedTemporaryFile(dir=layer_path.parent, prefix=f".{layer_key}_",
+                                            suffix=".npz", delete=False) as stream:
+                        temporary = Path(stream.name)
+                        np.savez(stream, signature=layer_key, images=layer_images)
+                    temporary.replace(layer_path)
+                finally:
+                    if temporary is not None:
+                        temporary.unlink(missing_ok=True)
+        for ax, pixels, extent in zip(axes, layer_images, extents):
+            ax.imshow(pixels, extent=extent,
                       origin="upper", interpolation="none", zorder=1)
     if perigee_markers and len(members):
         # Sample zero is the saved backward perigee, not the ETD midpoint.
-        perigees = synodic[:, :, :1]
-        peri_times = members[:, 5:6] * 86400 / plots.TIME_UNIT_S
-        peri_frames = (perigees, inertial_positions(perigees, peri_times),
-                       inertial_positions(perigees, peri_times, lunar_origin=True))
-        marker_colors = cmap(normalization(scores))
-        for ax, points in zip(axes, peri_frames):
-            ax.scatter(points[draw_order, 0, 0], points[draw_order, 1, 0],
-                       s=6, facecolors=marker_colors[draw_order], edgecolors="black",
-                       linewidths=0.25, alpha=0.95, zorder=4, rasterized=True)
+        for start in range(0, len(members), chunk_size):
+            indices = draw_order[start:start+chunk_size]
+            source_indices = indices if curve_indices is None else curve_indices[indices]
+            perigees = synodic[source_indices, :, :1]
+            peri_times = members[indices, 5:6] * 86400 / plots.TIME_UNIT_S
+            phase = 0 if phase_rad is None else phase_rad[indices, None]
+            third = (inertial_positions(perigees, peri_times) if third_frame == "catalog" else
+                     inertial_positions(perigees, peri_times, lunar_origin=True, phase_rad=phase))
+            peri_frames = (perigees, inertial_positions(perigees, peri_times, phase_rad=phase), third)
+            marker_colors = cmap(normalization(scores[indices]))
+            for ax, points in zip(axes, peri_frames):
+                ax.scatter(points[:, 0, 0], points[:, 1, 0],
+                           s=6, facecolors=marker_colors, edgecolors="black",
+                           linewidths=0.25, alpha=0.95, zorder=4, rasterized=True)
     if selection_grid is not None:
         from matplotlib.colors import ListedColormap
+        grid_cmap = plt.get_cmap(selection_grid.get("cmap", "viridis"))
         counts = selection_grid["occurrences"]
         selected_counts = selection_grid.get("selected_occurrences", counts)
         selected = ((selected_counts > 0) if "selected_occurrences" in selection_grid
@@ -132,7 +235,7 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
                            np.ma.masked_where(counts.T <= 0, np.ones(counts.T.shape)),
                            cmap=ListedColormap(["#e3e5e8"]), vmin=0, vmax=1, shading="flat")
         grid_ax.pcolormesh(selection_grid["edges_x"], selection_grid["edges_y"],
-                           np.ma.masked_where(~selected.T, selected_counts.T), cmap=cmap,
+                           np.ma.masked_where(~selected.T, selected_counts.T), cmap=grid_cmap,
                            norm=grid_normalization, shading="flat")
         grid_ax.set(xlabel=selection_grid["xlabel"], ylabel=selection_grid["ylabel"],
                     title=(selection_grid.get("selection_title", "Celle selezionate") +
@@ -146,7 +249,7 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
                      bbox=dict(facecolor="white", alpha=0.9, edgecolor="none"))
         original_grid_ax.pcolormesh(selection_grid["edges_x"], selection_grid["edges_y"],
                                     np.ma.masked_where(counts.T <= 0, counts.T),
-                                    cmap=cmap, norm=grid_normalization, shading="flat")
+                                    cmap=grid_cmap, norm=grid_normalization, shading="flat")
         original_grid_ax.set(xlabel=selection_grid["xlabel"], ylabel=selection_grid["ylabel"],
                              title="Griglia originale completa\nStessi assi e stessa scala colore della selezione")
         original_grid_ax.grid(alpha=0.15)
@@ -161,6 +264,11 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
     d = plots.EARTH_MOON_DISTANCE_KM
     moon_soi = (plots.MOON_MASS_KG / 5.974e24)**0.4*d
     titles = ("Sinodico Terra–Luna", "Geocentrico inerziale", "Lunocentrico, assi inerziali — zoom")
+    if phase_rad is not None:
+        titles = ("Sinodico Terra–Luna", "Geocentrico, assi ECLIPJ2000",
+                  "Lunocentrico, assi ECLIPJ2000 — zoom")
+    if third_frame == "catalog":
+        titles = (*titles[:2], "Geocentrico — ω del catalogo")
     for j, (ax, frame_title) in enumerate(zip(axes, titles)):
         ax.set_aspect("equal")
         ax.set_title(frame_title, fontsize=14)
@@ -168,7 +276,7 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
         ax.set_ylabel("y [km]")
         ax.grid(alpha=0.15)
         ax.ticklabel_format(style="sci", scilimits=(0, 0), axis="both")
-        if j < 2:
+        if j < 2 or third_frame == "catalog":
             ax.add_patch(Circle((0, 0), plots.R_EARTH_KM, color="#2563eb", zorder=5))
             ax.annotate("Terra", (0, 0), xytext=(5, 5), textcoords="offset points", fontsize=9)
             ax.set_xlim(center[0]-side/2, center[0]+side/2)
@@ -177,8 +285,11 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
             ax.add_patch(Circle((d, 0), 1737, color="#64748b", zorder=5))
             ax.annotate("Luna", (d, 0), xytext=(5, 5), textcoords="offset points", fontsize=9)
             ax.add_patch(Circle((d, 0), moon_soi, fill=False, ls="--", color="#888888", lw=0.8))
-        elif j == 1:
+        elif j == 1 or third_frame == "catalog":
             ax.add_patch(Circle((0, 0), d, fill=False, ls="--", color="#888888", lw=0.8))
+            if j == 2:
+                ax.add_patch(Circle((d, 0), 1737, color="#64748b", zorder=5))
+                ax.annotate("Luna a ETD", (d, 0), xytext=(5, 5), textcoords="offset points", fontsize=9)
         else:
             ax.add_patch(Circle((0, 0), 1737, color="#64748b", zorder=5))
             ax.annotate("Luna", (0, 0), xytext=(5, 5), textcoords="offset points", fontsize=9)
@@ -191,15 +302,31 @@ def draw_combined(synodic, members, scores, score_label, output, population_coun
                      else list(axes) + [grid_ax, original_grid_ax])
     fig.colorbar(scalar, ax=colorbar_axes, shrink=0.72, label=score_label)
     if separate_grid_scale:
-        fig.colorbar(plt.cm.ScalarMappable(norm=grid_normalization, cmap=cmap),
+        fig.colorbar(plt.cm.ScalarMappable(norm=grid_normalization, cmap=grid_cmap),
                      ax=[grid_ax, original_grid_ax], shrink=0.85,
                      label=selection_grid.get("colorbar_label", "Asteroidi distinti nella cella"))
     fig.suptitle(title if title is not None else f"{percentage:g}% delle traiettorie con più occorrenze — selezione unica\n"
                  f"{len(members):,} traiettorie su {population_count:,}, {synodic.shape[-1]} punti ciascuna".replace(",", "."),
                  fontsize=16)
-    fig.supxlabel(("Pallini con bordo nero: perigei salvati, al tempo del perigeo in ciascun riferimento.\n" if perigee_markers else "") +
+    frame_note = (
+        "Assi inerziali allineati al sinodico a ETD; nel lunocentrico si sottrae la posizione della Luna a ogni epoca."
+        if phase_rad is None else
+        "Modello CR3BP ruotato con la fase lunare all’ETD di ciascun trasferimento; assi inerziali ECLIPJ2000.\n"
+        "Nel lunocentrico si sottrae la posizione della Luna del modello a ogni epoca."
+    )
+    if third_frame == "catalog":
+        frame_note = (
+            "Centro: assi del catalogo, allineati al sinodico a ETD.\n"
+            if phase_rad is None else
+            "Centro: modello CR3BP ruotato con la fase lunare all’ETD, in assi ECLIPJ2000.\n"
+        ) + "Destra: assi inerziali del catalogo, con la Luna su +x a ETD; origine nella Terra."
+    marker_note = ("Pallini: eventi di minimo r geocentrico salvati da GA16; "
+                   "φ indica il periapside dell’orbita osculatrice, che può essere distinto dall’evento.\n"
+                   if phase_rad is not None else
+                   "Pallini con bordo nero: perigei salvati, al tempo del perigeo in ciascun riferimento.\n")
+    fig.supxlabel((marker_note if perigee_markers else "") +
                   "Stesse traiettorie e stessi colori nelle tre viste, dal perigeo salvato all’uscita dalla SOI terrestre.\n"
-                  "Assi inerziali allineati al sinodico a ETD; nel lunocentrico si sottrae la posizione della Luna a ogni epoca.", fontsize=10)
+                  + frame_note + ("\n" + footer_note if footer_note else ""), fontsize=10)
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=180)
@@ -227,7 +354,8 @@ def combined_scores(members, stats, winner_rows, catalog_path, only_bound=True, 
         geometry = plots.prepare_parking_geometry(members, stats, only_bound, n_bins, variable)
         data = plots.best_transfer_occurrences(geometry, winner_rows, len(stats))
         x = candidates[:, 9]
-        y = candidates[:, 10] if variable == "e" else candidates[:, 11] % 360
+        y = (candidates[:, 10] if variable == "e" else
+             plots.catalog_perigee_azimuth(candidates, stats))
         ix = np.clip(np.searchsorted(data["edges_x"], x, side="right")-1, 0, n_bins-1)
         iy = np.clip(np.searchsorted(data["edges_y"], y, side="right")-1, 0, n_bins-1)
         scores[:, j] = data["occurrences"][ix, iy]
@@ -280,7 +408,7 @@ def main():
     report = args.report.read_text()
     stats_path = Path(re.search(r"^Catalogo: (.+)$", report, re.M)[1])
     member_path = stats_path.with_name("trajectory_exit_catalog.txt")
-    stats = plots.load_table(stats_path, 14)
+    stats = plots.load_table(stats_path, 14, allow_extra=True)
     stats = stats[np.argsort(stats[:, 0])]
     print("Caricamento catalogo e graduatoria unica...", flush=True)
     members = plots.load_table(member_path, 12)

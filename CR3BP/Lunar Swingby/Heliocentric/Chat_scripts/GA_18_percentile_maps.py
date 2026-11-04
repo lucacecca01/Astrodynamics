@@ -18,7 +18,7 @@ def main():
     for variable, filename, ylabel in (
         ("e", "05_migliori_transfer_occorrenze_eps_e.png", "e al perigeo [-]"),
         ("omega", "06_migliori_transfer_occorrenze_eps_omega.png",
-         r"$\omega$ al perigeo, catalogo [deg]"),
+         plots.PHI_CATALOG_LABEL),
     ):
         geometry = plots.prepare_parking_geometry(members, stats, plots.ONLY_BOUND_PARKING,
                                                  plots.N_BINS, variable)

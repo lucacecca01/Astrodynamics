@@ -142,7 +142,8 @@ class Transformations:
         e = np.linalg.norm(E)
 
         if n != 0 and e > eps:
-            w = np.arccos(np.dot(N, E) / n / e)
+            cos_w = np.dot(N, E) / n / e
+            w = np.arccos(np.clip(cos_w, -1, 1))
             if E[2] < 0:
                 w = 2 * np.pi - w
         elif e > eps:
@@ -162,10 +163,11 @@ class Transformations:
         else:
             if n != 0:
                 cp = np.cross(N, R)
+                cos_TA = np.dot(N, R) / n / r
                 if cp[2] >= 0:
-                    TA = np.arccos(np.dot(N, R) / n / r)
+                    TA = np.arccos(np.clip(cos_TA, -1, 1))
                 else:
-                    TA = 2 * np.pi - np.arccos(np.dot(N, R) / n / r)
+                    TA = 2 * np.pi - np.arccos(np.clip(cos_TA, -1, 1))
             else:
                 TA = np.arccos(R[0] / r)
 

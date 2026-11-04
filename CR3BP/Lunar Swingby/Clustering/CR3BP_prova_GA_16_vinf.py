@@ -1363,7 +1363,7 @@ print(f"Traiettorie mantenute: {n_kept}; escluse: {len(keep) - n_kept}")
 
 
 # Clustering limits are based on all retained trajectories, including unassigned points.
-STD_LIMITS = np.array([0.04, 0.04, np.inf])
+STD_LIMITS = np.array([0.04, 0.05, np.inf])
 MIN_CLUSTER_SIZE = 10
 MAX_CLUSTERS = max(1, n_kept // 100)    # floor(1% of the total), at least one
 BASE_MIN_CLUSTER_SIZE = 200
@@ -1398,13 +1398,13 @@ positions_soi = d * np.column_stack((
 
 
 clustering_features = np.column_stack((
-   # normalize_block(event_features[:, 0:1]),                          # eps
-   # normalize_block(event_features[:, 1:2]),                          # e
+    normalize_block(event_features[:, 0:1]),                          # eps
+    normalize_block(event_features[:, 1:2]),                          # e
    # normalize_block(angular_features),                                # w
    # 100 *normalize_block(event_features[:, 6:7]),                     # verso al perigeo
-    normalize_block(positions_soi),                                    # r_SOI
-    normalize_block(event_features[:, 3:6]),                           # v_SOI
-    TIME_WEIGHT * normalize_block(event_times_days[:, 1:2]),           # ETD -> SOI
+   # normalize_block(positions_soi),                                    # r_SOI
+   # normalize_block(event_features[:, 3:6]),                           # v_SOI
+   # TIME_WEIGHT * normalize_block(event_times_days[:, 1:2]),           # ETD -> SOI
 ))
 
 

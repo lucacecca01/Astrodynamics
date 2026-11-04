@@ -17,18 +17,20 @@ from GA_18_combined_trajectories import combined_scores, draw_combined, inertial
 
 MAPS = (
     ("05_eps_e", "05_migliori_transfer_occorrenze_eps_e", r"$\varepsilon$–$e$"),
-    ("06_eps_omega", "06_migliori_transfer_occorrenze_eps_omega", r"$\varepsilon$–$\omega$"),
+    ("06_eps_omega", "06_migliori_transfer_occorrenze_eps_omega", r"$\varepsilon$–$\omega_{\mathrm{cat,corr}}$"),
     ("07_hp_e", "07_migliori_transfer_occorrenze_rp_e", r"$h_p$–$e$"),
-    ("08_hp_omega", "08_migliori_transfer_occorrenze_rp_omega", r"$h_p$–$\omega$"),
+    ("08_hp_omega", "08_migliori_transfer_occorrenze_rp_omega", r"$h_p$–$\omega_{\mathrm{cat,corr}}$"),
     ("09_hp_theta", "09_migliori_transfer_occorrenze_rp_theta", r"$h_p$–$\theta$"),
     ("10_eps_theta", "10_migliori_transfer_occorrenze_eps_theta", r"$\varepsilon$–$\theta$"),
 )
+
+ANGLE_CONVENTION = "phi_catalog = direction_perigee * omega mod 360"
 
 
 def prepare(grid_dir, output):
     report = (plots.OUTPUT_DIR / "riepilogo.txt").read_text()
     catalog = Path(re.search(r"^Catalogo: (.+)$", report, re.M)[1])
-    stats = plots.load_table(catalog, 14)
+    stats = plots.load_table(catalog, 14, allow_extra=True)
     stats = stats[np.argsort(stats[:, 0])]
     members = plots.load_table(catalog.with_name("trajectory_exit_catalog.txt"), 12)
     winner_ids = np.array([int(x) for x in re.findall(r"Miglior trasferimento: cluster (\d+)", report)])
@@ -38,11 +40,12 @@ def prepare(grid_dir, output):
     candidates, _ = combined_scores(members, stats, winner_rows, catalog, cell_counts=False)
     del members
     eps, ecc = candidates[:, 9], candidates[:, 10]
-    hp = -plots.MU_EARTH / (2*eps) * (1-ecc) - plots.R_EARTH_KM
-    omega = candidates[:, 11] % 360
-    directions = plots.winning_cluster_directions(candidates, catalog.with_name("trajectory_exit_catalog.txt"))
-    theta = (directions*omega - plots.MOON_RATE_DEG_DAY*candidates[:, 5]) % 360
-    coordinates = ((eps, ecc), (eps, omega), (hp, ecc), (hp, omega), (hp, theta), (eps, theta))
+    hp = np.empty(len(candidates))
+    np.divide(-plots.MU_EARTH * (1-ecc), 2*eps, out=hp)
+    hp -= plots.R_EARTH_KM
+    phi_catalog = plots.catalog_perigee_azimuth(candidates, stats)
+    theta = (phi_catalog - plots.MOON_RATE_DEG_DAY*candidates[:, 5]) % 360
+    coordinates = ((eps, ecc), (eps, phi_catalog), (hp, ecc), (hp, phi_catalog), (hp, theta), (eps, theta))
     scores = np.empty((len(candidates), 6), dtype=np.int64)
     frequencies = np.bincount(winner_rows, minlength=len(stats))
     rows = np.searchsorted(stats[:, 0], candidates[:, 1])
@@ -78,6 +81,7 @@ def prepare(grid_dir, output):
     selected = selected[np.argsort(candidates[selected, 0])]
     summary = dict(population_count=len(candidates), union_for_cache_only=len(selected),
                    selection="Celle della singola mappa sopra il percentile; nessuna aggregazione tra mappe",
+                   catalog_angle_convention=ANGLE_CONVENTION,
                    samples_per_trajectory=201, maps=summaries)
     np.savez_compressed(output / "membri_selezionati.npz", members=candidates[selected],
                         source_ids=candidates[selected, 0].astype(np.int64), per_map_counts=scores[selected])
@@ -100,7 +104,7 @@ def package_pdf(paths, output):
 
 
 _RENDER_DATA = None
-PLOT_VERSION = "four_percentiles_small_perigees_selected_original_grids_v2"
+PLOT_VERSION = "four_percentiles_catalog_azimuth_alpha003_v3"
 
 
 def render_map(task):
@@ -113,7 +117,7 @@ def render_map(task):
         grid_data = {name: grid[name] for name in ("occurrences", "edges_x", "edges_y")}
     grid_data["xlabel"] = plots.EPS_LABEL if column in (0, 1, 5) else plots.HP_LABEL
     grid_data["ylabel"] = ("e al perigeo [-]" if column in (0, 2) else
-                           r"$\omega$ al perigeo, catalogo [deg]" if column in (1, 3) else plots.THETA_LABEL)
+                           plots.PHI_CATALOG_LABEL if column in (1, 3) else plots.THETA_LABEL)
     normalization = Normalize(vmin=0, vmax=info["maximum"])
     pages = []
     for record in info["levels"]:
@@ -143,7 +147,7 @@ def render_map(task):
             grid_data["threshold"] = record["threshold"]
             draw_combined(curves[indices], selection, row_scores, f"Asteroidi per cella — mappa {key[:2]}",
                           path, summary["population_count"], title=title, normalization=normalization,
-                          fixed_alpha=0.12, global_limits=limits, raster_chunks=True,
+                          fixed_alpha=0.03, global_limits=limits, raster_chunks=True,
                           perigee_markers=True, selection_grid=grid_data)
         np.savez_compressed(output/f"{tag}_selezione.npz", source_ids=selection[:, 0].astype(np.int64),
                             cluster_ids=selection[:, 1].astype(np.int64), occurrences=row_scores,
@@ -166,6 +170,9 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     summary = (json.loads((args.output / "riepilogo.json").read_text()) if args.render_only
                else prepare(args.grids, args.output))
+    if summary.get("catalog_angle_convention") != ANGLE_CONVENTION:
+        raise ValueError("Selezioni salvate con la vecchia convenzione di omega. "
+                         "Rigenera le griglie e avvia senza --render-only per ricalcolare le selezioni.")
     with np.load(args.output / "membri_selezionati.npz") as data:
         members, scores = data["members"], data["per_map_counts"]
     # The previous P95 union is a verified superset of every new selection.

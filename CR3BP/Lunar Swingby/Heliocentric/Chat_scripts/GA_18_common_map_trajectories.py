@@ -11,7 +11,7 @@ from matplotlib.colors import Normalize
 
 import GA_18_plots as plots
 from GA_18_combined_trajectories import draw_combined, inertial_positions, trajectory_times
-from GA_18_percentile_trajectories import MAPS
+from GA_18_percentile_trajectories import ANGLE_CONVENTION, MAPS, PLOT_VERSION
 
 
 def main():
@@ -32,16 +32,22 @@ def main():
         parser.error("Le tre opacità devono essere comprese fra 0 e 1.")
     tag = f"P{args.percentile:g}".replace(".","_")
     parent = plots.OUTPUT_DIR/"traiettorie_percentili_per_mappa"
+    summary = json.loads((parent/"riepilogo.json").read_text())
+    if summary.get("catalog_angle_convention") != ANGLE_CONVENTION:
+        raise ValueError("Selezioni sorgente precedenti alla correzione pro/retro. "
+                         "Rigenera prima GA_18_percentile_trajectories.py senza --render-only.")
     common = None
     input_counts = {}
     for key,_,_ in MAPS:
         with np.load(parent/key/f"{tag}_selezione.npz") as data:
+            if "plot_version" not in data or str(data["plot_version"]) != PLOT_VERSION:
+                raise ValueError("Selezioni per mappa non aggiornate. "
+                                 "Completa prima GA_18_percentile_trajectories.py.")
             ids = data["source_ids"]
             input_counts[key] = len(ids)
             common = ids if common is None else np.intersect1d(common,ids)
     if not len(common):
         raise ValueError("Nessuna traiettoria comune alle sei mappe.")
-    summary = json.loads((parent/"riepilogo.json").read_text())
     with np.load(parent/"membri_selezionati.npz") as data:
         indices = np.searchsorted(data["source_ids"],common)
         if not np.array_equal(data["source_ids"][indices],common):
@@ -60,7 +66,7 @@ def main():
     frequency = Counter(map(int,re.findall(r"Miglior trasferimento: cluster (\d+)",report)))
     clusters = members[:,1].astype(np.int64)
     scores = np.array([frequency[int(cluster)] for cluster in clusters])
-    alpha = args.alpha if args.alpha is not None else (0.12 if len(common)>500 else 0.9)
+    alpha = args.alpha if args.alpha is not None else (0.03 if len(common)>500 else 0.9)
     if args.score_opacity or args.color_opacities is not None:
         alpha = None
     line_width = args.line_width if args.line_width is not None else (0.25 if len(common)>500 else 0.8)
@@ -88,6 +94,7 @@ def main():
     np.savez_compressed(output/"selezione.npz",source_ids=common,members=members,
                         scores=scores,per_map_counts=cell_scores)
     details = dict(percentile=args.percentile,rule="AND delle sei mappe, nessun filtro sul punteggio individuale",
+                   catalog_angle_convention=ANGLE_CONVENTION,
                    trajectories=len(common),clusters=len(np.unique(clusters)),
                    members_by_cluster={str(c):int(np.count_nonzero(clusters==c)) for c in np.unique(clusters)},
                    input_counts=input_counts,trajectories_above_100=int(np.count_nonzero(scores>100)),

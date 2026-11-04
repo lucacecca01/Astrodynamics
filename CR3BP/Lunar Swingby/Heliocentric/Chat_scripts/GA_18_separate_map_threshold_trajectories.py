@@ -18,13 +18,13 @@ from PIL import Image
 
 import GA_18_plots as plots
 from GA_18_combined_trajectories import draw_combined, inertial_positions, trajectory_times
-from GA_18_absolute_threshold_trajectories import DEFAULT_THRESHOLDS
+from GA_18_absolute_threshold_trajectories import ANGLE_CONVENTION, DEFAULT_THRESHOLDS
 
 MAPS = (
-    ("08_hp_omega", 3, r"$h_p$–$\omega$", "quota–omega"),
+    ("08_hp_omega", 3, r"$h_p$–$\phi_{p,\mathrm{cat}}$", "quota–azimut del perigeo nel catalogo"),
     ("10_eps_theta", 5, r"$\varepsilon$–$\theta$", "energia–theta"),
     ("07_hp_e", 2, r"$h_p$–$e$", "quota–eccentricita"),
-    ("06_eps_omega", 1, r"$\varepsilon$–$\omega$", "energia–omega"),
+    ("06_eps_omega", 1, r"$\varepsilon$–$\phi_{p,\mathrm{cat}}$", "energia–azimut del perigeo nel catalogo"),
     ("05_eps_e", 0, r"$\varepsilon$–$e$", "energia–eccentricita"),
 )
 
@@ -42,10 +42,18 @@ def main():
     args = parser.parse_args()
     thresholds = sorted(set(args.thresholds))
     parent = json.loads((args.source/"riepilogo.json").read_text())
+    if (parent.get("catalog_angle_convention") != ANGLE_CONVENTION
+            or "maximum_occurrences_per_map" not in parent):
+        raise ValueError("Conteggi sorgente precedenti alla correzione pro/retro. "
+                         "Rigenera prima GA_18_absolute_threshold_trajectories.py.")
     parent_minimum = min(map(int, parent["thresholds"]))
     if min(thresholds) < parent_minimum:
         parser.error(f"La selezione sorgente permette soglie >= {parent_minimum}.")
     with np.load(args.source/f"selezione_ge_{parent_minimum}.npz", allow_pickle=False) as data:
+        if ("catalog_angle_convention" not in data
+                or str(data["catalog_angle_convention"]) != ANGLE_CONVENTION):
+            raise ValueError("Selezione sorgente con la vecchia convenzione di omega. "
+                             "Rigenera prima GA_18_absolute_threshold_trajectories.py.")
         members, counts = data["members"], data["per_map_counts"]
         ids = data["source_ids"]
     cache = Path(parent["dense_cache"])
@@ -72,8 +80,9 @@ def main():
     d = plots.EARTH_MOON_DISTANCE_KM
     args.output.mkdir(parents=True, exist_ok=True)
     # Saved global maxima also cover cells absent from the >=1200 union.
-    original_maps = json.loads((plots.OUTPUT_DIR/"traiettorie_top_10_percent_201_punti/riepilogo.json").read_text())["maps"]
+    map_maxima = parent["maximum_occurrences_per_map"]
     summary = dict(source=str(args.source.resolve()), samples_per_trajectory=201,
+                   catalog_angle_convention=ANGLE_CONVENTION,
                    selection="Soglia applicata solo alla cella della singola mappa, nessuna aggregazione fra mappe",
                    thresholds=thresholds, same_axes_opacity=True, color_scale_scope="per_map",
                    same_color_scale_across_thresholds=True, maps={})
@@ -81,7 +90,7 @@ def main():
         output = args.output/key
         output.mkdir(parents=True, exist_ok=True)
         map_scores = counts[:, column]
-        max_occurrences = int(original_maps[key[:2]]["maximum_occurrences"])
+        max_occurrences = int(map_maxima[key[:2]])
         normalization = Normalize(vmin=min(thresholds), vmax=max(min(thresholds)+1, max_occurrences))
         overview, axes = plt.subplots(2, 4, figsize=(20, 11), layout="constrained")
         overview_axes = axes.ravel()
@@ -96,12 +105,12 @@ def main():
                      f"{count:,} traiettorie distinte, 201 punti ciascuna; massimo della mappa: {max_occurrences}".replace(",", "."))
             draw_combined(curves, row_members, row_scores, f"Asteroidi nella cella: {plain_label}",
                           output/f"traiettorie_ge_{threshold}_tre_riferimenti.png", parent["population_count"],
-                          title=title, normalization=normalization, fixed_alpha=0.12, global_limits=limits)
+                          title=title, normalization=normalization, fixed_alpha=0.03, global_limits=limits)
             order = np.argsort(row_scores, kind="stable")
             for start in range(0, count, 2048):
                 chosen = order[start:start+2048]
                 colors = cmap(normalization(row_scores[chosen]))
-                colors[:, 3] = 0.12
+                colors[:, 3] = 0.03
                 ax.add_collection(LineCollection(curves[chosen].transpose(0, 2, 1), colors=colors,
                                                  linewidths=0.25, rasterized=True))
             ax.set_aspect("equal")
