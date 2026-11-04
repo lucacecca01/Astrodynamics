@@ -1,0 +1,18 @@
+{
+  "bins": [
+    100,
+    5000,
+    10000
+  ],
+  "population": 2133757,
+  "winners": 4886,
+  "maps": 8,
+  "criterion": "(vmax-vmean)/vmax <= tolleranza; celle popolate, stesso dominio per mappa.",
+  "weighting": "Un source_id per cella. I contributi nelle mappe 11/12 sono coppie source_id-cella distinte.",
+  "denominator": "Solo i membri dei cluster vincenti, come nelle mappe velocita esistenti.",
+  "verification": "Tutte le 8 griglie 100x100 coincidono con gli aggregati preesistenti.",
+  "elapsed_seconds": 44.126362800598145,
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt",
+  "report_sha256": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+  "script_sha256": "ab813836ba380d6e017173402d5dd13d879a39d1f5f12dd05dce48f0a5929701"
+}

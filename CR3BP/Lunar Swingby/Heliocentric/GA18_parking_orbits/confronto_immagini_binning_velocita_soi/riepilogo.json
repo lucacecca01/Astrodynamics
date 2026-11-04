@@ -1,0 +1,2567 @@
+{
+  "bins": [
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000,
+    10000
+  ],
+  "distinct_members": 2133757,
+  "selected_asteroids": 4886,
+  "represented_asteroids": 4443,
+  "represented_clusters": 312,
+  "speed_limits_km_s": [
+    0.9217733780785081,
+    2.1661636551837997
+  ],
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt",
+  "report_sha256": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+  "study_sha256": "8c68b419782dd744f1544175c37f245b4e06ac5f33fd5f94eda772e37ba5fce1",
+  "script_sha256": "e98efa727e79759afdcb37d3792730cd292ac053b7f9210f0c43d3184615eaa3",
+  "maps": [
+    {
+      "key": "05_eps_e",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "e al perigeo [-]"
+    },
+    {
+      "key": "06_eps_omega",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\omega_{\\mathrm{cat,corr}}$ al perigeo [deg]"
+    },
+    {
+      "key": "07_hp_e",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "e al perigeo [-]"
+    },
+    {
+      "key": "08_hp_omega",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\omega_{\\mathrm{cat,corr}}$ al perigeo [deg]"
+    },
+    {
+      "key": "09_hp_theta",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\theta$: Luna \u2192 perigeo al perigeo [deg]"
+    },
+    {
+      "key": "10_eps_theta",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\theta$: Luna \u2192 perigeo al perigeo [deg]"
+    },
+    {
+      "key": "11_eps_phi",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\phi_p$ ECLIPJ2000 [deg]"
+    },
+    {
+      "key": "12_hp_phi",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\phi_p$ ECLIPJ2000 [deg]"
+    }
+  ],
+  "products": [
+    {
+      "key": "05_eps_e",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_05_eps_e.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_05_eps_e.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_05_eps_e.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/05_eps_e/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        -0.4834441909513434,
+        -0.4519153793987907,
+        0.2200286875847261,
+        0.25002757699828626
+      ],
+      "zoom_selection": {
+        "limits": [
+          -0.4834441909513434,
+          -0.4519153793987907,
+          0.2200286875847261,
+          0.25002757699828626
+        ],
+        "base_indices": [
+          54,
+          57,
+          22,
+          25
+        ],
+        "cell_flat": 5523,
+        "cell_indices": [
+          55,
+          23
+        ],
+        "trajectory_count": 242,
+        "speed_mean": 0.9815745606608364,
+        "speed_maximum": 2.118580547296328,
+        "relative_gap_percent": 53.66829163453362,
+        "high_speed_p90": 1.7413125932293299,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "06_eps_omega",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_06_eps_omega.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_06_eps_omega.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_06_eps_omega.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/06_eps_omega/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        -0.4834441909513434,
+        -0.4519153793987907,
+        273.6,
+        284.40000000000003
+      ],
+      "zoom_selection": {
+        "limits": [
+          -0.4834441909513434,
+          -0.4519153793987907,
+          273.6,
+          284.40000000000003
+        ],
+        "base_indices": [
+          54,
+          57,
+          76,
+          79
+        ],
+        "cell_flat": 5577,
+        "cell_indices": [
+          55,
+          77
+        ],
+        "trajectory_count": 448,
+        "speed_mean": 0.9797081918883322,
+        "speed_maximum": 2.118580547296328,
+        "relative_gap_percent": 53.75638688183897,
+        "high_speed_p90": 1.682135407132019,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "07_hp_e",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_07_hp_e.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_07_hp_e.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_07_hp_e.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/07_hp_e/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        316441.00750836317,
+        331752.668482085,
+        0.22002741868101483,
+        0.2500261350622507
+      ],
+      "zoom_selection": {
+        "limits": [
+          316441.00750836317,
+          331752.668482085,
+          0.22002741868101483,
+          0.2500261350622507
+        ],
+        "base_indices": [
+          62,
+          65,
+          22,
+          25
+        ],
+        "cell_flat": 6323,
+        "cell_indices": [
+          63,
+          23
+        ],
+        "trajectory_count": 198,
+        "speed_mean": 0.9778292807929763,
+        "speed_maximum": 2.118580547296328,
+        "relative_gap_percent": 53.84507414453257,
+        "high_speed_p90": 1.78981314672401,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "08_hp_omega",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_08_hp_omega.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_08_hp_omega.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_08_hp_omega.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/08_hp_omega/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        311337.12051712256,
+        326648.7814908444,
+        277.2,
+        288.0
+      ],
+      "zoom_selection": {
+        "limits": [
+          311337.12051712256,
+          326648.7814908444,
+          277.2,
+          288.0
+        ],
+        "base_indices": [
+          61,
+          64,
+          77,
+          80
+        ],
+        "cell_flat": 6278,
+        "cell_indices": [
+          62,
+          78
+        ],
+        "trajectory_count": 1307,
+        "speed_mean": 0.9880011275436247,
+        "speed_maximum": 2.1661636551837997,
+        "relative_gap_percent": 54.38935903207219,
+        "high_speed_p90": 1.592200101202486,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "09_hp_theta",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_09_hp_theta.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_09_hp_theta.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_09_hp_theta.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/09_hp_theta/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        173532.1717536261,
+        188843.83272734794,
+        280.8,
+        291.6
+      ],
+      "zoom_selection": {
+        "limits": [
+          173532.1717536261,
+          188843.83272734794,
+          280.8,
+          291.6
+        ],
+        "base_indices": [
+          34,
+          37,
+          78,
+          81
+        ],
+        "cell_flat": 3579,
+        "cell_indices": [
+          35,
+          79
+        ],
+        "trajectory_count": 573,
+        "speed_mean": 0.9621004412797218,
+        "speed_maximum": 2.0925886602205104,
+        "relative_gap_percent": 54.02343233675276,
+        "high_speed_p90": 1.7869600246527761,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "10_eps_theta",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_10_eps_theta.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_10_eps_theta.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_10_eps_theta.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/10_eps_theta/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        -0.43092734972165647,
+        -0.39940012349238674,
+        331.2,
+        342.0
+      ],
+      "zoom_selection": {
+        "limits": [
+          -0.43092734972165647,
+          -0.39940012349238674,
+          331.2,
+          342.0
+        ],
+        "base_indices": [
+          59,
+          62,
+          92,
+          95
+        ],
+        "cell_flat": 6093,
+        "cell_indices": [
+          60,
+          93
+        ],
+        "trajectory_count": 759,
+        "speed_mean": 1.01078700514436,
+        "speed_maximum": 2.156014663570652,
+        "relative_gap_percent": 53.117804705912356,
+        "high_speed_p90": 1.7436938872152614,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "11_eps_phi",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_11_eps_phi.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_11_eps_phi.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_11_eps_phi.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/11_eps_phi/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        -0.43092734972165647,
+        -0.39940012349238674,
+        104.4,
+        115.2
+      ],
+      "zoom_selection": {
+        "limits": [
+          -0.43092734972165647,
+          -0.39940012349238674,
+          104.4,
+          115.2
+        ],
+        "base_indices": [
+          59,
+          62,
+          29,
+          32
+        ],
+        "cell_flat": 6030,
+        "cell_indices": [
+          60,
+          30
+        ],
+        "trajectory_count": 4041,
+        "speed_mean": 0.9982873875443081,
+        "speed_maximum": 2.156014663570652,
+        "relative_gap_percent": 53.697560391773536,
+        "high_speed_p90": 2.093504758516319,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    },
+    {
+      "key": "12_hp_phi",
+      "bins": [
+        100,
+        200,
+        500,
+        1000,
+        2000,
+        5000,
+        10000
+      ],
+      "figures": [
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/overview_12_hp_phi.png",
+        "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/zoom_12_hp_phi.png"
+      ],
+      "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_12_hp_phi.pdf",
+      "native_count": 21,
+      "native_images": [
+        {
+          "bins": 100,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/100_media.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/100_massima.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 100,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/100_scarto.png",
+          "pixels": [
+            100,
+            100
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/200_media.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/200_massima.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 200,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/200_scarto.png",
+          "pixels": [
+            200,
+            200
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/500_media.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/500_massima.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 500,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/500_scarto.png",
+          "pixels": [
+            500,
+            500
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/1000_media.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/1000_massima.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 1000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/1000_scarto.png",
+          "pixels": [
+            1000,
+            1000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/2000_media.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/2000_massima.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 2000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/2000_scarto.png",
+          "pixels": [
+            2000,
+            2000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/5000_media.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/5000_massima.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 5000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/5000_scarto.png",
+          "pixels": [
+            5000,
+            5000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_mean",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/10000_media.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "speed_maximum",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/10000_massima.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        },
+        {
+          "bins": 10000,
+          "metric": "relative_gap",
+          "file": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/nativi/12_hp_phi/10000_scarto.png",
+          "pixels": [
+            10000,
+            10000
+          ],
+          "mode": "P",
+          "empty_palette_index": 0
+        }
+      ],
+      "zoom_limits": [
+        311337.12051712256,
+        326648.7814908444,
+        273.6,
+        284.40000000000003
+      ],
+      "zoom_selection": {
+        "limits": [
+          311337.12051712256,
+          326648.7814908444,
+          273.6,
+          284.40000000000003
+        ],
+        "base_indices": [
+          61,
+          64,
+          76,
+          79
+        ],
+        "cell_flat": 6277,
+        "cell_indices": [
+          62,
+          77
+        ],
+        "trajectory_count": 698,
+        "speed_mean": 0.9818415855320655,
+        "speed_maximum": 2.1661636551837997,
+        "relative_gap_percent": 54.67371160150151,
+        "high_speed_p90": 2.107329625676881,
+        "selection": "maximum >= P90 and at least 20 distinct trajectories",
+        "domain_fraction_per_axis": 0.03,
+        "angular_wrap": false
+      },
+      "scales": {
+        "velocity": {
+          "limits_km_s": [
+            0.9217733780785081,
+            2.1661636551837997
+          ],
+          "normalization": "power",
+          "gamma": 3,
+          "cmap": "inferno"
+        },
+        "gap": {
+          "limits_percent": [
+            0,
+            60
+          ],
+          "normalization": "linear",
+          "cmap": "cividis"
+        }
+      },
+      "overview": {
+        "pixels": [
+          1000,
+          1000
+        ],
+        "reduction": "exact BOX area-average of quantized native RGB colors on white; nearest rounding"
+      },
+      "native_orientation": "x increases right; y increases up; native PNG row 0 is the highest y cell",
+      "pdf_engine": "matplotlib PdfPages; one lossless RGB page at a time"
+    }
+  ],
+  "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/confronto_immagini_binning_velocita_soi/confronto_05_12_tutti_binning.pdf",
+  "native_definition": "Un pixel per cella originale; palette con colore del valore, bianco per celle vuote.",
+  "overview_definition": "Riduzione BOX della superficie colorata, non un nuovo binning delle velocita.",
+  "zoom_definition": "Stesso intervallo fisico in tutte le sette risoluzioni di ciascuna mappa."
+}

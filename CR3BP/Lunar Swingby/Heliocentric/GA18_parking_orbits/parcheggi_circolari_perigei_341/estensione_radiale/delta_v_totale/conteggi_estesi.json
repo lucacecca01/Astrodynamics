@@ -1,0 +1,3115 @@
+{
+  "selection": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_delta_v_leo200_hohmann_parcheggio/individuali/11_eps_phi/P99_99_selezione.npz",
+  "distinct_trajectories": 341,
+  "largest_perigee_radius_km": 348953.24187175307,
+  "rule": "Copertura completa ordinata: fascia [primo raggio non coperto, raggio+2*tolleranza].",
+  "note": "Minimo numero di intervalli radiali di larghezza 2*tolleranza; ogni source_id conta una volta.",
+  "coverage_per_tolerance": {
+    "1000": 341,
+    "5000": 341,
+    "10000": 341
+  },
+  "l1_geocentric_xy_km": [
+    326380.9649835009,
+    0.0
+  ],
+  "bands": {
+    "1000": [
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 26760.55407690643,
+        "altitude_km": 20382.55407690643,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          25760.55407690643,
+          27687.3823849547
+        ],
+        "admissible_center_range_km": [
+          26687.3823849547,
+          26760.55407690643
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          502848,
+          512879,
+          522964
+        ],
+        "delta_v_total_mean_km_s": 5.10715699722917,
+        "delta_v_total_min_km_s": 5.095641085449113,
+        "delta_v_total_max_km_s": 5.119362488442582
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 28792.486054813246,
+        "altitude_km": 22414.486054813246,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          27792.486054813246,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          28385.821386220894,
+          28792.486054813246
+        ],
+        "source_ids": [
+          493656,
+          503219,
+          513050,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "delta_v_total_mean_km_s": 5.1275940264874205,
+        "delta_v_total_min_km_s": 5.121507949406723,
+        "delta_v_total_max_km_s": 5.138353813127854
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 130586.87463969323,
+        "altitude_km": 124208.87463969323,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          129586.87463969323,
+          131491.2883185898
+        ],
+        "admissible_center_range_km": [
+          130491.2883185898,
+          130586.87463969323
+        ],
+        "source_ids": [
+          414198,
+          414563,
+          414564,
+          414565,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341
+        ],
+        "delta_v_total_mean_km_s": 4.727443620349973,
+        "delta_v_total_min_km_s": 4.721871585001027,
+        "delta_v_total_max_km_s": 4.7315074889462405
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 132965.68441689434,
+        "altitude_km": 126587.68441689434,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          131965.68441689434,
+          133859.29005671814
+        ],
+        "admissible_center_range_km": [
+          132859.29005671814,
+          132965.68441689434
+        ],
+        "source_ids": [
+          420773,
+          420774,
+          420775,
+          420776,
+          420777
+        ],
+        "delta_v_total_mean_km_s": 4.71482136984307,
+        "delta_v_total_min_km_s": 4.710116378169825,
+        "delta_v_total_max_km_s": 4.7195217216668635
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 135332.40803422747,
+        "altitude_km": 128954.40803422747,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          134332.40803422747,
+          136228.91514561095
+        ],
+        "admissible_center_range_km": [
+          135228.91514561095,
+          135332.40803422747
+        ],
+        "source_ids": [
+          408614,
+          408615,
+          408616,
+          408617,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772
+        ],
+        "delta_v_total_mean_km_s": 4.704615485566188,
+        "delta_v_total_min_km_s": 4.698235187753098,
+        "delta_v_total_max_km_s": 4.710536799273294
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 137657.10639731988,
+        "altitude_km": 131279.10639731988,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          136657.10639731988,
+          138135.76415872737
+        ],
+        "admissible_center_range_km": [
+          137135.76415872737,
+          137657.10639731988
+        ],
+        "source_ids": [
+          397474,
+          397475,
+          402917,
+          402918,
+          402919,
+          408613
+        ],
+        "delta_v_total_mean_km_s": 4.698879488753935,
+        "delta_v_total_min_km_s": 4.694788419185177,
+        "delta_v_total_max_km_s": 4.701732101581637
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 141200.94683247578,
+        "altitude_km": 134822.94683247578,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          140200.94683247578,
+          142193.59419464835
+        ],
+        "admissible_center_range_km": [
+          141193.59419464835,
+          141200.94683247578
+        ],
+        "source_ids": [
+          387239,
+          397130,
+          414276,
+          420565,
+          427342
+        ],
+        "delta_v_total_mean_km_s": 4.678016140834345,
+        "delta_v_total_min_km_s": 4.668397498010279,
+        "delta_v_total_max_km_s": 4.683922950923589
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 143909.60095740343,
+        "altitude_km": 137531.60095740343,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          142909.60095740343,
+          144540.2187643336
+        ],
+        "admissible_center_range_km": [
+          143540.2187643336,
+          143909.60095740343
+        ],
+        "source_ids": [
+          377694,
+          387238,
+          392171,
+          414445
+        ],
+        "delta_v_total_mean_km_s": 4.67001869062109,
+        "delta_v_total_min_km_s": 4.658871144415387,
+        "delta_v_total_max_km_s": 4.677474514275528
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 146070.41618356147,
+        "altitude_km": 139692.41618356147,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          145070.41618356147,
+          146720.1373995693
+        ],
+        "admissible_center_range_km": [
+          145720.1373995693,
+          146070.41618356147
+        ],
+        "source_ids": [
+          391906,
+          392170,
+          397381,
+          397382,
+          414441,
+          414442,
+          414443,
+          414444
+        ],
+        "delta_v_total_mean_km_s": 4.656402666602979,
+        "delta_v_total_min_km_s": 4.648360844625276,
+        "delta_v_total_max_km_s": 4.665547851240892
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 148233.77302938988,
+        "altitude_km": 141855.77302938988,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          147233.77302938988,
+          148948.97022412598
+        ],
+        "admissible_center_range_km": [
+          147948.97022412598,
+          148233.77302938988
+        ],
+        "source_ids": [
+          373068,
+          382347,
+          386903,
+          397380,
+          402816,
+          402817,
+          402818,
+          408502,
+          408503,
+          408504,
+          414439,
+          414440
+        ],
+        "delta_v_total_mean_km_s": 4.648164242911566,
+        "delta_v_total_min_km_s": 4.641016103719868,
+        "delta_v_total_max_km_s": 4.658699809532585
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 150262.09437376406,
+        "altitude_km": 143884.09437376406,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          149262.09437376406,
+          150811.92054728811
+        ],
+        "admissible_center_range_km": [
+          149811.92054728811,
+          150262.09437376406
+        ],
+        "source_ids": [
+          387160,
+          387161,
+          408500,
+          408501,
+          414199,
+          414277
+        ],
+        "delta_v_total_mean_km_s": 4.637137847985117,
+        "delta_v_total_min_km_s": 4.631624932477171,
+        "delta_v_total_max_km_s": 4.64387941799505
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 152427.0163156507,
+        "altitude_km": 146049.0163156507,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          151427.0163156507,
+          151884.4082455479
+        ],
+        "admissible_center_range_km": [
+          150884.4082455479,
+          152427.0163156507
+        ],
+        "source_ids": [
+          355135,
+          368470,
+          377630
+        ],
+        "delta_v_total_mean_km_s": 4.645003136335797,
+        "delta_v_total_min_km_s": 4.640662926837688,
+        "delta_v_total_max_km_s": 4.64876109438776
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 154483.45184967585,
+        "altitude_km": 148105.45184967585,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          153483.45184967585,
+          155232.15636521863
+        ],
+        "admissible_center_range_km": [
+          154232.15636521863,
+          154483.45184967585
+        ],
+        "source_ids": [
+          363869,
+          373010,
+          382280,
+          392096,
+          392097,
+          397131,
+          427343
+        ],
+        "delta_v_total_mean_km_s": 4.6228637957317265,
+        "delta_v_total_min_km_s": 4.606942886605476,
+        "delta_v_total_max_km_s": 4.636074520951091
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 156899.35543753902,
+        "altitude_km": 150521.35543753902,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          155899.35543753902,
+          157337.88064374178
+        ],
+        "admissible_center_range_km": [
+          156337.88064374178,
+          156899.35543753902
+        ],
+        "source_ids": [
+          359431,
+          397299,
+          397300,
+          414278
+        ],
+        "delta_v_total_mean_km_s": 4.61100768053337,
+        "delta_v_total_min_km_s": 4.601784196658823,
+        "delta_v_total_max_km_s": 4.629330471086699
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 159032.05546711638,
+        "altitude_km": 152654.05546711638,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          158032.05546711638,
+          159649.3866857693
+        ],
+        "admissible_center_range_km": [
+          158649.3866857693,
+          159032.05546711638
+        ],
+        "source_ids": [
+          350726,
+          355088,
+          368415,
+          377573,
+          387088,
+          420646,
+          420647,
+          420648
+        ],
+        "delta_v_total_mean_km_s": 4.603975231356355,
+        "delta_v_total_min_km_s": 4.587099698556095,
+        "delta_v_total_max_km_s": 4.621272830833085
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 161052.862605537,
+        "altitude_km": 154674.862605537,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          160052.862605537,
+          161926.75980913473
+        ],
+        "admissible_center_range_km": [
+          160926.75980913473,
+          161052.862605537
+        ],
+        "source_ids": [
+          346386,
+          363819,
+          402730,
+          402731,
+          402732,
+          420642,
+          420643,
+          420644,
+          420645
+        ],
+        "delta_v_total_mean_km_s": 4.588792438250097,
+        "delta_v_total_min_km_s": 4.575993760681756,
+        "delta_v_total_max_km_s": 4.610783380074789
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 163066.83726098025,
+        "altitude_km": 156688.83726098025,
+        "count": 11,
+        "fraction": 0.03225806451612903,
+        "member_radius_range_km": [
+          162066.83726098025,
+          163907.90032386364
+        ],
+        "admissible_center_range_km": [
+          162907.90032386364,
+          163066.83726098025
+        ],
+        "source_ids": [
+          359382,
+          372956,
+          382059,
+          382221,
+          392033,
+          408410,
+          408411,
+          408412,
+          414346,
+          420640,
+          420641
+        ],
+        "delta_v_total_mean_km_s": 4.579763691961703,
+        "delta_v_total_min_km_s": 4.570017011376007,
+        "delta_v_total_max_km_s": 4.601138700770479
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 165394.15941576558,
+        "altitude_km": 159016.15941576558,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          164394.15941576558,
+          166339.62108900584
+        ],
+        "admissible_center_range_km": [
+          165339.62108900584,
+          165394.15941576558
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          350682,
+          355043,
+          368364,
+          392032,
+          408409,
+          414342,
+          414343,
+          414344,
+          414345,
+          427284
+        ],
+        "delta_v_total_mean_km_s": 4.577139851082576,
+        "delta_v_total_min_km_s": 4.558698690208285,
+        "delta_v_total_max_km_s": 4.603126509311858
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 168140.97674146137,
+        "altitude_km": 161762.97674146137,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          167140.97674146137,
+          169113.05332346278
+        ],
+        "admissible_center_range_km": [
+          168113.05332346278,
+          168140.97674146137
+        ],
+        "source_ids": [
+          342198,
+          363770,
+          377523,
+          387028,
+          402606,
+          414200,
+          427344,
+          427345
+        ],
+        "delta_v_total_mean_km_s": 4.561407002396551,
+        "delta_v_total_min_km_s": 4.548025643792098,
+        "delta_v_total_max_km_s": 4.582674307860638
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 170147.4534858087,
+        "altitude_km": 163769.4534858087,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          169147.4534858087,
+          170742.86875734117
+        ],
+        "admissible_center_range_km": [
+          169742.86875734117,
+          170147.4534858087
+        ],
+        "source_ids": [
+          337992,
+          359337,
+          372907,
+          397229,
+          397230
+        ],
+        "delta_v_total_mean_km_s": 4.561842175241123,
+        "delta_v_total_min_km_s": 4.549314882933118,
+        "delta_v_total_max_km_s": 4.580345194478693
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 173270.56990522545,
+        "altitude_km": 166892.56990522545,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          172270.56990522545,
+          173980.06562751287
+        ],
+        "admissible_center_range_km": [
+          172980.06562751287,
+          173270.56990522545
+        ],
+        "source_ids": [
+          315085,
+          320913,
+          333670,
+          368318,
+          382169,
+          382170,
+          402660
+        ],
+        "delta_v_total_mean_km_s": 4.554775635672643,
+        "delta_v_total_min_km_s": 4.53023266445279,
+        "delta_v_total_max_km_s": 4.574461235753737
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 175674.02530075843,
+        "altitude_km": 169296.02530075843,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          174674.02530075843,
+          176265.80838326164
+        ],
+        "admissible_center_range_km": [
+          175265.80838326164,
+          175674.02530075843
+        ],
+        "source_ids": [
+          346113,
+          363727,
+          377479,
+          391978,
+          391979,
+          402658,
+          402659
+        ],
+        "delta_v_total_mean_km_s": 4.5331874422151435,
+        "delta_v_total_min_km_s": 4.524503912499706,
+        "delta_v_total_max_km_s": 4.5496224267365974
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 177729.62426429713,
+        "altitude_km": 171351.62426429713,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          176729.62426429713,
+          178605.12732629792
+        ],
+        "admissible_center_range_km": [
+          177605.12732629792,
+          177729.62426429713
+        ],
+        "source_ids": [
+          309612,
+          329979,
+          359295,
+          408335,
+          408336,
+          408337
+        ],
+        "delta_v_total_mean_km_s": 4.531851998297564,
+        "delta_v_total_min_km_s": 4.515066519553964,
+        "delta_v_total_max_km_s": 4.554521582033107
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 180305.12024459575,
+        "altitude_km": 173927.12024459575,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          179305.12024459575,
+          181221.6853884938
+        ],
+        "admissible_center_range_km": [
+          180221.6853884938,
+          180305.12024459575
+        ],
+        "source_ids": [
+          293643,
+          304124,
+          346271,
+          368278,
+          372867,
+          386975
+        ],
+        "delta_v_total_mean_km_s": 4.530703119354733,
+        "delta_v_total_min_km_s": 4.510807310623619,
+        "delta_v_total_max_km_s": 4.555627971679702
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 182339.26900733344,
+        "altitude_km": 175961.26900733344,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          181339.26900733344,
+          183228.74142290495
+        ],
+        "admissible_center_range_km": [
+          182228.74142290495,
+          182339.26900733344
+        ],
+        "source_ids": [
+          333849,
+          363599,
+          377397,
+          397174,
+          397175
+        ],
+        "delta_v_total_mean_km_s": 4.509849670258516,
+        "delta_v_total_min_km_s": 4.4997950766982395,
+        "delta_v_total_max_km_s": 4.527628329436816
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 184464.03566279326,
+        "altitude_km": 178086.03566279326,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          183464.03566279326,
+          185135.7993897663
+        ],
+        "admissible_center_range_km": [
+          184135.7993897663,
+          184464.03566279326
+        ],
+        "source_ids": [
+          283330,
+          298712,
+          315032,
+          320858,
+          325777,
+          346102,
+          359255,
+          363689,
+          382124
+        ],
+        "delta_v_total_mean_km_s": 4.5204401608733304,
+        "delta_v_total_min_km_s": 4.498716046895177,
+        "delta_v_total_max_km_s": 4.538888098324692
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 186972.1250603365,
+        "altitude_km": 180594.1250603365,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          185972.1250603365,
+          187069.04017416306
+        ],
+        "admissible_center_range_km": [
+          186069.04017416306,
+          186972.1250603365
+        ],
+        "source_ids": [
+          350567,
+          377443,
+          391935,
+          391936
+        ],
+        "delta_v_total_mean_km_s": 4.489457637120614,
+        "delta_v_total_min_km_s": 4.484013661134709,
+        "delta_v_total_max_km_s": 4.500974497222176
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 189698.8696514617,
+        "altitude_km": 183320.8696514617,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          188698.8696514617,
+          190527.30286851572
+        ],
+        "admissible_center_range_km": [
+          189527.30286851572,
+          189698.8696514617
+        ],
+        "source_ids": [
+          288431,
+          309563,
+          329916,
+          337891,
+          342092,
+          372834,
+          386935
+        ],
+        "delta_v_total_mean_km_s": 4.497001705679586,
+        "delta_v_total_min_km_s": 4.473145774244208,
+        "delta_v_total_max_km_s": 4.51774173299817
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 193784.95884042172,
+        "altitude_km": 187406.95884042172,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          192784.95884042172,
+          194701.68130606675
+        ],
+        "admissible_center_range_km": [
+          193701.68130606675,
+          193784.95884042172
+        ],
+        "source_ids": [
+          354891,
+          359220,
+          363658,
+          382086
+        ],
+        "delta_v_total_mean_km_s": 4.467453234470858,
+        "delta_v_total_min_km_s": 4.462291092120116,
+        "delta_v_total_max_km_s": 4.471313591023762
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 195845.06494745082,
+        "altitude_km": 189467.06494745082,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          194845.06494745082,
+          196826.62720511397
+        ],
+        "admissible_center_range_km": [
+          195826.62720511397,
+          195845.06494745082
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          293580,
+          304054,
+          333788,
+          350536,
+          372787,
+          377416
+        ],
+        "delta_v_total_mean_km_s": 4.485610983455452,
+        "delta_v_total_min_km_s": 4.453670793300673,
+        "delta_v_total_max_km_s": 4.50870703377821
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 198478.43897063783,
+        "altitude_km": 192100.43897063783,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          197478.43897063783,
+          198191.79016503663
+        ],
+        "admissible_center_range_km": [
+          197191.79016503663,
+          198478.43897063783
+        ],
+        "source_ids": [
+          314981,
+          320803,
+          325720,
+          372807
+        ],
+        "delta_v_total_mean_km_s": 4.468737176212365,
+        "delta_v_total_min_km_s": 4.446601865503903,
+        "delta_v_total_max_km_s": 4.478887718414204
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 202487.0646786038,
+        "altitude_km": 196109.0646786038,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          201487.0646786038,
+          202853.14404766916
+        ],
+        "admissible_center_range_km": [
+          201853.14404766916,
+          202487.0646786038
+        ],
+        "source_ids": [
+          283273,
+          298644,
+          363632
+        ],
+        "delta_v_total_mean_km_s": 4.460717604861938,
+        "delta_v_total_min_km_s": 4.435725179660675,
+        "delta_v_total_max_km_s": 4.479225766021772
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 204910.48687736856,
+        "altitude_km": 198532.48687736856,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          203910.48687736856,
+          205659.55230200975
+        ],
+        "admissible_center_range_km": [
+          204659.55230200975,
+          204910.48687736856
+        ],
+        "source_ids": [
+          309510,
+          329862,
+          337754,
+          337832,
+          346181,
+          354860
+        ],
+        "delta_v_total_mean_km_s": 4.4405225118606095,
+        "delta_v_total_min_km_s": 4.4324999510040275,
+        "delta_v_total_max_km_s": 4.4567992689160745
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 209207.66881848118,
+        "altitude_km": 202829.66881848118,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          208207.66881848118,
+          209474.0282106335
+        ],
+        "admissible_center_range_km": [
+          208474.0282106335,
+          209207.66881848118
+        ],
+        "source_ids": [
+          293528,
+          363612
+        ],
+        "delta_v_total_mean_km_s": 4.429240204333957,
+        "delta_v_total_min_km_s": 4.414000417238227,
+        "delta_v_total_max_km_s": 4.444479991429687
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 211564.95282400885,
+        "altitude_km": 205186.95282400885,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          210564.95282400885,
+          211965.12728134252
+        ],
+        "admissible_center_range_km": [
+          210965.12728134252,
+          211564.95282400885
+        ],
+        "source_ids": [
+          256720,
+          262184,
+          267526,
+          303996
+        ],
+        "delta_v_total_mean_km_s": 4.447674364299889,
+        "delta_v_total_min_km_s": 4.434315604121182,
+        "delta_v_total_max_km_s": 4.455388626061495
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 213712.22418500285,
+        "altitude_km": 207334.22418500285,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          212712.22418500285,
+          214414.01024239088
+        ],
+        "admissible_center_range_km": [
+          213414.01024239088,
+          213712.22418500285
+        ],
+        "source_ids": [
+          272841,
+          278050,
+          320748,
+          325670,
+          342009,
+          346157
+        ],
+        "delta_v_total_mean_km_s": 4.41975522478598,
+        "delta_v_total_min_km_s": 4.400309856175099,
+        "delta_v_total_max_km_s": 4.44413154451564
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 215975.78704482803,
+        "altitude_km": 209597.78704482803,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          214975.78704482803,
+          214975.78704482803
+        ],
+        "admissible_center_range_km": [
+          213975.78704482803,
+          215975.78704482803
+        ],
+        "source_ids": [
+          245464
+        ],
+        "delta_v_total_mean_km_s": 4.444097703982041,
+        "delta_v_total_min_km_s": 4.444097703982041,
+        "delta_v_total_max_km_s": 4.444097703982041
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 218563.67519453246,
+        "altitude_km": 212185.67519453246,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          217563.67519453246,
+          219494.8499341566
+        ],
+        "admissible_center_range_km": [
+          218494.8499341566,
+          218563.67519453246
+        ],
+        "source_ids": [
+          298579,
+          309440,
+          359139
+        ],
+        "delta_v_total_mean_km_s": 4.39758905655926,
+        "delta_v_total_min_km_s": 4.38149492197331,
+        "delta_v_total_max_km_s": 4.411438820108792
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 220786.12995837122,
+        "altitude_km": 214408.12995837122,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          219786.12995837122,
+          220009.22266502742
+        ],
+        "admissible_center_range_km": [
+          219009.22266502742,
+          220786.12995837122
+        ],
+        "source_ids": [
+          239737,
+          314886,
+          350475
+        ],
+        "delta_v_total_mean_km_s": 4.401706757859931,
+        "delta_v_total_min_km_s": 4.378818403256111,
+        "delta_v_total_max_km_s": 4.429711741844558
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 223125.33260094112,
+        "altitude_km": 216747.33260094112,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          222125.33260094112,
+          223142.61045513794
+        ],
+        "admissible_center_range_km": [
+          222142.61045513794,
+          223125.33260094112
+        ],
+        "source_ids": [
+          216213,
+          288298,
+          320405,
+          329814
+        ],
+        "delta_v_total_mean_km_s": 4.398021861372292,
+        "delta_v_total_min_km_s": 4.382158902447432,
+        "delta_v_total_max_km_s": 4.428148966148446
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 225948.6524696981,
+        "altitude_km": 219570.6524696981,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          224948.6524696981,
+          226933.92073067222
+        ],
+        "admissible_center_range_km": [
+          225933.92073067222,
+          225948.6524696981
+        ],
+        "source_ids": [
+          233905,
+          303918
+        ],
+        "delta_v_total_mean_km_s": 4.3960386995206955,
+        "delta_v_total_min_km_s": 4.376729863363108,
+        "delta_v_total_max_km_s": 4.415347535678283
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 231135.42946907468,
+        "altitude_km": 224757.42946907468,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          230135.42946907468,
+          231655.38783320217
+        ],
+        "admissible_center_range_km": [
+          230655.38783320217,
+          231135.42946907468
+        ],
+        "source_ids": [
+          198704,
+          228069,
+          262106,
+          320679,
+          325605,
+          337774
+        ],
+        "delta_v_total_mean_km_s": 4.375228124802156,
+        "delta_v_total_min_km_s": 4.3473431470924195,
+        "delta_v_total_max_km_s": 4.408751515643018
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 233445.87130736353,
+        "altitude_km": 227067.87130736353,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          232445.87130736353,
+          233058.1749667355
+        ],
+        "admissible_center_range_km": [
+          232058.1749667355,
+          233445.87130736353
+        ],
+        "source_ids": [
+          267440,
+          293415
+        ],
+        "delta_v_total_mean_km_s": 4.368386916038555,
+        "delta_v_total_min_km_s": 4.362931064590881,
+        "delta_v_total_max_km_s": 4.37384276748623
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 235638.5224278745,
+        "altitude_km": 229260.5224278745,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          234638.5224278745,
+          236531.40293390825
+        ],
+        "admissible_center_range_km": [
+          235531.40293390825,
+          235638.5224278745
+        ],
+        "source_ids": [
+          192776,
+          222124,
+          251005,
+          272747,
+          277949
+        ],
+        "delta_v_total_mean_km_s": 4.37513084697748,
+        "delta_v_total_min_km_s": 4.357021083496751,
+        "delta_v_total_max_km_s": 4.391985375576698
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 237891.2834532816,
+        "altitude_km": 231513.2834532816,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          236891.2834532816,
+          238385.38302226464
+        ],
+        "admissible_center_range_km": [
+          237385.38302226464,
+          237891.2834532816
+        ],
+        "source_ids": [
+          204554,
+          283112,
+          314803,
+          333657
+        ],
+        "delta_v_total_mean_km_s": 4.349570722283999,
+        "delta_v_total_min_km_s": 4.330900108483046,
+        "delta_v_total_max_km_s": 4.38357332403137
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 244112.28145980753,
+        "altitude_km": 237734.28145980753,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          243112.28145980753,
+          243112.28145980753
+        ],
+        "admissible_center_range_km": [
+          242112.28145980753,
+          244112.28145980753
+        ],
+        "source_ids": [
+          298450
+        ],
+        "delta_v_total_mean_km_s": 4.326619195410519,
+        "delta_v_total_min_km_s": 4.326619195410519,
+        "delta_v_total_max_km_s": 4.326619195410519
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 247259.41159802678,
+        "altitude_km": 240881.41159802678,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          246259.41159802678,
+          247501.73315566703
+        ],
+        "admissible_center_range_km": [
+          246501.73315566703,
+          247259.41159802678
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          309309,
+          325519
+        ],
+        "delta_v_total_mean_km_s": 4.3360840014105015,
+        "delta_v_total_min_km_s": 4.302334976973655,
+        "delta_v_total_max_km_s": 4.366195696005715
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 249616.26839544237,
+        "altitude_km": 243238.26839544237,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          248616.26839544237,
+          249118.5795442675
+        ],
+        "admissible_center_range_km": [
+          248118.5795442675,
+          249616.26839544237
+        ],
+        "source_ids": [
+          198645,
+          288167,
+          320588
+        ],
+        "delta_v_total_mean_km_s": 4.322114721114937,
+        "delta_v_total_min_km_s": 4.301052005863231,
+        "delta_v_total_max_km_s": 4.352567171207153
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 255587.12857616442,
+        "altitude_km": 249209.12857616442,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          254587.12857616442,
+          256377.84367499105
+        ],
+        "admissible_center_range_km": [
+          255377.84367499105,
+          255587.12857616442
+        ],
+        "source_ids": [
+          163670,
+          303779,
+          314702
+        ],
+        "delta_v_total_mean_km_s": 4.304326512743967,
+        "delta_v_total_min_km_s": 4.280466831633628,
+        "delta_v_total_max_km_s": 4.34307160465969
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 258083.94730263334,
+        "altitude_km": 251705.94730263334,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          257083.94730263334,
+          257083.94730263334
+        ],
+        "admissible_center_range_km": [
+          256083.94730263334,
+          258083.94730263334
+        ],
+        "source_ids": [
+          261993
+        ],
+        "delta_v_total_mean_km_s": 4.2994320733103235,
+        "delta_v_total_min_km_s": 4.2994320733103235,
+        "delta_v_total_max_km_s": 4.2994320733103235
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 260332.15931759775,
+        "altitude_km": 253954.15931759775,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          259332.15931759775,
+          261053.93119846925
+        ],
+        "admissible_center_range_km": [
+          260053.93119846925,
+          260332.15931759775
+        ],
+        "source_ids": [
+          169393,
+          267316
+        ],
+        "delta_v_total_mean_km_s": 4.30834675505228,
+        "delta_v_total_min_km_s": 4.290473880486045,
+        "delta_v_total_max_km_s": 4.326219629618514
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 262347.12863045133,
+        "altitude_km": 255969.12863045133,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          261347.12863045136,
+          263228.80038112233
+        ],
+        "admissible_center_range_km": [
+          262228.80038112233,
+          262347.1286304514
+        ],
+        "source_ids": [
+          192704,
+          250897,
+          272615,
+          298347
+        ],
+        "delta_v_total_mean_km_s": 4.2904328702986225,
+        "delta_v_total_min_km_s": 4.266175195134331,
+        "delta_v_total_max_km_s": 4.323122058307233
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 265428.0249457022,
+        "altitude_km": 259050.02494570217,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          264428.0249457022,
+          266187.969772997
+        ],
+        "admissible_center_range_km": [
+          265187.969772997,
+          265428.0249457022
+        ],
+        "source_ids": [
+          157877,
+          204464,
+          222016,
+          277808
+        ],
+        "delta_v_total_mean_km_s": 4.2968926999655,
+        "delta_v_total_min_km_s": 4.271280859637047,
+        "delta_v_total_max_km_s": 4.319064303683579
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 268168.88109346543,
+        "altitude_km": 261790.88109346543,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          267168.88109346543,
+          267931.1976399871
+        ],
+        "admissible_center_range_km": [
+          266931.1976399871,
+          268168.88109346543
+        ],
+        "source_ids": [
+          245257,
+          282964
+        ],
+        "delta_v_total_mean_km_s": 4.267967594270223,
+        "delta_v_total_min_km_s": 4.261293590811852,
+        "delta_v_total_max_km_s": 4.274641597728594
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 275673.99614610773,
+        "altitude_km": 269295.99614610773,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          274673.99614610773,
+          274673.99614610773
+        ],
+        "admissible_center_range_km": [
+          273673.99614610773,
+          275673.99614610773
+        ],
+        "source_ids": [
+          239525
+        ],
+        "delta_v_total_mean_km_s": 4.257808991171948,
+        "delta_v_total_min_km_s": 4.257808991171948,
+        "delta_v_total_max_km_s": 4.257808991171948
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 280866.97638618515,
+        "altitude_km": 274488.97638618515,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          279866.97638618515,
+          281719.7637220536
+        ],
+        "admissible_center_range_km": [
+          280719.7637220536,
+          280866.97638618515
+        ],
+        "source_ids": [
+          198540,
+          233689,
+          293153,
+          402565,
+          420564
+        ],
+        "delta_v_total_mean_km_s": 4.207516467979594,
+        "delta_v_total_min_km_s": 4.155749503071775,
+        "delta_v_total_max_km_s": 4.262492013552755
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 284172.50445664866,
+        "altitude_km": 277794.50445664866,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          283172.50445664866,
+          284156.5995751187
+        ],
+        "admissible_center_range_km": [
+          283156.5995751187,
+          284172.50445664866
+        ],
+        "source_ids": [
+          152171,
+          402566,
+          408286
+        ],
+        "delta_v_total_mean_km_s": 4.1926168598147315,
+        "delta_v_total_min_km_s": 4.150071135174809,
+        "delta_v_total_max_km_s": 4.272852410747619
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 288142.6960363405,
+        "altitude_km": 281764.6960363405,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          287142.6960363405,
+          288966.86580848385
+        ],
+        "admissible_center_range_km": [
+          287966.86580848385,
+          288142.6960363405
+        ],
+        "source_ids": [
+          408246,
+          408247,
+          420513,
+          420514
+        ],
+        "delta_v_total_mean_km_s": 4.134290019045142,
+        "delta_v_total_min_km_s": 4.129784598904305,
+        "delta_v_total_max_km_s": 4.13868128664432
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 290622.0778018648,
+        "altitude_km": 284244.0778018648,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          289622.0778018648,
+          291455.73524601775
+        ],
+        "admissible_center_range_km": [
+          290455.73524601775,
+          290622.0778018648
+        ],
+        "source_ids": [
+          267158,
+          408245,
+          420511,
+          420512,
+          420560
+        ],
+        "delta_v_total_mean_km_s": 4.141941844617101,
+        "delta_v_total_min_km_s": 4.121678758591763,
+        "delta_v_total_max_km_s": 4.20152722154796
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 293883.08633845934,
+        "altitude_km": 287505.08633845934,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          292883.08633845934,
+          294300.4056280587
+        ],
+        "admissible_center_range_km": [
+          293300.4056280587,
+          293883.08633845934
+        ],
+        "source_ids": [
+          272448,
+          420509,
+          420510
+        ],
+        "delta_v_total_mean_km_s": 4.141126946270556,
+        "delta_v_total_min_km_s": 4.113760329259792,
+        "delta_v_total_max_km_s": 4.191932914697139
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 296682.88792188716,
+        "altitude_km": 290304.88792188716,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          295682.88792188716,
+          297620.0635001227
+        ],
+        "admissible_center_range_km": [
+          296620.0635001227,
+          296682.88792188716
+        ],
+        "source_ids": [
+          256353,
+          277632,
+          391886,
+          402536,
+          408287,
+          427290,
+          427291
+        ],
+        "delta_v_total_mean_km_s": 4.134988924176619,
+        "delta_v_total_min_km_s": 4.102290964924762,
+        "delta_v_total_max_km_s": 4.193912814518226
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 299087.1816304148,
+        "altitude_km": 292709.1816304148,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          298087.1816304148,
+          300015.24172549334
+        ],
+        "admissible_center_range_km": [
+          299015.24172549334,
+          299087.1816304148
+        ],
+        "source_ids": [
+          180833,
+          402535,
+          427288,
+          427289
+        ],
+        "delta_v_total_mean_km_s": 4.133019462931058,
+        "delta_v_total_min_km_s": 4.096751385835533,
+        "delta_v_total_max_km_s": 4.2249389359936025
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 302091.32687535026,
+        "altitude_km": 295713.32687535026,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          301091.32687535026,
+          302496.7280474988
+        ],
+        "admissible_center_range_km": [
+          301496.7280474988,
+          302091.32687535026
+        ],
+        "source_ids": [
+          397076,
+          420561,
+          427286,
+          427287
+        ],
+        "delta_v_total_mean_km_s": 4.097530082314263,
+        "delta_v_total_min_km_s": 4.0934096680720335,
+        "delta_v_total_max_km_s": 4.103711582669371
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 304727.37398714694,
+        "altitude_km": 298349.37398714694,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          303727.37398714694,
+          305606.6021806346
+        ],
+        "admissible_center_range_km": [
+          304606.6021806346,
+          304727.37398714694
+        ],
+        "source_ids": [
+          386879,
+          397075,
+          408288,
+          427285
+        ],
+        "delta_v_total_mean_km_s": 4.097681776464188,
+        "delta_v_total_min_km_s": 4.093558012948592,
+        "delta_v_total_max_km_s": 4.103324457384305
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 307530.49145266047,
+        "altitude_km": 301152.49145266047,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          306530.49145266047,
+          306530.49145266047
+        ],
+        "admissible_center_range_km": [
+          305530.49145266047,
+          307530.49145266047
+        ],
+        "source_ids": [
+          221855
+        ],
+        "delta_v_total_mean_km_s": 4.180338051615784,
+        "delta_v_total_min_km_s": 4.180338051615784,
+        "delta_v_total_max_km_s": 4.180338051615784
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 311847.8580786964,
+        "altitude_km": 305469.8580786964,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          310847.8580786964,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          309847.8580786964,
+          311847.8580786964
+        ],
+        "source_ids": [
+          386860
+        ],
+        "delta_v_total_mean_km_s": 4.088021389436738,
+        "delta_v_total_min_km_s": 4.088021389436738,
+        "delta_v_total_max_km_s": 4.088021389436738
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 318365.8989371338,
+        "altitude_km": 311987.8989371338,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          317365.8989371338,
+          317365.8989371338
+        ],
+        "admissible_center_range_km": [
+          316365.8989371338,
+          318365.8989371338
+        ],
+        "source_ids": [
+          420562
+        ],
+        "delta_v_total_mean_km_s": 4.055589344921221,
+        "delta_v_total_min_km_s": 4.055589344921221,
+        "delta_v_total_max_km_s": 4.055589344921221
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 325373.2817367417,
+        "altitude_km": 318995.2817367417,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          324373.2817367417,
+          324373.2817367417
+        ],
+        "admissible_center_range_km": [
+          323373.2817367417,
+          325373.2817367417
+        ],
+        "source_ids": [
+          186601
+        ],
+        "delta_v_total_mean_km_s": 4.151973715688902,
+        "delta_v_total_min_km_s": 4.151973715688902,
+        "delta_v_total_max_km_s": 4.151973715688902
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 328779.90651293186,
+        "altitude_km": 322401.90651293186,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          327779.90651293186,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          327818.6804644271,
+          328779.90651293186
+        ],
+        "source_ids": [
+          233487,
+          372764
+        ],
+        "delta_v_total_mean_km_s": 4.089431731408665,
+        "delta_v_total_min_km_s": 4.0564014050708925,
+        "delta_v_total_max_km_s": 4.122462057746436
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 349953.24187175307,
+        "altitude_km": 343575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          347953.24187175307,
+          349953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "delta_v_total_mean_km_s": 4.0116774632116154,
+        "delta_v_total_min_km_s": 4.0116774632116154,
+        "delta_v_total_max_km_s": 4.0116774632116154
+      }
+    ],
+    "5000": [
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 30760.55407690643,
+        "altitude_km": 24382.55407690643,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          25760.55407690643,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          24385.821386220894,
+          30760.55407690643
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          493656,
+          502848,
+          503219,
+          512879,
+          513050,
+          522964,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "delta_v_total_mean_km_s": 5.116240121343948,
+        "delta_v_total_min_km_s": 5.095641085449113,
+        "delta_v_total_max_km_s": 5.138353813127854
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 134586.8746396932,
+        "altitude_km": 128208.87463969321,
+        "count": 30,
+        "fraction": 0.08797653958944282,
+        "member_radius_range_km": [
+          129586.87463969323,
+          138135.76415872737
+        ],
+        "admissible_center_range_km": [
+          133135.76415872737,
+          134586.87463969324
+        ],
+        "source_ids": [
+          397474,
+          397475,
+          402917,
+          402918,
+          402919,
+          408613,
+          408614,
+          408615,
+          408616,
+          408617,
+          414198,
+          414563,
+          414564,
+          414565,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772,
+          420773,
+          420774,
+          420775,
+          420776,
+          420777,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341
+        ],
+        "delta_v_total_mean_km_s": 4.712778645177812,
+        "delta_v_total_min_km_s": 4.694788419185177,
+        "delta_v_total_max_km_s": 4.7315074889462405
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 145200.94683247578,
+        "altitude_km": 138822.94683247578,
+        "count": 33,
+        "fraction": 0.0967741935483871,
+        "member_radius_range_km": [
+          140200.94683247578,
+          150092.97370113168
+        ],
+        "admissible_center_range_km": [
+          145092.97370113168,
+          145200.94683247578
+        ],
+        "source_ids": [
+          373068,
+          377694,
+          382347,
+          386903,
+          387161,
+          387238,
+          387239,
+          391906,
+          392170,
+          392171,
+          397130,
+          397380,
+          397381,
+          397382,
+          402816,
+          402817,
+          402818,
+          408500,
+          408501,
+          408502,
+          408503,
+          408504,
+          414276,
+          414277,
+          414439,
+          414440,
+          414441,
+          414442,
+          414443,
+          414444,
+          414445,
+          420565,
+          427342
+        ],
+        "delta_v_total_mean_km_s": 4.656063683532679,
+        "delta_v_total_min_km_s": 4.6332607003759945,
+        "delta_v_total_max_km_s": 4.683922950923589
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 155367.32995166283,
+        "altitude_km": 148989.32995166283,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          150367.32995166283,
+          160151.03410059898
+        ],
+        "admissible_center_range_km": [
+          155151.03410059898,
+          155367.32995166283
+        ],
+        "source_ids": [
+          350726,
+          355088,
+          355135,
+          359431,
+          363869,
+          368415,
+          368470,
+          373010,
+          377573,
+          377630,
+          382280,
+          387088,
+          387160,
+          392096,
+          392097,
+          397131,
+          397299,
+          397300,
+          402732,
+          414199,
+          414278,
+          420645,
+          420646,
+          420647,
+          420648,
+          427343
+        ],
+        "delta_v_total_mean_km_s": 4.6160480520616884,
+        "delta_v_total_min_km_s": 4.584312110987043,
+        "delta_v_total_max_km_s": 4.64876109438776
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 165524.9228384128,
+        "altitude_km": 159146.9228384128,
+        "count": 42,
+        "fraction": 0.12316715542521994,
+        "member_radius_range_km": [
+          160524.9228384128,
+          169940.2654900019
+        ],
+        "admissible_center_range_km": [
+          164940.2654900019,
+          165524.9228384128
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          337992,
+          342198,
+          346386,
+          350682,
+          355043,
+          359337,
+          359382,
+          363770,
+          363819,
+          368364,
+          372956,
+          377523,
+          382059,
+          382221,
+          387028,
+          392032,
+          392033,
+          397229,
+          397230,
+          402606,
+          402730,
+          402731,
+          408409,
+          408410,
+          408411,
+          408412,
+          414200,
+          414342,
+          414343,
+          414344,
+          414345,
+          414346,
+          420640,
+          420641,
+          420642,
+          420643,
+          420644,
+          427284,
+          427344,
+          427345
+        ],
+        "delta_v_total_mean_km_s": 4.575521934044962,
+        "delta_v_total_min_km_s": 4.548025643792098,
+        "delta_v_total_max_km_s": 4.610783380074789
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 175742.86875734117,
+        "altitude_km": 169364.86875734117,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          170742.86875734117,
+          180482.75140776904
+        ],
+        "admissible_center_range_km": [
+          175482.75140776904,
+          175742.86875734117
+        ],
+        "source_ids": [
+          293643,
+          304124,
+          309612,
+          315085,
+          320913,
+          329979,
+          333670,
+          346113,
+          346271,
+          359295,
+          363727,
+          368318,
+          372867,
+          372907,
+          377479,
+          382169,
+          382170,
+          386975,
+          391978,
+          391979,
+          402658,
+          402659,
+          402660,
+          408335,
+          408336,
+          408337
+        ],
+        "delta_v_total_mean_km_s": 4.5397184344025625,
+        "delta_v_total_min_km_s": 4.510807310623619,
+        "delta_v_total_max_km_s": 4.574461235753737
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 186221.6853884938,
+        "altitude_km": 179843.6853884938,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          181221.6853884938,
+          190527.30286851572
+        ],
+        "admissible_center_range_km": [
+          185527.30286851572,
+          186221.6853884938
+        ],
+        "source_ids": [
+          283330,
+          288431,
+          298712,
+          309563,
+          315032,
+          320858,
+          325777,
+          329916,
+          333849,
+          337891,
+          342092,
+          346102,
+          350567,
+          359255,
+          363599,
+          363689,
+          368278,
+          372834,
+          377397,
+          377443,
+          382124,
+          386935,
+          391935,
+          391936,
+          397174,
+          397175
+        ],
+        "delta_v_total_mean_km_s": 4.507112081639414,
+        "delta_v_total_min_km_s": 4.473145774244208,
+        "delta_v_total_max_km_s": 4.538888098324692
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 197784.95884042172,
+        "altitude_km": 191406.95884042172,
+        "count": 20,
+        "fraction": 0.05865102639296188,
+        "member_radius_range_km": [
+          192784.95884042172,
+          202232.44816422756
+        ],
+        "admissible_center_range_km": [
+          197232.44816422756,
+          197784.95884042172
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          283273,
+          293580,
+          304054,
+          314981,
+          320803,
+          325720,
+          333788,
+          350536,
+          354891,
+          359220,
+          363632,
+          363658,
+          372787,
+          372807,
+          377416,
+          382086
+        ],
+        "delta_v_total_mean_km_s": 4.475791121148493,
+        "delta_v_total_min_km_s": 4.435725179660675,
+        "delta_v_total_max_km_s": 4.50870703377821
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 207853.14404766916,
+        "altitude_km": 201475.14404766916,
+        "count": 15,
+        "fraction": 0.04398826979472141,
+        "member_radius_range_km": [
+          202853.14404766916,
+          212842.31139468204
+        ],
+        "admissible_center_range_km": [
+          207842.31139468204,
+          207853.14404766916
+        ],
+        "source_ids": [
+          256720,
+          262184,
+          267526,
+          272841,
+          293528,
+          298644,
+          303996,
+          309510,
+          320748,
+          329862,
+          337754,
+          337832,
+          346181,
+          354860,
+          363612
+        ],
+        "delta_v_total_mean_km_s": 4.441519568280668,
+        "delta_v_total_min_km_s": 4.414000417238227,
+        "delta_v_total_max_km_s": 4.467201868903368
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 218259.7396560563,
+        "altitude_km": 211881.7396560563,
+        "count": 15,
+        "fraction": 0.04398826979472141,
+        "member_radius_range_km": [
+          213259.7396560563,
+          223142.61045513794
+        ],
+        "admissible_center_range_km": [
+          218142.61045513794,
+          218259.7396560563
+        ],
+        "source_ids": [
+          216213,
+          239737,
+          245464,
+          278050,
+          288298,
+          298579,
+          309440,
+          314886,
+          320405,
+          325670,
+          329814,
+          342009,
+          346157,
+          350475,
+          359139
+        ],
+        "delta_v_total_mean_km_s": 4.405955014877942,
+        "delta_v_total_min_km_s": 4.378818403256111,
+        "delta_v_total_max_km_s": 4.444097703982041
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 229948.6524696981,
+        "altitude_km": 223570.6524696981,
+        "count": 11,
+        "fraction": 0.03225806451612903,
+        "member_radius_range_km": [
+          224948.6524696981,
+          234638.5224278745
+        ],
+        "admissible_center_range_km": [
+          229638.5224278745,
+          229948.6524696981
+        ],
+        "source_ids": [
+          198704,
+          228069,
+          233905,
+          262106,
+          267440,
+          272747,
+          293415,
+          303918,
+          320679,
+          325605,
+          337774
+        ],
+        "delta_v_total_mean_km_s": 4.376885363593536,
+        "delta_v_total_min_km_s": 4.3473431470924195,
+        "delta_v_total_max_km_s": 4.415347535678283
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 240462.85660018265,
+        "altitude_km": 234084.85660018265,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          235462.85660018265,
+          243112.28145980753
+        ],
+        "admissible_center_range_km": [
+          238112.28145980753,
+          240462.85660018265
+        ],
+        "source_ids": [
+          192776,
+          204554,
+          222124,
+          251005,
+          277949,
+          283112,
+          298450,
+          314803,
+          333657
+        ],
+        "delta_v_total_mean_km_s": 4.359448588870718,
+        "delta_v_total_min_km_s": 4.326619195410519,
+        "delta_v_total_max_km_s": 4.391985375576698
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 251259.41159802678,
+        "altitude_km": 244881.41159802678,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          246259.41159802678,
+          256153.02453427776
+        ],
+        "admissible_center_range_km": [
+          251153.02453427776,
+          251259.41159802678
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          198645,
+          288167,
+          303779,
+          309309,
+          314702,
+          320588,
+          325519
+        ],
+        "delta_v_total_mean_km_s": 4.320065344728779,
+        "delta_v_total_min_km_s": 4.280466831633628,
+        "delta_v_total_max_km_s": 4.366195696005715
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 261377.84367499105,
+        "altitude_km": 254999.84367499105,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          256377.84367499105,
+          266187.969772997
+        ],
+        "admissible_center_range_km": [
+          261187.96977299702,
+          261377.84367499105
+        ],
+        "source_ids": [
+          157877,
+          163670,
+          169393,
+          192704,
+          204464,
+          222016,
+          250897,
+          261993,
+          267316,
+          272615,
+          277808,
+          298347
+        ],
+        "delta_v_total_mean_km_s": 4.300708289094255,
+        "delta_v_total_min_km_s": 4.266175195134331,
+        "delta_v_total_max_km_s": 4.34307160465969
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 272168.88109346543,
+        "altitude_km": 265790.88109346543,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          267168.88109346543,
+          274673.99614610773
+        ],
+        "admissible_center_range_km": [
+          269673.99614610773,
+          272168.88109346543
+        ],
+        "source_ids": [
+          239525,
+          245257,
+          282964
+        ],
+        "delta_v_total_mean_km_s": 4.2645813932374645,
+        "delta_v_total_min_km_s": 4.257808991171948,
+        "delta_v_total_max_km_s": 4.274641597728594
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 284866.97638618515,
+        "altitude_km": 278488.97638618515,
+        "count": 13,
+        "fraction": 0.03812316715542522,
+        "member_radius_range_km": [
+          279866.97638618515,
+          289622.0778018648
+        ],
+        "admissible_center_range_km": [
+          284622.0778018648,
+          284866.97638618515
+        ],
+        "source_ids": [
+          152171,
+          198540,
+          233689,
+          293153,
+          402565,
+          402566,
+          408246,
+          408247,
+          408286,
+          420513,
+          420514,
+          420560,
+          420564
+        ],
+        "delta_v_total_mean_km_s": 4.1755747693808924,
+        "delta_v_total_min_km_s": 4.129784598904305,
+        "delta_v_total_max_km_s": 4.272852410747619
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 295020.27633087116,
+        "altitude_km": 288642.27633087116,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          290020.27633087116,
+          300015.24172549334
+        ],
+        "admissible_center_range_km": [
+          295015.24172549334,
+          295020.27633087116
+        ],
+        "source_ids": [
+          180833,
+          256353,
+          267158,
+          272448,
+          277632,
+          391886,
+          402535,
+          402536,
+          408245,
+          408287,
+          420509,
+          420510,
+          420511,
+          420512,
+          427288,
+          427289,
+          427290,
+          427291
+        ],
+        "delta_v_total_mean_km_s": 4.1377895209127145,
+        "delta_v_total_min_km_s": 4.096751385835533,
+        "delta_v_total_max_km_s": 4.2249389359936025
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 306091.32687535026,
+        "altitude_km": 299713.32687535026,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          301091.32687535026,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          305847.8580786964,
+          306091.32687535026
+        ],
+        "source_ids": [
+          221855,
+          386860,
+          386879,
+          397075,
+          397076,
+          408288,
+          420561,
+          427285,
+          427286,
+          427287
+        ],
+        "delta_v_total_mean_km_s": 4.104920687616632,
+        "delta_v_total_min_km_s": 4.088021389436738,
+        "delta_v_total_max_km_s": 4.180338051615784
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 322365.8989371338,
+        "altitude_km": 315987.8989371338,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          317365.8989371338,
+          324373.2817367417
+        ],
+        "admissible_center_range_km": [
+          319373.2817367417,
+          322365.8989371338
+        ],
+        "source_ids": [
+          186601,
+          420562
+        ],
+        "delta_v_total_mean_km_s": 4.103781530305062,
+        "delta_v_total_min_km_s": 4.055589344921221,
+        "delta_v_total_max_km_s": 4.151973715688902
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 332779.90651293186,
+        "altitude_km": 326401.90651293186,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          327779.90651293186,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          323818.6804644271,
+          332779.90651293186
+        ],
+        "source_ids": [
+          233487,
+          372764
+        ],
+        "delta_v_total_mean_km_s": 4.089431731408665,
+        "delta_v_total_min_km_s": 4.0564014050708925,
+        "delta_v_total_max_km_s": 4.122462057746436
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 353953.24187175307,
+        "altitude_km": 347575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          343953.24187175307,
+          353953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "delta_v_total_mean_km_s": 4.0116774632116154,
+        "delta_v_total_min_km_s": 4.0116774632116154,
+        "delta_v_total_max_km_s": 4.0116774632116154
+      }
+    ],
+    "10000": [
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 35760.554076906425,
+        "altitude_km": 29382.554076906425,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          25760.55407690643,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          19385.821386220894,
+          35760.554076906425
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          493656,
+          502848,
+          503219,
+          512879,
+          513050,
+          522964,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "delta_v_total_mean_km_s": 5.116240121343948,
+        "delta_v_total_min_km_s": 5.095641085449113,
+        "delta_v_total_max_km_s": 5.138353813127854
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 139586.8746396932,
+        "altitude_km": 133208.8746396932,
+        "count": 60,
+        "fraction": 0.17595307917888564,
+        "member_radius_range_km": [
+          129586.87463969323,
+          149262.09437376406
+        ],
+        "admissible_center_range_km": [
+          139262.09437376406,
+          139586.87463969324
+        ],
+        "source_ids": [
+          373068,
+          377694,
+          382347,
+          386903,
+          387238,
+          387239,
+          391906,
+          392170,
+          392171,
+          397130,
+          397380,
+          397381,
+          397382,
+          397474,
+          397475,
+          402816,
+          402817,
+          402818,
+          402917,
+          402918,
+          402919,
+          408501,
+          408502,
+          408503,
+          408504,
+          408613,
+          408614,
+          408615,
+          408616,
+          408617,
+          414198,
+          414276,
+          414439,
+          414440,
+          414441,
+          414442,
+          414443,
+          414444,
+          414445,
+          414563,
+          414564,
+          414565,
+          420565,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772,
+          420773,
+          420774,
+          420775,
+          420776,
+          420777,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341,
+          427342
+        ],
+        "delta_v_total_mean_km_s": 4.685348691880943,
+        "delta_v_total_min_km_s": 4.638214443103492,
+        "delta_v_total_max_km_s": 4.7315074889462405
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 159849.89744357605,
+        "altitude_km": 153471.89744357605,
+        "count": 70,
+        "fraction": 0.20527859237536658,
+        "member_radius_range_km": [
+          149849.89744357605,
+          169606.52747529576
+        ],
+        "admissible_center_range_km": [
+          159606.52747529576,
+          159849.89744357605
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          337992,
+          342198,
+          346386,
+          350682,
+          350726,
+          355043,
+          355088,
+          355135,
+          359337,
+          359382,
+          359431,
+          363770,
+          363819,
+          363869,
+          368364,
+          368415,
+          368470,
+          372956,
+          373010,
+          377523,
+          377573,
+          377630,
+          382059,
+          382221,
+          382280,
+          387028,
+          387088,
+          387160,
+          387161,
+          392032,
+          392033,
+          392096,
+          392097,
+          397131,
+          397230,
+          397299,
+          397300,
+          402606,
+          402730,
+          402731,
+          402732,
+          408409,
+          408410,
+          408411,
+          408412,
+          408500,
+          414199,
+          414200,
+          414277,
+          414278,
+          414342,
+          414343,
+          414344,
+          414345,
+          414346,
+          420640,
+          420641,
+          420642,
+          420643,
+          420644,
+          420645,
+          420646,
+          420647,
+          420648,
+          427284,
+          427343,
+          427344,
+          427345
+        ],
+        "delta_v_total_mean_km_s": 4.59360564428022,
+        "delta_v_total_min_km_s": 4.548025643792098,
+        "delta_v_total_max_km_s": 4.64876109438776
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 179940.2654900019,
+        "altitude_km": 173562.2654900019,
+        "count": 50,
+        "fraction": 0.1466275659824047,
+        "member_radius_range_km": [
+          169940.2654900019,
+          189639.63170737616
+        ],
+        "admissible_center_range_km": [
+          179639.63170737616,
+          179940.2654900019
+        ],
+        "source_ids": [
+          283330,
+          293643,
+          298712,
+          304124,
+          309612,
+          315032,
+          315085,
+          320858,
+          320913,
+          325777,
+          329979,
+          333670,
+          333849,
+          337891,
+          342092,
+          346102,
+          346113,
+          346271,
+          350567,
+          359255,
+          359295,
+          363599,
+          363689,
+          363727,
+          368278,
+          368318,
+          372834,
+          372867,
+          372907,
+          377397,
+          377443,
+          377479,
+          382124,
+          382169,
+          382170,
+          386935,
+          386975,
+          391935,
+          391936,
+          391978,
+          391979,
+          397174,
+          397175,
+          397229,
+          402658,
+          402659,
+          402660,
+          408335,
+          408336,
+          408337
+        ],
+        "delta_v_total_mean_km_s": 4.524770336663947,
+        "delta_v_total_min_km_s": 4.473145774244208,
+        "delta_v_total_max_km_s": 4.574461235753737
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 200016.50379452933,
+        "altitude_km": 193638.50379452933,
+        "count": 32,
+        "fraction": 0.093841642228739,
+        "member_radius_range_km": [
+          190016.50379452933,
+          209474.0282106335
+        ],
+        "admissible_center_range_km": [
+          199474.0282106335,
+          200016.50379452933
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          283273,
+          288431,
+          293528,
+          293580,
+          298644,
+          304054,
+          309510,
+          309563,
+          314981,
+          320803,
+          325720,
+          329862,
+          329916,
+          333788,
+          337754,
+          337832,
+          346181,
+          350536,
+          354860,
+          354891,
+          359220,
+          363612,
+          363632,
+          363658,
+          372787,
+          372807,
+          377416,
+          382086
+        ],
+        "delta_v_total_mean_km_s": 4.469157226204125,
+        "delta_v_total_min_km_s": 4.414000417238227,
+        "delta_v_total_max_km_s": 4.51774173299817
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 220564.95282400885,
+        "altitude_km": 214186.95282400885,
+        "count": 25,
+        "fraction": 0.07331378299120235,
+        "member_radius_range_km": [
+          210564.95282400885,
+          230489.48723003533
+        ],
+        "admissible_center_range_km": [
+          220489.48723003533,
+          220564.95282400885
+        ],
+        "source_ids": [
+          216213,
+          228069,
+          233905,
+          239737,
+          245464,
+          256720,
+          262184,
+          267526,
+          272841,
+          278050,
+          288298,
+          298579,
+          303918,
+          303996,
+          309440,
+          314886,
+          320405,
+          320679,
+          320748,
+          325670,
+          329814,
+          342009,
+          346157,
+          350475,
+          359139
+        ],
+        "delta_v_total_mean_km_s": 4.411795706292733,
+        "delta_v_total_min_km_s": 4.358489921310512,
+        "delta_v_total_max_km_s": 4.455388626061495
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 240853.65198497297,
+        "altitude_km": 234475.65198497297,
+        "count": 23,
+        "fraction": 0.06744868035190615,
+        "member_radius_range_km": [
+          230853.65198497297,
+          249118.5795442675
+        ],
+        "admissible_center_range_km": [
+          239118.5795442675,
+          240853.65198497297
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          192776,
+          198645,
+          198704,
+          204554,
+          222124,
+          251005,
+          262106,
+          267440,
+          272747,
+          277949,
+          283112,
+          288167,
+          293415,
+          298450,
+          309309,
+          314803,
+          320588,
+          325519,
+          325605,
+          333657,
+          337774
+        ],
+        "delta_v_total_mean_km_s": 4.35390718302948,
+        "delta_v_total_min_km_s": 4.301052005863231,
+        "delta_v_total_max_km_s": 4.408751515643018
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 264587.1285761644,
+        "altitude_km": 258209.12857616442,
+        "count": 16,
+        "fraction": 0.0469208211143695,
+        "member_radius_range_km": [
+          254587.12857616442,
+          267931.1976399871
+        ],
+        "admissible_center_range_km": [
+          257931.1976399871,
+          264587.1285761644
+        ],
+        "source_ids": [
+          157877,
+          163670,
+          169393,
+          192704,
+          204464,
+          222016,
+          245257,
+          250897,
+          261993,
+          267316,
+          272615,
+          277808,
+          282964,
+          298347,
+          303779,
+          314702
+        ],
+        "delta_v_total_mean_km_s": 4.294646411952733,
+        "delta_v_total_min_km_s": 4.261293590811852,
+        "delta_v_total_max_km_s": 4.34307160465969
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 284673.99614610773,
+        "altitude_km": 278295.99614610773,
+        "count": 21,
+        "fraction": 0.06158357771260997,
+        "member_radius_range_km": [
+          274673.99614610773,
+          294300.4056280587
+        ],
+        "admissible_center_range_km": [
+          284300.4056280587,
+          284673.99614610773
+        ],
+        "source_ids": [
+          152171,
+          198540,
+          233689,
+          239525,
+          267158,
+          272448,
+          293153,
+          402565,
+          402566,
+          408245,
+          408246,
+          408247,
+          408286,
+          420509,
+          420510,
+          420511,
+          420512,
+          420513,
+          420514,
+          420560,
+          420564
+        ],
+        "delta_v_total_mean_km_s": 4.168737716599613,
+        "delta_v_total_min_km_s": 4.113760329259792,
+        "delta_v_total_max_km_s": 4.272852410747619
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 305682.88792188716,
+        "altitude_km": 299304.88792188716,
+        "count": 21,
+        "fraction": 0.06158357771260997,
+        "member_radius_range_km": [
+          295682.88792188716,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          300847.8580786964,
+          305682.88792188716
+        ],
+        "source_ids": [
+          180833,
+          221855,
+          256353,
+          277632,
+          386860,
+          386879,
+          391886,
+          397075,
+          397076,
+          402535,
+          402536,
+          408287,
+          408288,
+          420561,
+          427285,
+          427286,
+          427287,
+          427288,
+          427289,
+          427290,
+          427291
+        ],
+        "delta_v_total_mean_km_s": 4.120295580815567,
+        "delta_v_total_min_km_s": 4.088021389436738,
+        "delta_v_total_max_km_s": 4.2249389359936025
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 327365.8989371338,
+        "altitude_km": 320987.8989371338,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          317365.8989371338,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          318818.6804644271,
+          327365.8989371338
+        ],
+        "source_ids": [
+          186601,
+          233487,
+          372764,
+          420562
+        ],
+        "delta_v_total_mean_km_s": 4.096606630856862,
+        "delta_v_total_min_km_s": 4.055589344921221,
+        "delta_v_total_max_km_s": 4.151973715688902
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 358953.24187175307,
+        "altitude_km": 352575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          338953.24187175307,
+          358953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "delta_v_total_mean_km_s": 4.0116774632116154,
+        "delta_v_total_min_km_s": 4.0116774632116154,
+        "delta_v_total_max_km_s": 4.0116774632116154
+      }
+    ]
+  },
+  "color_quantity": "Hohmann LEO 200 km -> circolare(rp), piu immissione nell'escape",
+  "point_color": "Delta V totale individuale",
+  "circle_color": "Media nella fascia",
+  "normalization": "Lineare comune a tutte le tolleranze, viridis_r",
+  "color_limits_km_s": [
+    4.0116774632116154,
+    5.138353813127854
+  ]
+}

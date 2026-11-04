@@ -1,0 +1,5087 @@
+{
+  "selection": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_delta_v_leo200_hohmann_parcheggio/individuali/11_eps_phi/P99_99_selezione.npz",
+  "distinct_trajectories": 341,
+  "largest_perigee_radius_km": 348953.24187175307,
+  "rule": "Copertura completa ordinata: fascia [primo raggio non coperto, raggio+2*tolleranza].",
+  "note": "Minimo numero di intervalli radiali di larghezza 2*tolleranza; ogni source_id conta una volta.",
+  "coverage_per_tolerance": {
+    "1000": 341,
+    "5000": 341,
+    "10000": 341
+  },
+  "l1_geocentric_xy_km": [
+    326380.9649835009,
+    0.0
+  ],
+  "bands": {
+    "1000": [
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 26760.55407690643,
+        "altitude_km": 20382.55407690643,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          25760.55407690643,
+          27687.3823849547
+        ],
+        "admissible_center_range_km": [
+          26687.3823849547,
+          26760.55407690643
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          502848,
+          512879,
+          522964
+        ],
+        "asteroids_distinct": 353,
+        "v_soi_max_km_s": 2.000032765814024,
+        "v_soi_mean_km_s": 1.9855674825623424,
+        "largest_gap_deg": 359.5450234331151,
+        "angular_gaps_deg": [
+          0.050022265218473194,
+          0.05008675343685809,
+          0.050210541001206366,
+          0.10104290235508984,
+          0.0509651532053681,
+          0.005691733857190684,
+          0.04890502733618973,
+          0.04896599015563652,
+          0.0490862003188397,
+          359.5450234331151
+        ],
+        "sum_squared_gaps_deg2": 129272.65144586333,
+        "relative_angular_velocity_deg_hour": -30.301967246705278,
+        "relative_cycle_hours": 11.880416775222496,
+        "maximum_wait_hours": 11.865402021784849,
+        "mean_wait_hours": 5.925204385860051,
+        "parking_angular_velocity_rad_s": -0.00014424235989051707
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 28792.486054813246,
+        "altitude_km": 22414.486054813246,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          27792.486054813246,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          28385.821386220894,
+          28792.486054813246
+        ],
+        "source_ids": [
+          493656,
+          503219,
+          513050,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "asteroids_distinct": 353,
+        "v_soi_max_km_s": 1.9741774072340896,
+        "v_soi_mean_km_s": 1.9588510305023545,
+        "largest_gap_deg": 359.40139369729405,
+        "angular_gaps_deg": [
+          0.0901195890511417,
+          0.05176874147491617,
+          0.052090778851265895,
+          0.052483687947130875,
+          0.052950633091597865,
+          0.24737558076503774,
+          0.05181729152485559,
+          359.40139369729405
+        ],
+        "sum_squared_gaps_deg2": 129169.44474456622,
+        "relative_angular_velocity_deg_hour": -27.208722168784025,
+        "relative_cycle_hours": 13.231051343271835,
+        "maximum_wait_hours": 13.209050813478754,
+        "mean_wait_hours": 6.593547667427738,
+        "parking_angular_velocity_rad_s": -0.0001292458845625075
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 130586.87463969323,
+        "altitude_km": 124208.87463969323,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          129586.87463969323,
+          131491.2883185898
+        ],
+        "admissible_center_range_km": [
+          130491.2883185898,
+          130586.87463969323
+        ],
+        "source_ids": [
+          414198,
+          414563,
+          414564,
+          414565,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0347853910346787,
+        "v_soi_mean_km_s": 2.0005552171259664,
+        "largest_gap_deg": 201.82076129150326,
+        "angular_gaps_deg": [
+          2.8706256426482213,
+          2.887395238735003,
+          2.9040612296115746,
+          2.920598521366035,
+          4.335241152699023,
+          3.0899003153645594,
+          3.106454624928155,
+          132.14061348576382,
+          3.924348497380322,
+          201.82076129150326
+        ],
+        "sum_squared_gaps_deg2": 58279.69480214578,
+        "relative_angular_velocity_deg_hour": -3.3098590042021083,
+        "relative_cycle_hours": 108.76596239989487,
+        "maximum_wait_hours": 60.975637039305006,
+        "mean_wait_hours": 24.455428601572287,
+        "parking_angular_velocity_rad_s": -1.3380926310966986e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 132965.68441689434,
+        "altitude_km": 126587.68441689434,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          131965.68441689434,
+          133859.29005671814
+        ],
+        "admissible_center_range_km": [
+          132859.29005671814,
+          132965.68441689434
+        ],
+        "source_ids": [
+          420773,
+          420774,
+          420775,
+          420776,
+          420777
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 2.0098223965317823,
+        "v_soi_mean_km_s": 1.9992480615624253,
+        "largest_gap_deg": 348.7538922682864,
+        "angular_gaps_deg": [
+          2.78618895597016,
+          2.803063218731368,
+          2.8199707975165538,
+          2.8368847594955326,
+          348.7538922682864
+        ],
+        "sum_squared_gaps_deg2": 121660.89753502359,
+        "relative_angular_velocity_deg_hour": -3.2361246174207166,
+        "relative_cycle_hours": 111.24417090183945,
+        "maximum_wait_hours": 107.76899331715265,
+        "mean_wait_hours": 52.21475955809159,
+        "parking_angular_velocity_rad_s": -1.3023451916168579e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 135332.40803422747,
+        "altitude_km": 128954.40803422747,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          134332.40803422747,
+          136228.91514561095
+        ],
+        "admissible_center_range_km": [
+          135228.91514561095,
+          135332.40803422747
+        ],
+        "source_ids": [
+          408614,
+          408615,
+          408616,
+          408617,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.042267358224748,
+        "v_soi_mean_km_s": 1.9899516715562662,
+        "largest_gap_deg": 325.5656984107827,
+        "angular_gaps_deg": [
+          14.094132963910543,
+          3.124465945191732,
+          3.143103757258878,
+          3.161612801241951,
+          325.5656984107827,
+          2.70296584514017,
+          2.7194183039864015,
+          2.735973939320502,
+          2.7526280331671273
+        ],
+        "sum_squared_gaps_deg2": 106251.06952463932,
+        "relative_angular_velocity_deg_hour": -3.16596621033588,
+        "relative_cycle_hours": 113.70936266619451,
+        "maximum_wait_hours": 102.83296686740165,
+        "mean_wait_hours": 46.611656629044205,
+        "parking_angular_velocity_rad_s": -1.2683314360172767e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 137657.10639731988,
+        "altitude_km": 131279.10639731988,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          136657.10639731988,
+          138135.76415872737
+        ],
+        "admissible_center_range_km": [
+          137135.76415872737,
+          137657.10639731988
+        ],
+        "source_ids": [
+          397474,
+          397475,
+          402917,
+          402918,
+          402919,
+          408613
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 2.0227812412268804,
+        "v_soi_mean_km_s": 1.9908880463233014,
+        "largest_gap_deg": 337.7424419711823,
+        "angular_gaps_deg": [
+          3.7187078771470627,
+          3.311954006711364,
+          3.331961526765273,
+          8.271249728024529,
+          3.623684890169489,
+          337.7424419711823
+        ],
+        "sum_squared_gaps_deg2": 114187.401568138,
+        "relative_angular_velocity_deg_hour": -3.099976765109517,
+        "relative_cycle_hours": 116.12990266631299,
+        "maximum_wait_hours": 108.94999142332296,
+        "mean_wait_hours": 51.15961354099946,
+        "parking_angular_velocity_rad_s": -1.2363388501627077e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 141200.94683247578,
+        "altitude_km": 134822.94683247578,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          140200.94683247578,
+          142193.59419464835
+        ],
+        "admissible_center_range_km": [
+          141193.59419464835,
+          141200.94683247578
+        ],
+        "source_ids": [
+          387239,
+          397130,
+          414276,
+          420565,
+          427342
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.035418389514355,
+        "v_soi_mean_km_s": 2.0021315621696667,
+        "largest_gap_deg": 153.38857726762305,
+        "angular_gaps_deg": [
+          144.90833241947666,
+          2.161193707147362,
+          2.1017633570105545,
+          153.38857726762305,
+          57.44013324874237
+        ],
+        "sum_squared_gaps_deg2": 47834.937515861086,
+        "relative_angular_velocity_deg_hour": -3.004577434003153,
+        "relative_cycle_hours": 119.81718158628168,
+        "maximum_wait_hours": 51.05163059926719,
+        "mean_wait_hours": 22.112065565225176,
+        "parking_angular_velocity_rad_s": -1.1900879492736439e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 143909.60095740343,
+        "altitude_km": 137531.60095740343,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          142909.60095740343,
+          144540.2187643336
+        ],
+        "admissible_center_range_km": [
+          143540.2187643336,
+          143909.60095740343
+        ],
+        "source_ids": [
+          377694,
+          387238,
+          392171,
+          414445
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.040593893500154,
+        "v_soi_mean_km_s": 2.022434126365604,
+        "largest_gap_deg": 275.2439604295302,
+        "angular_gaps_deg": [
+          20.228087863850803,
+          17.348248691010845,
+          275.2439604295302,
+          47.1797030156082
+        ],
+        "sum_squared_gaps_deg2": 78695.29940084662,
+        "relative_angular_velocity_deg_hour": -2.9356004247667333,
+        "relative_cycle_hours": 122.63249349700106,
+        "maximum_wait_hours": 93.76070329850884,
+        "mean_wait_hours": 37.23225614204813,
+        "parking_angular_velocity_rad_s": -1.156646951513809e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 146070.41618356147,
+        "altitude_km": 139692.41618356147,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          145070.41618356147,
+          146720.1373995693
+        ],
+        "admissible_center_range_km": [
+          145720.1373995693,
+          146070.41618356147
+        ],
+        "source_ids": [
+          391906,
+          392170,
+          397381,
+          397382,
+          414441,
+          414442,
+          414443,
+          414444
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0539127054578556,
+        "v_soi_mean_km_s": 2.014646730999168,
+        "largest_gap_deg": 172.71303621813223,
+        "angular_gaps_deg": [
+          172.71303621813223,
+          133.52804672658152,
+          2.509100884148495,
+          2.525030041185687,
+          2.5409959739770898,
+          25.856567840407365,
+          3.188927189017477,
+          17.138295126550133
+        ],
+        "sum_squared_gaps_deg2": 48651.112683744665,
+        "relative_angular_velocity_deg_hour": -2.882858075035088,
+        "relative_cycle_hours": 124.87607458636975,
+        "maximum_wait_hours": 59.910349980038504,
+        "mean_wait_hours": 23.438888797087884,
+        "parking_angular_velocity_rad_s": -1.1310767387900436e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 148233.77302938988,
+        "altitude_km": 141855.77302938988,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          147233.77302938988,
+          148948.97022412598
+        ],
+        "admissible_center_range_km": [
+          147948.97022412598,
+          148233.77302938988
+        ],
+        "source_ids": [
+          373068,
+          382347,
+          386903,
+          397380,
+          402816,
+          402817,
+          402818,
+          408502,
+          408503,
+          408504,
+          414439,
+          414440
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.046640988573175,
+        "v_soi_mean_km_s": 1.9993390214037963,
+        "largest_gap_deg": 142.13799125245203,
+        "angular_gaps_deg": [
+          18.509437481879388,
+          142.13799125245203,
+          128.95295158422704,
+          2.4773793938108497,
+          4.122174761011479,
+          2.6342943825999896,
+          2.65103754368738,
+          4.33258326294515,
+          2.8532043385808947,
+          2.8711303009009725,
+          13.291174659459045,
+          35.16664103844579
+        ],
+        "sum_squared_gaps_deg2": 38660.272203523105,
+        "relative_angular_velocity_deg_hour": -2.8319720968481565,
+        "relative_cycle_hours": 127.11989655571183,
+        "maximum_wait_hours": 50.19046317957882,
+        "mean_wait_hours": 18.960223006664812,
+        "parking_angular_velocity_rad_s": -1.1064065203883777e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 150262.09437376406,
+        "altitude_km": 143884.09437376406,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          149262.09437376406,
+          150811.92054728811
+        ],
+        "admissible_center_range_km": [
+          149811.92054728811,
+          150262.09437376406
+        ],
+        "source_ids": [
+          387160,
+          387161,
+          408500,
+          408501,
+          414199,
+          414277
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0577983925975802,
+        "v_soi_mean_km_s": 2.0014016328872493,
+        "largest_gap_deg": 186.57022248975238,
+        "angular_gaps_deg": [
+          4.779586842711041,
+          125.42667529599132,
+          2.6009103041614026,
+          37.06929332834898,
+          3.5533117390348252,
+          186.57022248975238
+        ],
+        "sum_squared_gaps_deg2": 51956.66651265699,
+        "relative_angular_velocity_deg_hour": -2.7859202500808045,
+        "relative_cycle_hours": 129.2212151405118,
+        "maximum_wait_hours": 66.96897460878178,
+        "mean_wait_hours": 25.90240579249951,
+        "parking_angular_velocity_rad_s": -1.0840799550352053e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 152427.0163156507,
+        "altitude_km": 146049.0163156507,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          151427.0163156507,
+          151884.4082455479
+        ],
+        "admissible_center_range_km": [
+          150884.4082455479,
+          152427.0163156507
+        ],
+        "source_ids": [
+          355135,
+          368470,
+          377630
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 2.0367268315060967,
+        "v_soi_mean_km_s": 2.006913505376787,
+        "largest_gap_deg": 300.55862698516654,
+        "angular_gaps_deg": [
+          25.212457283460537,
+          34.228915731372915,
+          300.55862698516654
+        ],
+        "sum_squared_gaps_deg2": 92142.77492962423,
+        "relative_angular_velocity_deg_hour": -2.738451313688277,
+        "relative_cycle_hours": 131.46116500246805,
+        "maximum_wait_hours": 109.75496459725619,
+        "mean_wait_hours": 46.73301133799617,
+        "parking_angular_velocity_rad_s": -1.0610663652443898e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 154483.45184967585,
+        "altitude_km": 148105.45184967585,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          153483.45184967585,
+          155232.15636521863
+        ],
+        "admissible_center_range_km": [
+          154232.15636521863,
+          154483.45184967585
+        ],
+        "source_ids": [
+          363869,
+          373010,
+          382280,
+          392096,
+          392097,
+          397131,
+          427343
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0319574837745535,
+        "v_soi_mean_km_s": 2.0087991885394874,
+        "largest_gap_deg": 150.2622514874378,
+        "angular_gaps_deg": [
+          150.2622514874378,
+          6.365916672770595,
+          133.76710417907987,
+          3.133705532308852,
+          14.042049521220065,
+          23.516673158170647,
+          28.91229944901221
+        ],
+        "sum_squared_gaps_deg2": 42108.86151859267,
+        "relative_angular_velocity_deg_hour": -2.694896001289191,
+        "relative_cycle_hours": 133.5858600212336,
+        "maximum_wait_hours": 55.75808914910073,
+        "mean_wait_hours": 21.70196173023237,
+        "parking_angular_velocity_rad_s": -1.039950153908313e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 156899.35543753902,
+        "altitude_km": 150521.35543753902,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          155899.35543753902,
+          157337.88064374178
+        ],
+        "admissible_center_range_km": [
+          156337.88064374178,
+          156899.35543753902
+        ],
+        "source_ids": [
+          359431,
+          397299,
+          397300,
+          414278
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.057858169000985,
+        "v_soi_mean_km_s": 2.030568618529532,
+        "largest_gap_deg": 152.47334661339073,
+        "angular_gaps_deg": [
+          152.47334661339073,
+          112.37926116929427,
+          2.7674344954373282,
+          92.3799577218777
+        ],
+        "sum_squared_gaps_deg2": 44418.93505082608,
+        "relative_angular_velocity_deg_hour": -2.6455436324377546,
+        "relative_cycle_hours": 136.07789173685845,
+        "maximum_wait_hours": 57.63403209225966,
+        "mean_wait_hours": 23.319579610003313,
+        "parking_angular_velocity_rad_s": -1.0160234502939727e-05
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 159032.05546711638,
+        "altitude_km": 152654.05546711638,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          158032.05546711638,
+          159649.3866857693
+        ],
+        "admissible_center_range_km": [
+          158649.3866857693,
+          159032.05546711638
+        ],
+        "source_ids": [
+          350726,
+          355088,
+          368415,
+          377573,
+          387088,
+          420646,
+          420647,
+          420648
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0601032346441523,
+        "v_soi_mean_km_s": 2.0269996807897757,
+        "largest_gap_deg": 215.75735091672612,
+        "angular_gaps_deg": [
+          4.4715320784529595,
+          215.75735091672612,
+          2.05450128711513,
+          2.066273566927265,
+          52.08746405266379,
+          23.539329093682056,
+          25.722047896640845,
+          34.30150110779181
+        ],
+        "sum_squared_gaps_deg2": 51685.14018758722,
+        "relative_angular_velocity_deg_hour": -2.6035287191304324,
+        "relative_cycle_hours": 138.2738732070674,
+        "maximum_wait_hours": 82.87112384486704,
+        "mean_wait_hours": 27.57216250381149,
+        "parking_angular_velocity_rad_s": -9.956540455119515e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 161052.862605537,
+        "altitude_km": 154674.862605537,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          160052.862605537,
+          161926.75980913473
+        ],
+        "admissible_center_range_km": [
+          160926.75980913473,
+          161052.862605537
+        ],
+        "source_ids": [
+          346386,
+          363819,
+          402730,
+          402731,
+          402732,
+          420642,
+          420643,
+          420644,
+          420645
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.029179352866109,
+        "v_soi_mean_km_s": 1.9970949311897195,
+        "largest_gap_deg": 204.39715335821126,
+        "angular_gaps_deg": [
+          204.39715335821126,
+          2.010135343927942,
+          2.0207905287157644,
+          2.031746341532312,
+          21.30108385946386,
+          2.4325914782249924,
+          2.4480275632610073,
+          81.0794659535934,
+          42.27900557306947
+        ],
+        "sum_squared_gaps_deg2": 50617.489158004195,
+        "relative_angular_velocity_deg_hour": -2.5649973948012534,
+        "relative_cycle_hours": 140.35101974358702,
+        "maximum_wait_hours": 79.6870802958647,
+        "mean_wait_hours": 27.408241590223184,
+        "parking_angular_velocity_rad_s": -9.76973532325897e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 163066.83726098025,
+        "altitude_km": 156688.83726098025,
+        "count": 11,
+        "fraction": 0.03225806451612903,
+        "member_radius_range_km": [
+          162066.83726098025,
+          163907.90032386364
+        ],
+        "admissible_center_range_km": [
+          162907.90032386364,
+          163066.83726098025
+        ],
+        "source_ids": [
+          359382,
+          372956,
+          382059,
+          382221,
+          392033,
+          408410,
+          408411,
+          408412,
+          414346,
+          420640,
+          420641
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0529352193419097,
+        "v_soi_mean_km_s": 2.0122613017039512,
+        "largest_gap_deg": 178.8225000590208,
+        "angular_gaps_deg": [
+          61.212283621228096,
+          1.9898061962555005,
+          4.86446875778509,
+          8.07243977242291,
+          2.2004666631618477,
+          2.2132553020085766,
+          22.510745187119994,
+          18.900331438824253,
+          27.67799852114939,
+          31.535704481023515,
+          178.8225000590208
+        ],
+        "sum_squared_gaps_deg2": 38451.48585155329,
+        "relative_angular_velocity_deg_hour": -2.5277803627115842,
+        "relative_cycle_hours": 142.41743677991988,
+        "maximum_wait_hours": 70.74289471384115,
+        "mean_wait_hours": 21.127168423447433,
+        "parking_angular_velocity_rad_s": -9.589302059985327e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 165394.15941576558,
+        "altitude_km": 159016.15941576558,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          164394.15941576558,
+          166339.62108900584
+        ],
+        "admissible_center_range_km": [
+          165339.62108900584,
+          165394.15941576558
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          350682,
+          355043,
+          368364,
+          392032,
+          408409,
+          414342,
+          414343,
+          414344,
+          414345,
+          427284
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.105806596904532,
+        "v_soi_mean_km_s": 2.0099181019842463,
+        "largest_gap_deg": 102.51643116388246,
+        "angular_gaps_deg": [
+          54.942217463745386,
+          16.595093786917474,
+          102.51643116388246,
+          58.740579026072936,
+          2.024986027125351,
+          2.034829615588052,
+          2.045052977237276,
+          7.940106819262155,
+          26.372600994320806,
+          47.74402371357428,
+          34.318311061747465,
+          4.725767350526382
+        ],
+        "sum_squared_gaps_deg2": 21504.672553233122,
+        "relative_angular_velocity_deg_hour": -2.4861791837972427,
+        "relative_cycle_hours": 144.80050446330154,
+        "maximum_wait_hours": 41.234530411965295,
+        "mean_wait_hours": 12.013454606582833,
+        "parking_angular_velocity_rad_s": -9.387613853105745e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 168140.97674146137,
+        "altitude_km": 161762.97674146137,
+        "count": 8,
+        "fraction": 0.02346041055718475,
+        "member_radius_range_km": [
+          167140.97674146137,
+          169113.05332346278
+        ],
+        "admissible_center_range_km": [
+          168113.05332346278,
+          168140.97674146137
+        ],
+        "source_ids": [
+          342198,
+          363770,
+          377523,
+          387028,
+          402606,
+          414200,
+          427344,
+          427345
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0375977973086625,
+        "v_soi_mean_km_s": 2.0198440797696726,
+        "largest_gap_deg": 161.6735833614202,
+        "angular_gaps_deg": [
+          161.6735833614202,
+          7.161602833551484,
+          14.415920038156543,
+          1.9790954749948924,
+          70.64792649710961,
+          24.156905059804103,
+          30.132654724094778,
+          49.83231201086835
+        ],
+        "sum_squared_gaps_deg2": 35367.293462992726,
+        "relative_angular_velocity_deg_hour": -2.438924418652866,
+        "relative_cycle_hours": 147.60605012878798,
+        "maximum_wait_hours": 66.28888625040716,
+        "mean_wait_hours": 20.140534304853627,
+        "parking_angular_velocity_rad_s": -9.158516286709624e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 170147.4534858087,
+        "altitude_km": 163769.4534858087,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          169147.4534858087,
+          170742.86875734117
+        ],
+        "admissible_center_range_km": [
+          169742.86875734117,
+          170147.4534858087
+        ],
+        "source_ids": [
+          337992,
+          359337,
+          372907,
+          397229,
+          397230
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 2.048539188415652,
+        "v_soi_mean_km_s": 2.0096468125782185,
+        "largest_gap_deg": 229.0439681249681,
+        "angular_gaps_deg": [
+          229.0439681249681,
+          2.3911496130806995,
+          39.39647222220236,
+          35.49124862798459,
+          53.677161411764246
+        ],
+        "sum_squared_gaps_deg2": 58159.80534085632,
+        "relative_angular_velocity_deg_hour": -2.4056074559743226,
+        "relative_cycle_hours": 149.65035093566098,
+        "maximum_wait_hours": 95.21252835999395,
+        "mean_wait_hours": 33.578839813305855,
+        "parking_angular_velocity_rad_s": -8.996991093513888e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 173270.56990522545,
+        "altitude_km": 166892.56990522545,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          172270.56990522545,
+          173980.06562751287
+        ],
+        "admissible_center_range_km": [
+          172980.06562751287,
+          173270.56990522545
+        ],
+        "source_ids": [
+          315085,
+          320913,
+          333670,
+          368318,
+          382169,
+          382170,
+          402660
+        ],
+        "asteroids_distinct": 609,
+        "v_soi_max_km_s": 2.0676212232315105,
+        "v_soi_mean_km_s": 2.02466845086193,
+        "largest_gap_deg": 119.28613452705383,
+        "angular_gaps_deg": [
+          10.088172134691789,
+          103.15789456026974,
+          62.14919699881031,
+          34.86417487020964,
+          2.8529229604886837,
+          27.601503948476022,
+          119.28613452705383
+        ],
+        "sum_squared_gaps_deg2": 30820.519884146997,
+        "relative_angular_velocity_deg_hour": -2.3556604225928544,
+        "relative_cycle_hours": 152.82338513110105,
+        "maximum_wait_hours": 50.63808577118966,
+        "mean_wait_hours": 18.171667361866334,
+        "parking_angular_velocity_rad_s": -8.754841042372183e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 175674.02530075843,
+        "altitude_km": 169296.02530075843,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          174674.02530075843,
+          176265.80838326164
+        ],
+        "admissible_center_range_km": [
+          175265.80838326164,
+          175674.02530075843
+        ],
+        "source_ids": [
+          346113,
+          363727,
+          377479,
+          391978,
+          391979,
+          402658,
+          402659
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.060139385396787,
+        "v_soi_mean_km_s": 2.0174700147590046,
+        "largest_gap_deg": 233.97143980365206,
+        "angular_gaps_deg": [
+          55.042495206066974,
+          2.1223360485386706,
+          14.07369368410724,
+          2.418258667463931,
+          21.444537026391345,
+          30.927239563779835,
+          233.97143980365206
+        ],
+        "sum_squared_gaps_deg2": 59397.09437681535,
+        "relative_angular_velocity_deg_hour": -2.318728511884967,
+        "relative_cycle_hours": 155.25750347863914,
+        "maximum_wait_hours": 100.90506008116033,
+        "mean_wait_hours": 35.57810411585442,
+        "parking_angular_velocity_rad_s": -8.575790086565188e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 177729.62426429713,
+        "altitude_km": 171351.62426429713,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          176729.62426429713,
+          178605.12732629792
+        ],
+        "admissible_center_range_km": [
+          177605.12732629792,
+          177729.62426429713
+        ],
+        "source_ids": [
+          309612,
+          329979,
+          359295,
+          408335,
+          408336,
+          408337
+        ],
+        "asteroids_distinct": 1303,
+        "v_soi_max_km_s": 2.1022860901699465,
+        "v_soi_mean_km_s": 2.024951793098744,
+        "largest_gap_deg": 149.4395094138018,
+        "angular_gaps_deg": [
+          40.86952102612459,
+          149.4395094138018,
+          2.006559954822592,
+          1.99700228680976,
+          95.47846286584658,
+          70.20894445259466
+        ],
+        "sum_squared_gaps_deg2": 38055.931776100784,
+        "relative_angular_velocity_deg_hour": -2.2881293807239373,
+        "relative_cycle_hours": 157.33376050881364,
+        "maximum_wait_hours": 65.31077773518248,
+        "mean_wait_hours": 23.099856697533916,
+        "parking_angular_velocity_rad_s": -8.427441312395863e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 180305.12024459575,
+        "altitude_km": 173927.12024459575,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          179305.12024459575,
+          181221.6853884938
+        ],
+        "admissible_center_range_km": [
+          180221.6853884938,
+          180305.12024459575
+        ],
+        "source_ids": [
+          293643,
+          304124,
+          346271,
+          368278,
+          372867,
+          386975
+        ],
+        "asteroids_distinct": 609,
+        "v_soi_max_km_s": 2.0722482736566774,
+        "v_soi_mean_km_s": 2.019388621502028,
+        "largest_gap_deg": 152.84633312562883,
+        "angular_gaps_deg": [
+          24.566128268221213,
+          152.84633312562883,
+          26.87703643295029,
+          3.5913562451421512,
+          48.20935911784278,
+          103.90978681021471
+        ],
+        "sum_squared_gaps_deg2": 37822.15523663646,
+        "relative_angular_velocity_deg_hour": -2.251017961053221,
+        "relative_cycle_hours": 159.92764439407708,
+        "maximum_wait_hours": 67.90098336403948,
+        "mean_wait_hours": 23.336451361506082,
+        "parking_angular_velocity_rad_s": -8.247520072578259e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 182339.26900733344,
+        "altitude_km": 175961.26900733344,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          181339.26900733344,
+          183228.74142290495
+        ],
+        "admissible_center_range_km": [
+          182228.74142290495,
+          182339.26900733344
+        ],
+        "source_ids": [
+          333849,
+          363599,
+          377397,
+          397174,
+          397175
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 2.037071807647244,
+        "v_soi_mean_km_s": 2.0048213521807585,
+        "largest_gap_deg": 197.79257649522827,
+        "angular_gaps_deg": [
+          5.235802709023005,
+          32.29691623152584,
+          2.156218583389659,
+          122.51848598083325,
+          197.79257649522827
+        ],
+        "sum_squared_gaps_deg2": 55207.836430309726,
+        "relative_angular_velocity_deg_hour": -2.2226304651670667,
+        "relative_cycle_hours": 161.97024455567342,
+        "maximum_wait_hours": 88.99031107285796,
+        "mean_wait_hours": 34.49856006175495,
+        "parking_angular_velocity_rad_s": -8.109893608797774e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 184464.03566279326,
+        "altitude_km": 178086.03566279326,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          183464.03566279326,
+          185135.7993897663
+        ],
+        "admissible_center_range_km": [
+          184135.7993897663,
+          184464.03566279326
+        ],
+        "source_ids": [
+          283330,
+          298712,
+          315032,
+          320858,
+          325777,
+          346102,
+          359255,
+          363689,
+          382124
+        ],
+        "asteroids_distinct": 1480,
+        "v_soi_max_km_s": 2.042587785992979,
+        "v_soi_mean_km_s": 1.996627107310205,
+        "largest_gap_deg": 84.14753038413855,
+        "angular_gaps_deg": [
+          9.590348228830015,
+          33.44686471192679,
+          38.90199350614559,
+          84.14753038413855,
+          66.49686418067165,
+          33.800000007918555,
+          4.164150467179184,
+          79.48545165531357,
+          9.96679685787609
+        ],
+        "sum_squared_gaps_deg2": 21803.726666676528,
+        "relative_angular_velocity_deg_hour": -2.193811641648415,
+        "relative_cycle_hours": 164.09795315403582,
+        "maximum_wait_hours": 38.35677083056714,
+        "mean_wait_hours": 13.80380755066237,
+        "parking_angular_velocity_rad_s": -7.970176009644537e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 186972.1250603365,
+        "altitude_km": 180594.1250603365,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          185972.1250603365,
+          187069.04017416306
+        ],
+        "admissible_center_range_km": [
+          186069.04017416306,
+          186972.1250603365
+        ],
+        "source_ids": [
+          350567,
+          377443,
+          391935,
+          391936
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0925886602205104,
+        "v_soi_mean_km_s": 2.0189866402292203,
+        "largest_gap_deg": 280.2377290500848,
+        "angular_gaps_deg": [
+          2.230531529945239,
+          26.7098788049708,
+          50.82186061499917,
+          280.2377290500848
+        ],
+        "sum_squared_gaps_deg2": 81834.43919620145,
+        "relative_angular_velocity_deg_hour": -2.160843969050712,
+        "relative_cycle_hours": 166.6015710325225,
+        "maximum_wait_hours": 129.68901645091802,
+        "mean_wait_hours": 52.59932922319675,
+        "parking_angular_velocity_rad_s": -7.810344222547474e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 189698.8696514617,
+        "altitude_km": 183320.8696514617,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          188698.8696514617,
+          190527.30286851572
+        ],
+        "admissible_center_range_km": [
+          189527.30286851572,
+          189698.8696514617
+        ],
+        "source_ids": [
+          288431,
+          309563,
+          329916,
+          337891,
+          342092,
+          372834,
+          386935
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.0772783876130982,
+        "v_soi_mean_km_s": 2.0421263017103075,
+        "largest_gap_deg": 157.99351354309456,
+        "angular_gaps_deg": [
+          46.655377028573064,
+          157.99351354309456,
+          31.79147710273645,
+          60.42778771077002,
+          7.198547460444388,
+          17.114332877338768,
+          38.81896427704277
+        ],
+        "sum_squared_gaps_deg2": 33652.52153428097,
+        "relative_angular_velocity_deg_hour": -2.1262341717252125,
+        "relative_cycle_hours": 169.31342971874935,
+        "maximum_wait_hours": 74.30673236471394,
+        "mean_wait_hours": 21.982345060390355,
+        "parking_angular_velocity_rad_s": -7.64255119010917e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 193784.95884042172,
+        "altitude_km": 187406.95884042172,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          192784.95884042172,
+          194701.68130606675
+        ],
+        "admissible_center_range_km": [
+          193701.68130606675,
+          193784.95884042172
+        ],
+        "source_ids": [
+          354891,
+          359220,
+          363658,
+          382086
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0623557279923173,
+        "v_soi_mean_km_s": 2.0243230011398357,
+        "largest_gap_deg": 309.9389885515035,
+        "angular_gaps_deg": [
+          38.67390734649115,
+          4.625224506411087,
+          6.761879595594337,
+          309.9389885515035
+        ],
+        "sum_squared_gaps_deg2": 97624.963451174,
+        "relative_angular_velocity_deg_hour": -2.0766390491630196,
+        "relative_cycle_hours": 173.35704062056257,
+        "maximum_wait_hours": 149.25029396727518,
+        "mean_wait_hours": 65.29311247911306,
+        "parking_angular_velocity_rad_s": -7.402107250764618e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 195845.06494745082,
+        "altitude_km": 189467.06494745082,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          194845.06494745082,
+          196826.62720511397
+        ],
+        "admissible_center_range_km": [
+          195826.62720511397,
+          195845.06494745082
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          293580,
+          304054,
+          333788,
+          350536,
+          372787,
+          377416
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1086143360205765,
+        "v_soi_mean_km_s": 2.060063698029597,
+        "largest_gap_deg": 92.6698719095431,
+        "angular_gaps_deg": [
+          36.27279505038417,
+          14.54256904356982,
+          14.577155049942675,
+          14.566094884384952,
+          92.6698719095431,
+          23.675810597206095,
+          52.82119827914832,
+          30.65123391675678,
+          57.88209888739857,
+          22.3411723816655
+        ],
+        "sum_squared_gaps_deg2": 18679.15819511377,
+        "relative_angular_velocity_deg_hour": -2.0526118520936416,
+        "relative_cycle_hours": 175.3863009379021,
+        "maximum_wait_hours": 45.147294562788794,
+        "mean_wait_hours": 12.63915301109145,
+        "parking_angular_velocity_rad_s": -7.2856201121851236e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 198478.43897063783,
+        "altitude_km": 192100.43897063783,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          197478.43897063783,
+          198191.79016503663
+        ],
+        "admissible_center_range_km": [
+          197191.79016503663,
+          198478.43897063783
+        ],
+        "source_ids": [
+          314981,
+          320803,
+          325720,
+          372807
+        ],
+        "asteroids_distinct": 510,
+        "v_soi_max_km_s": 2.0716038467885687,
+        "v_soi_mean_km_s": 1.9877616227785864,
+        "largest_gap_deg": 245.59236711969606,
+        "angular_gaps_deg": [
+          95.50394607484785,
+          9.63791410702595,
+          9.265772698430169,
+          245.59236711969606
+        ],
+        "sum_squared_gaps_deg2": 69615.3584353564,
+        "relative_angular_velocity_deg_hour": -2.0228036360134842,
+        "relative_cycle_hours": 177.97080922272983,
+        "maximum_wait_hours": 121.41186754227236,
+        "mean_wait_hours": 47.799003376044624,
+        "parking_angular_velocity_rad_s": -7.141105802533826e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 202487.0646786038,
+        "altitude_km": 196109.0646786038,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          201487.0646786038,
+          202853.14404766916
+        ],
+        "admissible_center_range_km": [
+          201853.14404766916,
+          202487.0646786038
+        ],
+        "source_ids": [
+          283273,
+          298644,
+          363632
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.0913884915490994,
+        "v_soi_mean_km_s": 2.064527355246427,
+        "largest_gap_deg": 206.51750635569022,
+        "angular_gaps_deg": [
+          206.51750635569022,
+          118.59504939401884,
+          34.88744425029091
+        ],
+        "sum_squared_gaps_deg2": 57931.39993845948,
+        "relative_angular_velocity_deg_hour": -1.9792807046022696,
+        "relative_cycle_hours": 181.88425682265262,
+        "maximum_wait_hours": 104.3396754565893,
+        "mean_wait_hours": 40.65127169946977,
+        "parking_angular_velocity_rad_s": -6.930100676632339e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 204910.48687736856,
+        "altitude_km": 198532.48687736856,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          203910.48687736856,
+          205659.55230200975
+        ],
+        "admissible_center_range_km": [
+          204659.55230200975,
+          204910.48687736856
+        ],
+        "source_ids": [
+          309510,
+          329862,
+          337754,
+          337832,
+          346181,
+          354860
+        ],
+        "asteroids_distinct": 1303,
+        "v_soi_max_km_s": 2.0871300149578054,
+        "v_soi_mean_km_s": 2.059739178374324,
+        "largest_gap_deg": 214.45683998246898,
+        "angular_gaps_deg": [
+          61.23826518559082,
+          14.681347697613575,
+          15.284348726884389,
+          16.817109702321204,
+          37.522088705121064,
+          214.45683998246898
+        ],
+        "sum_squared_gaps_deg2": 51881.73694396517,
+        "relative_angular_velocity_deg_hour": -1.953997488941581,
+        "relative_cycle_hours": 184.2376983785177,
+        "maximum_wait_hours": 109.75287388861155,
+        "mean_wait_hours": 36.8772060279161,
+        "parking_angular_velocity_rad_s": -6.807524188084893e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 209207.66881848118,
+        "altitude_km": 202829.66881848118,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          208207.66881848118,
+          209474.0282106335
+        ],
+        "admissible_center_range_km": [
+          208474.0282106335,
+          209207.66881848118
+        ],
+        "source_ids": [
+          293528,
+          363612
+        ],
+        "asteroids_distinct": 276,
+        "v_soi_max_km_s": 2.0146120510693457,
+        "v_soi_mean_km_s": 1.9996581555279522,
+        "largest_gap_deg": 228.67419342174446,
+        "angular_gaps_deg": [
+          131.3258065782556,
+          228.67419342174446
+        ],
+        "sum_squared_gaps_deg2": 69538.35421051481,
+        "relative_angular_velocity_deg_hour": -1.9109578998616708,
+        "relative_cycle_hours": 188.38719577551106,
+        "maximum_wait_hours": 119.66469456930348,
+        "mean_wait_hours": 50.54064640649339,
+        "parking_angular_velocity_rad_s": -6.598862371932159e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 211564.95282400885,
+        "altitude_km": 205186.95282400885,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          210564.95282400885,
+          211965.12728134252
+        ],
+        "admissible_center_range_km": [
+          210965.12728134252,
+          211564.95282400885
+        ],
+        "source_ids": [
+          256720,
+          262184,
+          267526,
+          303996
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.1033100695555698,
+        "v_soi_mean_km_s": 2.0614156339980774,
+        "largest_gap_deg": 271.21295999981544,
+        "angular_gaps_deg": [
+          13.019546111116934,
+          13.238214450976137,
+          271.21295999981544,
+          62.52927943809152
+        ],
+        "sum_squared_gaps_deg2": 77811.13936169795,
+        "relative_angular_velocity_deg_hour": -1.8882728386584615,
+        "relative_cycle_hours": 190.65041482869862,
+        "maximum_wait_hours": 143.6301759191224,
+        "mean_wait_hours": 57.23273918827698,
+        "parking_angular_velocity_rad_s": -6.488882091650931e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 213712.22418500285,
+        "altitude_km": 207334.22418500285,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          212712.22418500285,
+          214414.01024239088
+        ],
+        "admissible_center_range_km": [
+          213414.01024239088,
+          213712.22418500285
+        ],
+        "source_ids": [
+          272841,
+          278050,
+          320748,
+          325670,
+          342009,
+          346157
+        ],
+        "asteroids_distinct": 2036,
+        "v_soi_max_km_s": 2.079170545237357,
+        "v_soi_mean_km_s": 2.011947942448423,
+        "largest_gap_deg": 228.8204334528602,
+        "angular_gaps_deg": [
+          228.8204334528602,
+          8.012175983661791,
+          33.452258370765435,
+          9.238371956196147,
+          67.84943618489899,
+          12.62732405161745
+        ],
+        "sum_squared_gaps_deg2": 58390.38213936671,
+        "relative_angular_velocity_deg_hour": -1.8681518303910247,
+        "relative_cycle_hours": 192.70382318157087,
+        "maximum_wait_hours": 122.48492319008437,
+        "mean_wait_hours": 43.41068624725647,
+        "parking_angular_velocity_rad_s": -6.391332690793217e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 215975.78704482803,
+        "altitude_km": 209597.78704482803,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          214975.78704482803,
+          214975.78704482803
+        ],
+        "admissible_center_range_km": [
+          213975.78704482803,
+          215975.78704482803
+        ],
+        "source_ids": [
+          245464
+        ],
+        "asteroids_distinct": 177,
+        "v_soi_max_km_s": 2.0234381547712292,
+        "v_soi_mean_km_s": 2.0234381547712292,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.8474811916610385,
+        "relative_cycle_hours": 194.85989985983576,
+        "maximum_wait_hours": 194.85989985983576,
+        "mean_wait_hours": 97.42994992991788,
+        "parking_angular_velocity_rad_s": -6.291118606257517e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 218563.67519453246,
+        "altitude_km": 212185.67519453246,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          217563.67519453246,
+          219494.8499341566
+        ],
+        "admissible_center_range_km": [
+          218494.8499341566,
+          218563.67519453246
+        ],
+        "source_ids": [
+          298579,
+          309440,
+          359139
+        ],
+        "asteroids_distinct": 510,
+        "v_soi_max_km_s": 2.0635260001504965,
+        "v_soi_mean_km_s": 2.0055368320160114,
+        "largest_gap_deg": 249.41708007557554,
+        "angular_gaps_deg": [
+          89.71663430166126,
+          20.866285622763144,
+          249.41708007557554
+        ],
+        "sum_squared_gaps_deg2": 70693.35617953482,
+        "relative_angular_velocity_deg_hour": -1.8245026870937395,
+        "relative_cycle_hours": 197.31404209299686,
+        "maximum_wait_hours": 136.704145102068,
+        "mean_wait_hours": 53.8147833985492,
+        "parking_angular_velocity_rad_s": -6.1797156724008715e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 220786.12995837122,
+        "altitude_km": 214408.12995837122,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          219786.12995837122,
+          220009.22266502742
+        ],
+        "admissible_center_range_km": [
+          219009.22266502742,
+          220786.12995837122
+        ],
+        "source_ids": [
+          239737,
+          314886,
+          350475
+        ],
+        "asteroids_distinct": 1222,
+        "v_soi_max_km_s": 2.095491229021392,
+        "v_soi_mean_km_s": 2.0923528050682774,
+        "largest_gap_deg": 161.64728776511973,
+        "angular_gaps_deg": [
+          161.64728776511973,
+          69.69707377044628,
+          128.655638464434
+        ],
+        "sum_squared_gaps_deg2": 47539.8010426736,
+        "relative_angular_velocity_deg_hour": -1.8053049564631471,
+        "relative_cycle_hours": 199.4122924834217,
+        "maximum_wait_hours": 89.54015618602747,
+        "mean_wait_hours": 36.57415397424886,
+        "parking_angular_velocity_rad_s": -6.086642447841205e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 223125.33260094112,
+        "altitude_km": 216747.33260094112,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          222125.33260094112,
+          223142.61045513794
+        ],
+        "admissible_center_range_km": [
+          222142.61045513794,
+          223125.33260094112
+        ],
+        "source_ids": [
+          216213,
+          288298,
+          320405,
+          329814
+        ],
+        "asteroids_distinct": 2093,
+        "v_soi_max_km_s": 2.117728086327414,
+        "v_soi_mean_km_s": 2.0849430295292604,
+        "largest_gap_deg": 135.91833420214311,
+        "angular_gaps_deg": [
+          89.34095823819062,
+          73.51854458960662,
+          61.22216297005966,
+          135.91833420214311
+        ],
+        "sum_squared_gaps_deg2": 35608.73002851011,
+        "relative_angular_velocity_deg_hour": -1.7856137925801976,
+        "relative_cycle_hours": 201.61134591137028,
+        "maximum_wait_hours": 76.11855081257085,
+        "mean_wait_hours": 27.69723760510243,
+        "parking_angular_velocity_rad_s": -5.9911769913669664e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 225948.6524696981,
+        "altitude_km": 219570.6524696981,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          224948.6524696981,
+          226933.92073067222
+        ],
+        "admissible_center_range_km": [
+          225933.92073067222,
+          225948.6524696981
+        ],
+        "source_ids": [
+          233905,
+          303918
+        ],
+        "asteroids_distinct": 1066,
+        "v_soi_max_km_s": 2.1092532683167717,
+        "v_soi_mean_km_s": 2.0362887084367096,
+        "largest_gap_deg": 238.14800529555055,
+        "angular_gaps_deg": [
+          238.14800529555055,
+          121.85199470444945
+        ],
+        "sum_squared_gaps_deg2": 71562.38103970276,
+        "relative_angular_velocity_deg_hour": -1.7625241490332948,
+        "relative_cycle_hours": 204.25252056685406,
+        "maximum_wait_hours": 135.11758430440196,
+        "mean_wait_hours": 56.391962596932615,
+        "parking_angular_velocity_rad_s": -5.879235240532157e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 231135.42946907468,
+        "altitude_km": 224757.42946907468,
+        "count": 6,
+        "fraction": 0.017595307917888565,
+        "member_radius_range_km": [
+          230135.42946907468,
+          231655.38783320217
+        ],
+        "admissible_center_range_km": [
+          230655.38783320217,
+          231135.42946907468
+        ],
+        "source_ids": [
+          198704,
+          228069,
+          262106,
+          320679,
+          325605,
+          337774
+        ],
+        "asteroids_distinct": 2036,
+        "v_soi_max_km_s": 2.1176722634137386,
+        "v_soi_mean_km_s": 2.032801939338906,
+        "largest_gap_deg": 99.41461126951513,
+        "angular_gaps_deg": [
+          79.28556894062014,
+          99.41461126951513,
+          26.48002151189155,
+          8.998250997922526,
+          85.37084211511927,
+          60.45070516493138
+        ],
+        "sum_squared_gaps_deg2": 27894.094874780567,
+        "relative_angular_velocity_deg_hour": -1.7219344580545888,
+        "relative_cycle_hours": 209.0671908655116,
+        "maximum_wait_hours": 57.73425974751211,
+        "mean_wait_hours": 22.498997134284096,
+        "parking_angular_velocity_rad_s": -5.6824508655473054e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 233445.87130736353,
+        "altitude_km": 227067.87130736353,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          232445.87130736353,
+          233058.1749667355
+        ],
+        "admissible_center_range_km": [
+          232058.1749667355,
+          233445.87130736353
+        ],
+        "source_ids": [
+          267440,
+          293415
+        ],
+        "asteroids_distinct": 889,
+        "v_soi_max_km_s": 2.0946665498811674,
+        "v_soi_mean_km_s": 2.085501378867389,
+        "largest_gap_deg": 320.52623653715955,
+        "angular_gaps_deg": [
+          39.47376346284045,
+          320.52623653715955
+        ],
+        "sum_squared_gaps_deg2": 104295.24631059542,
+        "relative_angular_velocity_deg_hour": -1.7045771151622546,
+        "relative_cycle_hours": 211.19607719579906,
+        "maximum_wait_hours": 188.03856609716917,
+        "mean_wait_hours": 84.9797333756458,
+        "parking_angular_velocity_rad_s": -5.598300092528177e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 235638.5224278745,
+        "altitude_km": 229260.5224278745,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          234638.5224278745,
+          236531.40293390825
+        ],
+        "admissible_center_range_km": [
+          235531.40293390825,
+          235638.5224278745
+        ],
+        "source_ids": [
+          192776,
+          222124,
+          251005,
+          272747,
+          277949
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.1322803242911577,
+        "v_soi_mean_km_s": 2.07522208355916,
+        "largest_gap_deg": 210.22738394687804,
+        "angular_gaps_deg": [
+          59.23696891565567,
+          210.22738394687804,
+          11.599861843811937,
+          31.428589416463183,
+          47.50719587719118
+        ],
+        "sum_squared_gaps_deg2": 51083.818135080386,
+        "relative_angular_velocity_deg_hour": -1.6884972365847388,
+        "relative_cycle_hours": 213.20733738845718,
+        "maximum_wait_hours": 124.50561327070764,
+        "mean_wait_hours": 42.01946314898407,
+        "parking_angular_velocity_rad_s": -5.5203426412785784e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 237891.2834532816,
+        "altitude_km": 231513.2834532816,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          236891.2834532816,
+          238385.38302226464
+        ],
+        "admissible_center_range_km": [
+          237385.38302226464,
+          237891.2834532816
+        ],
+        "source_ids": [
+          204554,
+          283112,
+          314803,
+          333657
+        ],
+        "asteroids_distinct": 1399,
+        "v_soi_max_km_s": 2.0988085273094335,
+        "v_soi_mean_km_s": 2.0452232594935245,
+        "largest_gap_deg": 171.27807467223872,
+        "angular_gaps_deg": [
+          171.27807467223872,
+          15.688140307008865,
+          44.49326698220807,
+          128.54051803854435
+        ],
+        "sum_squared_gaps_deg2": 48084.61219408877,
+        "relative_angular_velocity_deg_hour": -1.6723615291970602,
+        "relative_cycle_hours": 215.2644590986522,
+        "maximum_wait_hours": 102.41689472160563,
+        "mean_wait_hours": 39.93405877673216,
+        "parking_angular_velocity_rad_s": -5.442114524319309e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 244112.28145980753,
+        "altitude_km": 237734.28145980753,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          243112.28145980753,
+          243112.28145980753
+        ],
+        "admissible_center_range_km": [
+          242112.28145980753,
+          244112.28145980753
+        ],
+        "source_ids": [
+          298450
+        ],
+        "asteroids_distinct": 333,
+        "v_soi_max_km_s": 2.0984270272510535,
+        "v_soi_mean_km_s": 2.0984270272510535,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.6297264769316757,
+        "relative_cycle_hours": 220.89596327708958,
+        "maximum_wait_hours": 220.89596327708958,
+        "mean_wait_hours": 110.44798163854479,
+        "parking_angular_velocity_rad_s": -5.235413957988524e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 247259.41159802678,
+        "altitude_km": 240881.41159802678,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          246259.41159802678,
+          247501.73315566703
+        ],
+        "admissible_center_range_km": [
+          246501.73315566703,
+          247259.41159802678
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          309309,
+          325519
+        ],
+        "asteroids_distinct": 1381,
+        "v_soi_max_km_s": 2.107329625676881,
+        "v_soi_mean_km_s": 2.06767423494144,
+        "largest_gap_deg": 187.68558207985188,
+        "angular_gaps_deg": [
+          55.9189110685349,
+          86.67190347477548,
+          29.72360337683773,
+          187.68558207985188
+        ],
+        "sum_squared_gaps_deg2": 46748.31378538789,
+        "relative_angular_velocity_deg_hour": -1.6091750396289386,
+        "relative_cycle_hours": 223.71711661834675,
+        "maximum_wait_hours": 116.6346590381681,
+        "mean_wait_hours": 40.348757588104505,
+        "parking_angular_velocity_rad_s": -5.1357777782802075e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 249616.26839544237,
+        "altitude_km": 243238.26839544237,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          248616.26839544237,
+          249118.5795442675
+        ],
+        "admissible_center_range_km": [
+          248118.5795442675,
+          249616.26839544237
+        ],
+        "source_ids": [
+          198645,
+          288167,
+          320588
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.0913096768688533,
+        "v_soi_mean_km_s": 2.0348082141046735,
+        "largest_gap_deg": 182.9301451846247,
+        "angular_gaps_deg": [
+          182.9301451846247,
+          45.44873719462896,
+          131.6211176207463
+        ],
+        "sum_squared_gaps_deg2": 52853.14433358866,
+        "relative_angular_velocity_deg_hour": -1.5942073438610032,
+        "relative_cycle_hours": 225.81755214357358,
+        "maximum_wait_hours": 114.74677110794576,
+        "mean_wait_hours": 46.046171591442814,
+        "parking_angular_velocity_rad_s": -5.063212341450403e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 255587.12857616442,
+        "altitude_km": 249209.12857616442,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          254587.12857616442,
+          256377.84367499105
+        ],
+        "admissible_center_range_km": [
+          255377.84367499105,
+          255587.12857616442
+        ],
+        "source_ids": [
+          163670,
+          303779,
+          314702
+        ],
+        "asteroids_distinct": 1760,
+        "v_soi_max_km_s": 2.0835111983134706,
+        "v_soi_mean_km_s": 2.0590719780075974,
+        "largest_gap_deg": 238.63130322184136,
+        "angular_gaps_deg": [
+          101.48204170587938,
+          19.88665507227924,
+          238.63130322184136
+        ],
+        "sum_squared_gaps_deg2": 67638.98271611205,
+        "relative_angular_velocity_deg_hour": -1.5578253436431726,
+        "relative_cycle_hours": 231.09137456840588,
+        "maximum_wait_hours": 153.18232187940384,
+        "mean_wait_hours": 60.30395636680163,
+        "parking_angular_velocity_rad_s": -4.88682742693306e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 258083.94730263334,
+        "altitude_km": 251705.94730263334,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          257083.94730263334,
+          257083.94730263334
+        ],
+        "admissible_center_range_km": [
+          256083.94730263334,
+          258083.94730263334
+        ],
+        "source_ids": [
+          261993
+        ],
+        "asteroids_distinct": 177,
+        "v_soi_max_km_s": 2.0115724378698414,
+        "v_soi_mean_km_s": 2.0115724378698414,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.5432333023599638,
+        "relative_cycle_hours": 233.276458879857,
+        "maximum_wait_hours": 233.276458879857,
+        "mean_wait_hours": 116.6382294399285,
+        "parking_angular_velocity_rad_s": -4.816083214438911e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 260332.15931759775,
+        "altitude_km": 253954.15931759775,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          259332.15931759775,
+          261053.93119846925
+        ],
+        "admissible_center_range_km": [
+          260053.93119846925,
+          260332.15931759775
+        ],
+        "source_ids": [
+          169393,
+          267316
+        ],
+        "asteroids_distinct": 1760,
+        "v_soi_max_km_s": 2.1131202511757845,
+        "v_soi_mean_km_s": 2.0939634336940713,
+        "largest_gap_deg": 218.40416768771453,
+        "angular_gaps_deg": [
+          218.40416768771453,
+          141.59583231228544
+        ],
+        "sum_squared_gaps_deg2": 67749.76019157219,
+        "relative_angular_velocity_deg_hour": -1.530392865108096,
+        "relative_cycle_hours": 235.23371560842463,
+        "maximum_wait_hours": 142.711177415407,
+        "mean_wait_hours": 61.48544684198788,
+        "parking_angular_velocity_rad_s": -4.753831017927571e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 262347.12863045133,
+        "altitude_km": 255969.12863045133,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          261347.12863045136,
+          263228.80038112233
+        ],
+        "admissible_center_range_km": [
+          262228.80038112233,
+          262347.1286304514
+        ],
+        "source_ids": [
+          192704,
+          250897,
+          272615,
+          298347
+        ],
+        "asteroids_distinct": 1066,
+        "v_soi_max_km_s": 2.097518756991836,
+        "v_soi_mean_km_s": 2.035735967423256,
+        "largest_gap_deg": 213.03250889789103,
+        "angular_gaps_deg": [
+          213.03250889789103,
+          37.817145084227946,
+          29.64042636674526,
+          79.50991965113576
+        ],
+        "sum_squared_gaps_deg2": 54013.36850778408,
+        "relative_angular_velocity_deg_hour": -1.5191178670845484,
+        "relative_cycle_hours": 236.9796365379486,
+        "maximum_wait_hours": 140.23435147052643,
+        "mean_wait_hours": 49.3829800816549,
+        "parking_angular_velocity_rad_s": -4.699168284964583e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 265428.0249457022,
+        "altitude_km": 259050.02494570217,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          264428.0249457022,
+          266187.969772997
+        ],
+        "admissible_center_range_km": [
+          265187.969772997,
+          265428.0249457022
+        ],
+        "source_ids": [
+          157877,
+          204464,
+          222016,
+          277808
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.137500502645576,
+        "v_soi_mean_km_s": 2.0732550970443624,
+        "largest_gap_deg": 183.13578728313087,
+        "angular_gaps_deg": [
+          183.13578728313087,
+          72.04534034908022,
+          22.949148298766602,
+          81.86972406902231
+        ],
+        "sum_squared_gaps_deg2": 45958.562776603605,
+        "relative_angular_velocity_deg_hour": -1.502291003814163,
+        "relative_cycle_hours": 239.63399839711272,
+        "maximum_wait_hours": 121.90433598961044,
+        "mean_wait_hours": 42.489329316135155,
+        "parking_angular_velocity_rad_s": -4.6175893497281585e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 268168.88109346543,
+        "altitude_km": 261790.88109346543,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          267168.88109346543,
+          267931.1976399871
+        ],
+        "admissible_center_range_km": [
+          266931.1976399871,
+          268168.88109346543
+        ],
+        "source_ids": [
+          245257,
+          282964
+        ],
+        "asteroids_distinct": 871,
+        "v_soi_max_km_s": 2.0573841548234433,
+        "v_soi_mean_km_s": 2.0383381160984704,
+        "largest_gap_deg": 311.20654806819533,
+        "angular_gaps_deg": [
+          48.7934519318047,
+          311.20654806819533
+        ],
+        "sum_squared_gaps_deg2": 99230.31651194331,
+        "relative_angular_velocity_deg_hour": -1.48772647132754,
+        "relative_cycle_hours": 241.9799653620211,
+        "maximum_wait_hours": 209.18263811660017,
+        "mean_wait_hours": 92.63791879792605,
+        "parking_angular_velocity_rad_s": -4.5469785036433676e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 275673.99614610773,
+        "altitude_km": 269295.99614610773,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          274673.99614610773,
+          274673.99614610773
+        ],
+        "admissible_center_range_km": [
+          273673.99614610773,
+          275673.99614610773
+        ],
+        "source_ids": [
+          239525
+        ],
+        "asteroids_distinct": 871,
+        "v_soi_max_km_s": 2.0703880516233526,
+        "v_soi_mean_km_s": 2.0703880516233526,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.449688160476301,
+        "relative_cycle_hours": 248.32926819359588,
+        "maximum_wait_hours": 248.32926819359588,
+        "mean_wait_hours": 124.16463409679794,
+        "parking_angular_velocity_rad_s": -4.3625635685735865e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 280866.97638618515,
+        "altitude_km": 274488.97638618515,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          279866.97638618515,
+          281719.7637220536
+        ],
+        "admissible_center_range_km": [
+          280719.7637220536,
+          280866.97638618515
+        ],
+        "source_ids": [
+          198540,
+          233689,
+          293153,
+          402565,
+          420564
+        ],
+        "asteroids_distinct": 1147,
+        "v_soi_max_km_s": 2.035078571769844,
+        "v_soi_mean_km_s": 2.020063560242447,
+        "largest_gap_deg": 156.8966584036612,
+        "angular_gaps_deg": [
+          32.24110581966775,
+          46.94998233022241,
+          78.32470434758324,
+          45.587549098865395,
+          156.8966584036612
+        ],
+        "sum_squared_gaps_deg2": 36073.335107496154,
+        "relative_angular_velocity_deg_hour": -1.4248479191896435,
+        "relative_cycle_hours": 252.6585435200295,
+        "maximum_wait_hours": 110.11466998730177,
+        "mean_wait_hours": 35.16294871979137,
+        "parking_angular_velocity_rad_s": -4.242134680395252e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 284172.50445664866,
+        "altitude_km": 277794.50445664866,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          283172.50445664866,
+          284156.5995751187
+        ],
+        "admissible_center_range_km": [
+          283156.5995751187,
+          284172.50445664866
+        ],
+        "source_ids": [
+          152171,
+          402566,
+          408286
+        ],
+        "asteroids_distinct": 1303,
+        "v_soi_max_km_s": 2.1226027645113605,
+        "v_soi_mean_km_s": 2.043334869362327,
+        "largest_gap_deg": 218.49683993224815,
+        "angular_gaps_deg": [
+          131.53257459652698,
+          9.970585471224894,
+          218.49683993224815
+        ],
+        "sum_squared_gaps_deg2": 65141.099815008405,
+        "relative_angular_velocity_deg_hour": -1.4096251945347589,
+        "relative_cycle_hours": 255.38703578493894,
+        "maximum_wait_hours": 155.00350077409206,
+        "mean_wait_hours": 64.18284100897311,
+        "parking_angular_velocity_rad_s": -4.168332828630738e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 288142.6960363405,
+        "altitude_km": 281764.6960363405,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          287142.6960363405,
+          288966.86580848385
+        ],
+        "admissible_center_range_km": [
+          287966.86580848385,
+          288142.6960363405
+        ],
+        "source_ids": [
+          408246,
+          408247,
+          420513,
+          420514
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0322661846266157,
+        "v_soi_mean_km_s": 2.013783170018054,
+        "largest_gap_deg": 337.731974232239,
+        "angular_gaps_deg": [
+          3.058520651148271,
+          16.58613461155028,
+          2.6233705050624962,
+          337.731974232239
+        ],
+        "sum_squared_gaps_deg2": 114354.22290153855,
+        "relative_angular_velocity_deg_hour": -1.3919167427390273,
+        "relative_cycle_hours": 258.63615900731855,
+        "maximum_wait_hours": 242.63805719273606,
+        "mean_wait_hours": 114.10546673426187,
+        "parking_angular_velocity_rad_s": -4.082479831612343e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 290622.0778018648,
+        "altitude_km": 284244.0778018648,
+        "count": 5,
+        "fraction": 0.01466275659824047,
+        "member_radius_range_km": [
+          289622.0778018648,
+          291455.73524601775
+        ],
+        "admissible_center_range_km": [
+          290455.73524601775,
+          290622.0778018648
+        ],
+        "source_ids": [
+          267158,
+          408245,
+          420511,
+          420512,
+          420560
+        ],
+        "asteroids_distinct": 970,
+        "v_soi_max_km_s": 2.0448115223975276,
+        "v_soi_mean_km_s": 1.9897068531138529,
+        "largest_gap_deg": 209.6957078172498,
+        "angular_gaps_deg": [
+          3.3701160287657217,
+          20.1305586754127,
+          83.50929349245854,
+          43.294323986113255,
+          209.6957078172498
+        ],
+        "sum_squared_gaps_deg2": 53237.08754063309,
+        "relative_angular_velocity_deg_hour": -1.3811638168388478,
+        "relative_cycle_hours": 260.6497474166052,
+        "maximum_wait_hours": 151.82537021364556,
+        "mean_wait_hours": 53.53485115996031,
+        "parking_angular_velocity_rad_s": -4.030348175728703e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 293883.08633845934,
+        "altitude_km": 287505.08633845934,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          292883.08633845934,
+          294300.4056280587
+        ],
+        "admissible_center_range_km": [
+          293300.4056280587,
+          293883.08633845934
+        ],
+        "source_ids": [
+          272448,
+          420509,
+          420510
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.090836158467504,
+        "v_soi_mean_km_s": 2.005462767864731,
+        "largest_gap_deg": 211.8429750882061,
+        "angular_gaps_deg": [
+          3.753629705518648,
+          144.40339520627526,
+          211.8429750882061
+        ],
+        "sum_squared_gaps_deg2": 65743.87637728818,
+        "relative_angular_velocity_deg_hour": -1.3673654520983143,
+        "relative_cycle_hours": 263.2800173849323,
+        "maximum_wait_hours": 154.92783934471856,
+        "mean_wait_hours": 66.77873810017466,
+        "parking_angular_velocity_rad_s": -3.963451815697203e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 296682.88792188716,
+        "altitude_km": 290304.88792188716,
+        "count": 7,
+        "fraction": 0.020527859237536656,
+        "member_radius_range_km": [
+          295682.88792188716,
+          297620.0635001227
+        ],
+        "admissible_center_range_km": [
+          296620.0635001227,
+          296682.88792188716
+        ],
+        "source_ids": [
+          256353,
+          277632,
+          391886,
+          402536,
+          408287,
+          427290,
+          427291
+        ],
+        "asteroids_distinct": 1321,
+        "v_soi_max_km_s": 2.0933404234294906,
+        "v_soi_mean_km_s": 2.0494820034251733,
+        "largest_gap_deg": 167.7474519221605,
+        "angular_gaps_deg": [
+          5.135620750378244,
+          47.35371369048926,
+          54.95001468099052,
+          26.067638347381006,
+          29.857304068682538,
+          28.888256539917904,
+          167.7474519221605
+        ],
+        "sum_squared_gaps_deg2": 35832.972281766895,
+        "relative_angular_velocity_deg_hour": -1.355820362991767,
+        "relative_cycle_hours": 265.52190085537615,
+        "maximum_wait_hours": 123.72395082782744,
+        "mean_wait_hours": 36.70694025290413,
+        "parking_angular_velocity_rad_s": -3.907479644212373e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 299087.1816304148,
+        "altitude_km": 292709.1816304148,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          298087.1816304148,
+          300015.24172549334
+        ],
+        "admissible_center_range_km": [
+          299015.24172549334,
+          299087.1816304148
+        ],
+        "source_ids": [
+          180833,
+          402535,
+          427288,
+          427289
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.156014663570652,
+        "v_soi_mean_km_s": 2.043231142624478,
+        "largest_gap_deg": 231.98766804689967,
+        "angular_gaps_deg": [
+          5.751519138015162,
+          54.70212577926414,
+          231.98766804689967,
+          67.55868703582098
+        ],
+        "sum_squared_gaps_deg2": 61407.856857007915,
+        "relative_angular_velocity_deg_hour": -1.3461213401057628,
+        "relative_cycle_hours": 267.4350292758269,
+        "maximum_wait_hours": 172.33785776598174,
+        "mean_wait_hours": 63.3588425783939,
+        "parking_angular_velocity_rad_s": -3.86045745432708e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 302091.32687535026,
+        "altitude_km": 295713.32687535026,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          301091.32687535026,
+          302496.7280474988
+        ],
+        "admissible_center_range_km": [
+          301496.7280474988,
+          302091.32687535026
+        ],
+        "source_ids": [
+          397076,
+          420561,
+          427286,
+          427287
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0597807338245406,
+        "v_soi_mean_km_s": 2.0065026426813066,
+        "largest_gap_deg": 181.56298022814275,
+        "angular_gaps_deg": [
+          6.190669525669797,
+          69.8581810088191,
+          102.38816923736837,
+          181.56298022814275
+        ],
+        "sum_squared_gaps_deg2": 48366.94283214193,
+        "relative_angular_velocity_deg_hour": -1.3342730691498144,
+        "relative_cycle_hours": 269.80983752402983,
+        "maximum_wait_hours": 136.07632832148286,
+        "mean_wait_hours": 50.346747635317335,
+        "parking_angular_velocity_rad_s": -3.803015415757714e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 304727.37398714694,
+        "altitude_km": 298349.37398714694,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          303727.37398714694,
+          305606.6021806346
+        ],
+        "admissible_center_range_km": [
+          304606.6021806346,
+          304727.37398714694
+        ],
+        "source_ids": [
+          386879,
+          397075,
+          408288,
+          427285
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0484195248703694,
+        "v_soi_mean_km_s": 2.007057913281099,
+        "largest_gap_deg": 178.99668688753755,
+        "angular_gaps_deg": [
+          84.59492224974181,
+          61.773702481285724,
+          34.63468838143493,
+          178.99668688753755
+        ],
+        "sum_squared_gaps_deg2": 44211.66674468053,
+        "relative_angular_velocity_deg_hour": -1.3241165572651643,
+        "relative_cycle_hours": 271.8793885815804,
+        "maximum_wait_hours": 135.18197163642301,
+        "mean_wait_hours": 46.374386275911775,
+        "parking_angular_velocity_rad_s": -3.7537752566174154e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 307530.49145266047,
+        "altitude_km": 301152.49145266047,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          306530.49145266047,
+          306530.49145266047
+        ],
+        "admissible_center_range_km": [
+          305530.49145266047,
+          307530.49145266047
+        ],
+        "source_ids": [
+          221855
+        ],
+        "asteroids_distinct": 871,
+        "v_soi_max_km_s": 2.0925627009953276,
+        "v_soi_mean_km_s": 2.0925627009953276,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.3135545735657623,
+        "relative_cycle_hours": 274.06550686565504,
+        "maximum_wait_hours": 274.06550686565504,
+        "mean_wait_hours": 137.03275343282752,
+        "parking_angular_velocity_rad_s": -3.702569314646155e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 311847.8580786964,
+        "altitude_km": 305469.8580786964,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          310847.8580786964,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          309847.8580786964,
+          311847.8580786964
+        ],
+        "source_ids": [
+          386860
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 1.9876044054396074,
+        "v_soi_mean_km_s": 1.9876044054396074,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.2977498645333307,
+        "relative_cycle_hours": 277.40322679937674,
+        "maximum_wait_hours": 277.40322679937674,
+        "mean_wait_hours": 138.70161339968837,
+        "parking_angular_velocity_rad_s": -3.625945922997372e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 318365.8989371338,
+        "altitude_km": 311987.8989371338,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          317365.8989371338,
+          317365.8989371338
+        ],
+        "admissible_center_range_km": [
+          316365.8989371338,
+          318365.8989371338
+        ],
+        "source_ids": [
+          420562
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 1.986513465636008,
+        "v_soi_mean_km_s": 1.986513465636008,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.2748995603904638,
+        "relative_cycle_hours": 282.37518561049836,
+        "maximum_wait_hours": 282.37518561049836,
+        "mean_wait_hours": 141.18759280524918,
+        "parking_angular_velocity_rad_s": -3.5151645223376143e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 325373.2817367417,
+        "altitude_km": 318995.2817367417,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          324373.2817367417,
+          324373.2817367417
+        ],
+        "admissible_center_range_km": [
+          323373.2817367417,
+          325373.2817367417
+        ],
+        "source_ids": [
+          186601
+        ],
+        "asteroids_distinct": 889,
+        "v_soi_max_km_s": 2.1661636551837997,
+        "v_soi_mean_km_s": 2.1661636551837997,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.251603478230305,
+        "relative_cycle_hours": 287.6310319215629,
+        "maximum_wait_hours": 287.6310319215629,
+        "mean_wait_hours": 143.81551596078145,
+        "parking_angular_velocity_rad_s": -3.4022219288626456e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 328779.90651293186,
+        "altitude_km": 322401.90651293186,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          327779.90651293186,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          327818.6804644271,
+          328779.90651293186
+        ],
+        "source_ids": [
+          233487,
+          372764
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.118580547296328,
+        "v_soi_mean_km_s": 2.0678742098871004,
+        "largest_gap_deg": 253.60203679761548,
+        "angular_gaps_deg": [
+          106.39796320238452,
+          253.60203679761548
+        ],
+        "sum_squared_gaps_deg2": 75634.51964151509,
+        "relative_angular_velocity_deg_hour": -1.2407249617608973,
+        "relative_cycle_hours": 290.15294371854213,
+        "maximum_wait_hours": 204.39827086068382,
+        "mean_wait_hours": 84.66658379908756,
+        "parking_angular_velocity_rad_s": -3.3494813927172045e-06
+      },
+      {
+        "tolerance_km": 1000.0,
+        "radius_km": 349953.24187175307,
+        "altitude_km": 343575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          347953.24187175307,
+          349953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 1.9863749925843792,
+        "v_soi_mean_km_s": 1.9863749925843792,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.1789823316984878,
+        "relative_cycle_hours": 305.34808734696645,
+        "maximum_wait_hours": 305.34808734696645,
+        "mean_wait_hours": 152.67404367348323,
+        "parking_angular_velocity_rad_s": -3.0501446750977935e-06
+      }
+    ],
+    "5000": [
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 30760.55407690643,
+        "altitude_km": 24382.55407690643,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          25760.55407690643,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          24385.821386220894,
+          30760.55407690643
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          493656,
+          502848,
+          503219,
+          512879,
+          513050,
+          522964,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "asteroids_distinct": 353,
+        "v_soi_max_km_s": 2.000032765814024,
+        "v_soi_mean_km_s": 1.9736935038690144,
+        "largest_gap_deg": 359.3519162976216,
+        "angular_gaps_deg": [
+          0.0901195890511417,
+          0.05176874147491617,
+          0.05121880496750464,
+          0.0008719738837612567,
+          0.04915029133471194,
+          0.0033333966124189374,
+          0.04675335682443915,
+          0.006197276267158713,
+          0.04401326473404765,
+          0.10104290235508984,
+          0.0509651532053681,
+          0.005691733857190684,
+          0.04566252661334147,
+          0.0032425007228482627,
+          0.04857479080200733,
+          0.00039119935362919023,
+          0.0490862003188397,
+          359.3519162976216
+        ],
+        "sum_squared_gaps_deg2": 129133.83946496417,
+        "relative_angular_velocity_deg_hour": -24.691629569761126,
+        "relative_cycle_hours": 14.579839657115135,
+        "maximum_wait_hours": 14.553592555823283,
+        "mean_wait_hours": 7.263698586831883,
+        "parking_angular_velocity_rad_s": -0.00011704267527624892
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 134586.8746396932,
+        "altitude_km": 128208.87463969321,
+        "count": 30,
+        "fraction": 0.08797653958944282,
+        "member_radius_range_km": [
+          129586.87463969323,
+          138135.76415872737
+        ],
+        "admissible_center_range_km": [
+          133135.76415872737,
+          134586.87463969324
+        ],
+        "source_ids": [
+          397474,
+          397475,
+          402917,
+          402918,
+          402919,
+          408613,
+          408614,
+          408615,
+          408616,
+          408617,
+          414198,
+          414563,
+          414564,
+          414565,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772,
+          420773,
+          420774,
+          420775,
+          420776,
+          420777,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.042267358224748,
+        "v_soi_mean_km_s": 1.9952228600339332,
+        "largest_gap_deg": 174.04051628931936,
+        "angular_gaps_deg": [
+          2.769371545819609,
+          2.78618895597016,
+          2.803063218731368,
+          2.629764040533235,
+          0.19020675698331857,
+          2.8368847594955326,
+          0.07865368637731862,
+          0.6129626742908929,
+          2.1621632423683153,
+          0.34934002853252366,
+          0.8004507358105251,
+          1.7208348783051726,
+          0.6218181431431802,
+          0.9893085053169202,
+          1.2762685902749027,
+          0.896035705650128,
+          2.0080255239614466,
+          2.920598521366035,
+          1.1703213867720166,
+          3.1649197659270065,
+          0.4587651242424826,
+          2.631135191122077,
+          3.106454624928155,
+          132.14061348576382,
+          3.924348497380322,
+          174.04051628931936,
+          2.70296584514017,
+          2.7194183039864015,
+          2.735973939320502,
+          2.7526280331671273
+        ],
+        "sum_squared_gaps_deg2": 47888.00636459328,
+        "relative_angular_velocity_deg_hour": -3.1877339837409866,
+        "relative_cycle_hours": 112.93288644415667,
+        "maximum_wait_hours": 54.59693850773362,
+        "mean_wait_hours": 20.86470210188914,
+        "parking_angular_velocity_rad_s": -1.278884750371365e-05
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 145200.94683247578,
+        "altitude_km": 138822.94683247578,
+        "count": 33,
+        "fraction": 0.0967741935483871,
+        "member_radius_range_km": [
+          140200.94683247578,
+          150092.97370113168
+        ],
+        "admissible_center_range_km": [
+          145092.97370113168,
+          145200.94683247578
+        ],
+        "source_ids": [
+          373068,
+          377694,
+          382347,
+          386903,
+          387161,
+          387238,
+          387239,
+          391906,
+          392170,
+          392171,
+          397130,
+          397380,
+          397381,
+          397382,
+          402816,
+          402817,
+          402818,
+          408500,
+          408501,
+          408502,
+          408503,
+          408504,
+          414276,
+          414277,
+          414439,
+          414440,
+          414441,
+          414442,
+          414443,
+          414444,
+          414445,
+          420565,
+          427342
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0577983925975802,
+        "v_soi_mean_km_s": 2.0064760829361505,
+        "largest_gap_deg": 131.18829289616284,
+        "angular_gaps_deg": [
+          3.552907589991396,
+          8.117200716693082,
+          12.110887147157719,
+          3.97858062319213,
+          2.4199697115295393,
+          10.949698356289176,
+          131.18829289616284,
+          0.3503714554951216,
+          0.04512772162121337,
+          2.1160659855261486,
+          2.1017633570105545,
+          0.29400880079396075,
+          124.04561426378004,
+          1.381061032211278,
+          1.0963183615995717,
+          1.5045919425618308,
+          0.9886229830981392,
+          1.628959835351509,
+          0.8801410487969861,
+          1.7541533338030035,
+          0.7708767073826834,
+          1.8801608363046967,
+          0.6608351376723931,
+          2.5569947303582126,
+          1.114753394914544,
+          2.8532043385808947,
+          2.8711303009009725,
+          7.107150219512334,
+          6.184024439946711,
+          3.169310416193696,
+          3.188927189017477,
+          3.013360155549549,
+          14.124934971000584
+        ],
+        "sum_squared_gaps_deg2": 33332.70423529057,
+        "relative_angular_velocity_deg_hour": -2.903844685584315,
+        "relative_cycle_hours": 123.97357261811004,
+        "maximum_wait_hours": 45.17744821113426,
+        "mean_wait_hours": 15.942802581295446,
+        "parking_angular_velocity_rad_s": -1.1412513347044264e-05
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 155367.32995166283,
+        "altitude_km": 148989.32995166283,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          150367.32995166283,
+          160151.03410059898
+        ],
+        "admissible_center_range_km": [
+          155151.03410059898,
+          155367.32995166283
+        ],
+        "source_ids": [
+          350726,
+          355088,
+          355135,
+          359431,
+          363869,
+          368415,
+          368470,
+          373010,
+          377573,
+          377630,
+          382280,
+          387088,
+          387160,
+          392096,
+          392097,
+          397131,
+          397299,
+          397300,
+          402732,
+          414199,
+          414278,
+          420645,
+          420646,
+          420647,
+          420648,
+          427343
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0601032346441523,
+        "v_soi_mean_km_s": 2.01765918120792,
+        "largest_gap_deg": 112.03024563154236,
+        "angular_gaps_deg": [
+          24.040268987113883,
+          1.1721882963466541,
+          0.9135559212442459,
+          0.5629711007224429,
+          4.4715320784529595,
+          28.280856630953267,
+          112.03024563154236,
+          2.830901828175854,
+          4.296839343543837,
+          2.069077329226758,
+          64.20644070679305,
+          2.042989446490992,
+          2.05450128711513,
+          2.066273566927265,
+          20.01793860041647,
+          19.922040232324605,
+          2.7674344954373282,
+          9.380050724485386,
+          11.309435119089642,
+          3.133705532308852,
+          9.096188442283562,
+          4.9458610789365025,
+          9.736788037657504,
+          11.039398780046838,
+          2.7404863404663047,
+          4.872030461898305
+        ],
+        "sum_squared_gaps_deg2": 19503.022207127884,
+        "relative_angular_velocity_deg_hour": -2.6766174029408263,
+        "relative_cycle_hours": 134.49811676650702,
+        "maximum_wait_hours": 41.855158495365686,
+        "mean_wait_hours": 10.120060795193154,
+        "parking_angular_velocity_rad_s": -1.0310884393575197e-05
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 165524.9228384128,
+        "altitude_km": 159146.9228384128,
+        "count": 42,
+        "fraction": 0.12316715542521994,
+        "member_radius_range_km": [
+          160524.9228384128,
+          169940.2654900019
+        ],
+        "admissible_center_range_km": [
+          164940.2654900019,
+          165524.9228384128
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          337992,
+          342198,
+          346386,
+          350682,
+          355043,
+          359337,
+          359382,
+          363770,
+          363819,
+          368364,
+          372956,
+          377523,
+          382059,
+          382221,
+          387028,
+          392032,
+          392033,
+          397229,
+          397230,
+          402606,
+          402730,
+          402731,
+          408409,
+          408410,
+          408411,
+          408412,
+          414200,
+          414342,
+          414343,
+          414344,
+          414345,
+          414346,
+          420640,
+          420641,
+          420642,
+          420643,
+          420644,
+          427284,
+          427344,
+          427345
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.105806596904532,
+        "v_soi_mean_km_s": 2.010083614808792,
+        "largest_gap_deg": 101.35095045549741,
+        "angular_gaps_deg": [
+          11.401466082478443,
+          7.045262269631314,
+          15.246269972927188,
+          21.24921913870844,
+          16.595093786917474,
+          101.35095045549741,
+          0.18678773773839907,
+          0.9786929706466481,
+          6.182909862904836,
+          14.415920038156543,
+          1.9790954749948924,
+          36.162653650016665,
+          1.3062238867701126,
+          0.7187621403552384,
+          1.271044055900262,
+          0.7637855596877898,
+          1.2360145999165297,
+          0.8090383773207463,
+          1.2010969666071958,
+          0.8545332542528286,
+          1.1662572744629358,
+          4.718219323939195,
+          0.6513995972467796,
+          1.5365635767740002,
+          0.8545860363066993,
+          1.3458806268551484,
+          2.2132553020085766,
+          12.012925737865771,
+          1.825686530823134,
+          0.6069049474018584,
+          5.325398639038838,
+          2.739829331990393,
+          15.484772141373014,
+          3.4155592974512388,
+          26.103862942759633,
+          0.6132324838839054,
+          0.9609030945058521,
+          2.239509774229589,
+          26.644425811621943,
+          2.6517688951719833,
+          1.2084710023341927,
+          4.725767350526382
+        ],
+        "sum_squared_gaps_deg2": 14876.137543352503,
+        "relative_angular_velocity_deg_hour": -2.483885103036957,
+        "relative_cycle_hours": 144.93424013849955,
+        "maximum_wait_hours": 40.80339719883953,
+        "mean_wait_hours": 8.31813924012963,
+        "parking_angular_velocity_rad_s": -9.376491835724176e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 175742.86875734117,
+        "altitude_km": 169364.86875734117,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          170742.86875734117,
+          180482.75140776904
+        ],
+        "admissible_center_range_km": [
+          175482.75140776904,
+          175742.86875734117
+        ],
+        "source_ids": [
+          293643,
+          304124,
+          309612,
+          315085,
+          320913,
+          329979,
+          333670,
+          346113,
+          346271,
+          359295,
+          363727,
+          368318,
+          372867,
+          372907,
+          377479,
+          382169,
+          382170,
+          386975,
+          391978,
+          391979,
+          402658,
+          402659,
+          402660,
+          408335,
+          408336,
+          408337
+        ],
+        "asteroids_distinct": 1480,
+        "v_soi_max_km_s": 2.1022860901699465,
+        "v_soi_mean_km_s": 2.0179149154674216,
+        "largest_gap_deg": 82.65957122884535,
+        "angular_gaps_deg": [
+          40.86952102612459,
+          3.0908305437136647,
+          6.020367197894963,
+          4.067804936796826,
+          20.498323331424388,
+          82.65957122884535,
+          2.8545055228958347,
+          30.248106652230774,
+          2.006559954822592,
+          1.99700228680976,
+          20.790826312203848,
+          2.1223360485386706,
+          2.1298602213088316,
+          8.03756489797317,
+          3.9062685648252398,
+          2.418258667463931,
+          20.502082739947298,
+          0.05042646071382251,
+          0.8920278257302243,
+          1.9104686740446368,
+          24.673581581917347,
+          2.9279223665586755,
+          1.4152669412591763,
+          3.7015715633617106,
+          16.27987641011316,
+          53.929068042481504
+        ],
+        "sum_squared_gaps_deg2": 14674.792976261946,
+        "relative_angular_velocity_deg_hour": -2.3176892309642168,
+        "relative_cycle_hours": 155.3271228905141,
+        "maximum_wait_hours": 35.66464827316685,
+        "mean_wait_hours": 8.793955910558227,
+        "parking_angular_velocity_rad_s": -8.57075151047623e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 186221.6853884938,
+        "altitude_km": 179843.6853884938,
+        "count": 26,
+        "fraction": 0.07624633431085044,
+        "member_radius_range_km": [
+          181221.6853884938,
+          190527.30286851572
+        ],
+        "admissible_center_range_km": [
+          185527.30286851572,
+          186221.6853884938
+        ],
+        "source_ids": [
+          283330,
+          288431,
+          298712,
+          309563,
+          315032,
+          320858,
+          325777,
+          329916,
+          333849,
+          337891,
+          342092,
+          346102,
+          350567,
+          359255,
+          363599,
+          363689,
+          368278,
+          372834,
+          377397,
+          377443,
+          382124,
+          386935,
+          391935,
+          391936,
+          397174,
+          397175
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.0925886602205104,
+        "v_soi_mean_km_s": 2.016801141278514,
+        "largest_gap_deg": 84.14753038413855,
+        "angular_gaps_deg": [
+          1.5330430601371536,
+          9.590348228830015,
+          33.44686471192679,
+          2.085121027679101,
+          36.816872478466486,
+          84.14753038413855,
+          5.7543357428425566,
+          5.235802709023005,
+          25.95162154761013,
+          0.08735068101384513,
+          2.1431808489313937,
+          4.114763153970472,
+          2.156218583389659,
+          20.438897067610668,
+          0.6146938462799199,
+          2.323723602554338,
+          29.313650547063446,
+          2.162625858300771,
+          4.164150467179184,
+          12.243016293621508,
+          12.54434454460511,
+          7.198547460444388,
+          17.114332877338768,
+          14.400503415835146,
+          15.984707063468647,
+          8.433753797738973
+        ],
+        "sum_squared_gaps_deg2": 12904.666863671817,
+        "relative_angular_velocity_deg_hour": -2.1705918253363055,
+        "relative_cycle_hours": 165.85338422355045,
+        "maximum_wait_hours": 38.767090800731715,
+        "mean_wait_hours": 8.257263393585964,
+        "parking_angular_velocity_rad_s": -7.857603163434927e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 197784.95884042172,
+        "altitude_km": 191406.95884042172,
+        "count": 20,
+        "fraction": 0.05865102639296188,
+        "member_radius_range_km": [
+          192784.95884042172,
+          202232.44816422756
+        ],
+        "admissible_center_range_km": [
+          197232.44816422756,
+          197784.95884042172
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          283273,
+          293580,
+          304054,
+          314981,
+          320803,
+          325720,
+          333788,
+          350536,
+          354891,
+          359220,
+          363632,
+          363658,
+          372787,
+          372807,
+          377416,
+          382086
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1086143360205765,
+        "v_soi_mean_km_s": 2.0380024933124066,
+        "largest_gap_deg": 92.6698719095431,
+        "angular_gaps_deg": [
+          2.342866347477928,
+          33.92992870290624,
+          14.54256904356982,
+          14.577155049942675,
+          14.566094884384952,
+          92.6698719095431,
+          20.570636918549496,
+          3.105173678656598,
+          3.9118304633633443,
+          8.644245704773994,
+          23.012657499697212,
+          4.625224506411087,
+          6.761879595594337,
+          5.865360509308346,
+          30.65123391675678,
+          15.94334434230609,
+          9.63791410702595,
+          9.265772698430169,
+          23.03506773963636,
+          22.3411723816655
+        ],
+        "sum_squared_gaps_deg2": 13936.678943473498,
+        "relative_angular_velocity_deg_hour": -2.0305572275129444,
+        "relative_cycle_hours": 177.29123568752266,
+        "maximum_wait_hours": 45.63765583846484,
+        "mean_wait_hours": 9.53260428730206,
+        "parking_angular_velocity_rad_s": -7.178696274900557e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 207853.14404766916,
+        "altitude_km": 201475.14404766916,
+        "count": 15,
+        "fraction": 0.04398826979472141,
+        "member_radius_range_km": [
+          202853.14404766916,
+          212842.31139468204
+        ],
+        "admissible_center_range_km": [
+          207842.31139468204,
+          207853.14404766916
+        ],
+        "source_ids": [
+          256720,
+          262184,
+          267526,
+          272841,
+          293528,
+          298644,
+          303996,
+          309510,
+          320748,
+          329862,
+          337754,
+          337832,
+          346181,
+          354860,
+          363612
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1033100695555698,
+        "v_soi_mean_km_s": 2.0488369077325994,
+        "largest_gap_deg": 134.5518845593025,
+        "angular_gaps_deg": [
+          12.761138859619445,
+          13.019546111116934,
+          13.238214450976137,
+          134.5518845593025,
+          26.540459372529284,
+          34.697805813061535,
+          14.681347697613575,
+          15.284348726884389,
+          14.748494172379765,
+          2.0686155299414395,
+          28.64000412810293,
+          8.882084577018134,
+          12.323105933253828,
+          9.79060187827838,
+          18.77234818992173
+        ],
+        "sum_squared_gaps_deg2": 22690.35659941222,
+        "relative_angular_velocity_deg_hour": -1.9242845814462444,
+        "relative_cycle_hours": 187.0825154819008,
+        "maximum_wait_hours": 69.92306951717954,
+        "mean_wait_hours": 16.37719517669516,
+        "parking_angular_velocity_rad_s": -6.6634719474920785e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 218259.7396560563,
+        "altitude_km": 211881.7396560563,
+        "count": 15,
+        "fraction": 0.04398826979472141,
+        "member_radius_range_km": [
+          213259.7396560563,
+          223142.61045513794
+        ],
+        "admissible_center_range_km": [
+          218142.61045513794,
+          218259.7396560563
+        ],
+        "source_ids": [
+          216213,
+          239737,
+          245464,
+          278050,
+          288298,
+          298579,
+          309440,
+          314886,
+          320405,
+          325670,
+          329814,
+          342009,
+          346157,
+          350475,
+          359139
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.117728086327414,
+        "v_soi_mean_km_s": 2.045462321039844,
+        "largest_gap_deg": 89.34095823819062,
+        "angular_gaps_deg": [
+          5.580958728520251,
+          35.357983649406954,
+          89.34095823819062,
+          19.90003790666688,
+          11.467349242335018,
+          26.16187677186977,
+          8.012175983661791,
+          7.977104685073158,
+          25.475153685692277,
+          2.0707626441492835,
+          8.55221128887996,
+          20.866285622763144,
+          4.257749728574993,
+          41.34079885672776,
+          53.63859296748814
+        ],
+        "sum_squared_gaps_deg2": 16369.027938961932,
+        "relative_angular_velocity_deg_hour": -1.8271661329276345,
+        "relative_cycle_hours": 197.0264189513948,
+        "maximum_wait_hours": 48.89591407599114,
+        "mean_wait_hours": 12.442634863152005,
+        "parking_angular_velocity_rad_s": -6.192628422192539e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 229948.6524696981,
+        "altitude_km": 223570.6524696981,
+        "count": 11,
+        "fraction": 0.03225806451612903,
+        "member_radius_range_km": [
+          224948.6524696981,
+          234638.5224278745
+        ],
+        "admissible_center_range_km": [
+          229638.5224278745,
+          229948.6524696981
+        ],
+        "source_ids": [
+          198704,
+          228069,
+          233905,
+          262106,
+          267440,
+          272747,
+          293415,
+          303918,
+          320679,
+          325605,
+          337774
+        ],
+        "asteroids_distinct": 2036,
+        "v_soi_max_km_s": 2.1176722634137386,
+        "v_soi_mean_km_s": 2.0485360517416322,
+        "largest_gap_deg": 99.41461126951513,
+        "angular_gaps_deg": [
+          5.134159359414415,
+          74.15140958120573,
+          99.41461126951513,
+          26.48002151189155,
+          8.998250997922526,
+          29.10371193501561,
+          5.099952577405702,
+          27.79875455491083,
+          11.675008907929623,
+          11.69341413985751,
+          60.45070516493138
+        ],
+        "sum_squared_gaps_deg2": 21763.351971044496,
+        "relative_angular_velocity_deg_hour": -1.7310199792482464,
+        "relative_cycle_hours": 207.96986997015603,
+        "maximum_wait_hours": 57.43123271904076,
+        "mean_wait_hours": 17.4618884241237,
+        "parking_angular_velocity_rad_s": -5.726498715294266e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 240462.85660018265,
+        "altitude_km": 234084.85660018265,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          235462.85660018265,
+          243112.28145980753
+        ],
+        "admissible_center_range_km": [
+          238112.28145980753,
+          240462.85660018265
+        ],
+        "source_ids": [
+          192776,
+          204554,
+          222124,
+          251005,
+          277949,
+          283112,
+          298450,
+          314803,
+          333657
+        ],
+        "asteroids_distinct": 2270,
+        "v_soi_max_km_s": 2.1322803242911577,
+        "v_soi_mean_km_s": 2.062436191611626,
+        "largest_gap_deg": 138.54983099756333,
+        "angular_gaps_deg": [
+          26.508725240980276,
+          32.7282436746754,
+          138.54983099756333,
+          15.688140307008865,
+          14.285861370377262,
+          30.207405611830808,
+          11.496145660097795,
+          43.02845126027512,
+          47.50719587719118
+        ],
+        "sum_squared_gaps_deg2": 26573.139695577644,
+        "relative_angular_velocity_deg_hour": -1.6544030235385971,
+        "relative_cycle_hours": 217.6011497065553,
+        "maximum_wait_hours": 83.74611810199643,
+        "mean_wait_hours": 22.30843267388348,
+        "parking_angular_velocity_rad_s": -5.355049231964251e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 251259.41159802678,
+        "altitude_km": 244881.41159802678,
+        "count": 9,
+        "fraction": 0.026392961876832845,
+        "member_radius_range_km": [
+          246259.41159802678,
+          256153.02453427776
+        ],
+        "admissible_center_range_km": [
+          251153.02453427776,
+          251259.41159802678
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          198645,
+          288167,
+          303779,
+          309309,
+          314702,
+          320588,
+          325519
+        ],
+        "asteroids_distinct": 2270,
+        "v_soi_max_km_s": 2.107329625676881,
+        "v_soi_mean_km_s": 2.0523458838773903,
+        "largest_gap_deg": 131.6211176207463,
+        "angular_gaps_deg": [
+          31.00958267875398,
+          55.9189110685349,
+          86.67190347477548,
+          5.10229959083938,
+          4.227448371720982,
+          15.659206700558258,
+          4.7346487137191104,
+          25.054881780351593,
+          131.6211176207463
+        ],
+        "sum_squared_gaps_deg2": 29863.935823487096,
+        "relative_angular_velocity_deg_hour": -1.5839794969163339,
+        "relative_cycle_hours": 227.27566909852197,
+        "maximum_wait_hours": 83.09521548541771,
+        "mean_wait_hours": 26.185748442123263,
+        "parking_angular_velocity_rad_s": -5.013626340179701e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 261377.84367499105,
+        "altitude_km": 254999.84367499105,
+        "count": 12,
+        "fraction": 0.03519061583577713,
+        "member_radius_range_km": [
+          256377.84367499105,
+          266187.969772997
+        ],
+        "admissible_center_range_km": [
+          261187.96977299702,
+          261377.84367499105
+        ],
+        "source_ids": [
+          157877,
+          163670,
+          169393,
+          192704,
+          204464,
+          222016,
+          250897,
+          261993,
+          267316,
+          272615,
+          277808,
+          298347
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.137500502645576,
+        "v_soi_mean_km_s": 2.05972401036121,
+        "largest_gap_deg": 117.12499352662466,
+        "angular_gaps_deg": [
+          42.877449832295284,
+          14.466415902305101,
+          38.56364963666597,
+          117.12499352662466,
+          27.44714411984023,
+          10.370000964387714,
+          10.431963537890852,
+          10.509526641888158,
+          8.69893618696625,
+          32.03491301794725,
+          22.949148298766602,
+          24.525858334421912
+        ],
+        "sum_squared_gaps_deg2": 20563.41900645126,
+        "relative_angular_velocity_deg_hour": -1.5245144926642504,
+        "relative_cycle_hours": 236.14075283132397,
+        "maximum_wait_hours": 76.82773374094748,
+        "mean_wait_hours": 18.73403258090029,
+        "parking_angular_velocity_rad_s": -4.725331864093235e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 272168.88109346543,
+        "altitude_km": 265790.88109346543,
+        "count": 3,
+        "fraction": 0.008797653958944282,
+        "member_radius_range_km": [
+          267168.88109346543,
+          274673.99614610773
+        ],
+        "admissible_center_range_km": [
+          269673.99614610773,
+          272168.88109346543
+        ],
+        "source_ids": [
+          239525,
+          245257,
+          282964
+        ],
+        "asteroids_distinct": 871,
+        "v_soi_max_km_s": 2.0703880516233526,
+        "v_soi_mean_km_s": 2.049021427940098,
+        "largest_gap_deg": 311.20654806819533,
+        "angular_gaps_deg": [
+          47.608749313886534,
+          1.1847026179181626,
+          311.20654806819533
+        ],
+        "sum_squared_gaps_deg2": 99117.51209204737,
+        "relative_angular_velocity_deg_hour": -1.4671268966663917,
+        "relative_cycle_hours": 245.37754765316663,
+        "maximum_wait_hours": 212.11972105161414,
+        "mean_wait_hours": 93.83183659965152,
+        "parking_angular_velocity_rad_s": -4.447108947435747e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 284866.97638618515,
+        "altitude_km": 278488.97638618515,
+        "count": 13,
+        "fraction": 0.03812316715542522,
+        "member_radius_range_km": [
+          279866.97638618515,
+          289622.0778018648
+        ],
+        "admissible_center_range_km": [
+          284622.0778018648,
+          284866.97638618515
+        ],
+        "source_ids": [
+          152171,
+          198540,
+          233689,
+          293153,
+          402565,
+          402566,
+          408246,
+          408247,
+          408286,
+          420513,
+          420514,
+          420560,
+          420564
+        ],
+        "asteroids_distinct": 1480,
+        "v_soi_max_km_s": 2.1226027645113605,
+        "v_soi_mean_km_s": 2.0190084104173627,
+        "largest_gap_deg": 78.32470434758324,
+        "angular_gaps_deg": [
+          59.36772496674546,
+          3.058520651148271,
+          16.58613461155028,
+          2.6233705050624962,
+          14.538684331143926,
+          32.24110581966775,
+          3.1170337112087907,
+          9.970585471224894,
+          18.298283106370377,
+          15.56408004141835,
+          78.32470434758324,
+          45.587549098865395,
+          60.72222333801079
+        ],
+        "sum_squared_gaps_deg2": 17653.094074077013,
+        "relative_angular_velocity_deg_hour": -1.406483047575126,
+        "relative_cycle_hours": 255.9575820132812,
+        "maximum_wait_hours": 55.68833871309039,
+        "mean_wait_hours": 17.43226571857151,
+        "parking_angular_velocity_rad_s": -4.153099270289869e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 295020.27633087116,
+        "altitude_km": 288642.27633087116,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          290020.27633087116,
+          300015.24172549334
+        ],
+        "admissible_center_range_km": [
+          295015.24172549334,
+          295020.27633087116
+        ],
+        "source_ids": [
+          180833,
+          256353,
+          267158,
+          272448,
+          277632,
+          391886,
+          402535,
+          402536,
+          408245,
+          408287,
+          420509,
+          420510,
+          420511,
+          420512,
+          427288,
+          427289,
+          427290,
+          427291
+        ],
+        "asteroids_distinct": 2192,
+        "v_soi_max_km_s": 2.156014663570652,
+        "v_soi_mean_km_s": 2.0290314954212945,
+        "largest_gap_deg": 88.98910697151757,
+        "angular_gaps_deg": [
+          5.751519138015162,
+          5.448138776806786,
+          5.135620750378244,
+          19.60200770953412,
+          3.753629705518648,
+          3.5520770421908594,
+          3.3701160287657217,
+          13.840535766069763,
+          3.2353474384101446,
+          3.054675470932793,
+          51.89533921005773,
+          26.067638347381006,
+          29.857304068682538,
+          9.530361833784724,
+          9.452974018665799,
+          9.904920687467381,
+          88.98910697151757,
+          67.55868703582098
+        ],
+        "sum_squared_gaps_deg2": 17748.43703904583,
+        "relative_angular_velocity_deg_hour": -1.3626431674942239,
+        "relative_cycle_hours": 264.1924229231686,
+        "maximum_wait_hours": 65.3062438460396,
+        "mean_wait_hours": 18.090287748629727,
+        "parking_angular_velocity_rad_s": -3.940557533875642e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 306091.32687535026,
+        "altitude_km": 299713.32687535026,
+        "count": 10,
+        "fraction": 0.02932551319648094,
+        "member_radius_range_km": [
+          301091.32687535026,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          305847.8580786964,
+          306091.32687535026
+        ],
+        "source_ids": [
+          221855,
+          386860,
+          386879,
+          397075,
+          397076,
+          408288,
+          420561,
+          427285,
+          427286,
+          427287
+        ],
+        "asteroids_distinct": 1303,
+        "v_soi_max_km_s": 2.0925627009953276,
+        "v_soi_mean_km_s": 2.013440933028456,
+        "largest_gap_deg": 99.55228888880117,
+        "angular_gaps_deg": [
+          12.122005150444739,
+          6.190669525669797,
+          66.28224757362727,
+          3.5759334351918284,
+          7.903460185353481,
+          50.294308860740415,
+          34.63468838143493,
+          9.55571180983955,
+          69.88868618889683,
+          99.55228888880117
+        ],
+        "sum_squared_gaps_deg2": 23269.33317575026,
+        "relative_angular_velocity_deg_hour": -1.3189470569311517,
+        "relative_cycle_hours": 272.94499662300836,
+        "maximum_wait_hours": 75.47860876268497,
+        "mean_wait_hours": 24.5032718559985,
+        "parking_angular_velocity_rad_s": -3.7287128117531186e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 322365.8989371338,
+        "altitude_km": 315987.8989371338,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          317365.8989371338,
+          324373.2817367417
+        ],
+        "admissible_center_range_km": [
+          319373.2817367417,
+          322365.8989371338
+        ],
+        "source_ids": [
+          186601,
+          420562
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.1661636551837997,
+        "v_soi_mean_km_s": 2.076338560409904,
+        "largest_gap_deg": 303.04283229245186,
+        "angular_gaps_deg": [
+          56.957167707548166,
+          303.04283229245186
+        ],
+        "sum_squared_gaps_deg2": 95079.07715709688,
+        "relative_angular_velocity_deg_hour": -1.261446507978983,
+        "relative_cycle_hours": 285.3866554966102,
+        "maximum_wait_hours": 240.2343899448972,
+        "mean_wait_hours": 104.6847987560495,
+        "parking_angular_velocity_rad_s": -3.4499422837199187e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 332779.90651293186,
+        "altitude_km": 326401.90651293186,
+        "count": 2,
+        "fraction": 0.005865102639296188,
+        "member_radius_range_km": [
+          327779.90651293186,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          323818.6804644271,
+          332779.90651293186
+        ],
+        "source_ids": [
+          233487,
+          372764
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.118580547296328,
+        "v_soi_mean_km_s": 2.0678742098871004,
+        "largest_gap_deg": 253.60203679761548,
+        "angular_gaps_deg": [
+          106.39796320238452,
+          253.60203679761548
+        ],
+        "sum_squared_gaps_deg2": 75634.51964151509,
+        "relative_angular_velocity_deg_hour": -1.2283059451352392,
+        "relative_cycle_hours": 293.08658923763755,
+        "maximum_wait_hours": 206.4648777464749,
+        "mean_wait_hours": 85.52262110477918,
+        "parking_angular_velocity_rad_s": -3.289272301056745e-06
+      },
+      {
+        "tolerance_km": 5000.0,
+        "radius_km": 353953.24187175307,
+        "altitude_km": 347575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          343953.24187175307,
+          353953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 1.9863749925843792,
+        "v_soi_mean_km_s": 1.9863749925843792,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.1683477629796566,
+        "relative_cycle_hours": 308.1274355179027,
+        "maximum_wait_hours": 308.1274355179027,
+        "mean_wait_hours": 154.06371775895136,
+        "parking_angular_velocity_rad_s": -2.998586831021905e-06
+      }
+    ],
+    "10000": [
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 35760.554076906425,
+        "altitude_km": 29382.554076906425,
+        "count": 18,
+        "fraction": 0.05278592375366569,
+        "member_radius_range_km": [
+          25760.55407690643,
+          29385.821386220894
+        ],
+        "admissible_center_range_km": [
+          19385.821386220894,
+          35760.554076906425
+        ],
+        "source_ids": [
+          466536,
+          474984,
+          475162,
+          483946,
+          484141,
+          493260,
+          493451,
+          493656,
+          502848,
+          503219,
+          512879,
+          513050,
+          522964,
+          523124,
+          523289,
+          533338,
+          533492,
+          543927
+        ],
+        "asteroids_distinct": 353,
+        "v_soi_max_km_s": 2.000032765814024,
+        "v_soi_mean_km_s": 1.9736935038690144,
+        "largest_gap_deg": 359.3519162976216,
+        "angular_gaps_deg": [
+          0.0901195890511417,
+          0.05176874147491617,
+          0.05121880496750464,
+          0.0008719738837612567,
+          0.04915029133471194,
+          0.0033333966124189374,
+          0.04675335682443915,
+          0.006197276267158713,
+          0.04401326473404765,
+          0.10104290235508984,
+          0.0509651532053681,
+          0.005691733857190684,
+          0.04566252661334147,
+          0.0032425007228482627,
+          0.04857479080200733,
+          0.00039119935362919023,
+          0.0490862003188397,
+          359.3519162976216
+        ],
+        "sum_squared_gaps_deg2": 129133.83946496417,
+        "relative_angular_velocity_deg_hour": -19.809754477127317,
+        "relative_cycle_hours": 18.17286531318004,
+        "maximum_wait_hours": 18.140149930305068,
+        "mean_wait_hours": 9.05374950605944,
+        "parking_angular_velocity_rad_s": -9.337467693248137e-05
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 139586.8746396932,
+        "altitude_km": 133208.8746396932,
+        "count": 60,
+        "fraction": 0.17595307917888564,
+        "member_radius_range_km": [
+          129586.87463969323,
+          149262.09437376406
+        ],
+        "admissible_center_range_km": [
+          139262.09437376406,
+          139586.87463969324
+        ],
+        "source_ids": [
+          373068,
+          377694,
+          382347,
+          386903,
+          387238,
+          387239,
+          391906,
+          392170,
+          392171,
+          397130,
+          397380,
+          397381,
+          397382,
+          397474,
+          397475,
+          402816,
+          402817,
+          402818,
+          402917,
+          402918,
+          402919,
+          408501,
+          408502,
+          408503,
+          408504,
+          408613,
+          408614,
+          408615,
+          408616,
+          408617,
+          414198,
+          414276,
+          414439,
+          414440,
+          414441,
+          414442,
+          414443,
+          414444,
+          414445,
+          414563,
+          414564,
+          414565,
+          420565,
+          420768,
+          420769,
+          420770,
+          420771,
+          420772,
+          420773,
+          420774,
+          420775,
+          420776,
+          420777,
+          420778,
+          420779,
+          420780,
+          420781,
+          420782,
+          427341,
+          427342
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.0539127054578556,
+        "v_soi_mean_km_s": 2.00075755096381,
+        "largest_gap_deg": 129.46285907006882,
+        "angular_gaps_deg": [
+          0.5320458767642784,
+          2.237325669055331,
+          1.315581920936065,
+          1.470607035034095,
+          2.803063218731368,
+          2.629764040533235,
+          0.19020675698331857,
+          1.0235596654110655,
+          1.8133250940844672,
+          0.07865368637731862,
+          0.6129626742908929,
+          2.1621632423683153,
+          0.34934002853252366,
+          0.8004507358105251,
+          1.7208348783051726,
+          0.6218181431431802,
+          0.9893085053169202,
+          1.2762685902749027,
+          0.896035705650128,
+          0.7897258630033726,
+          1.218299660958074,
+          2.760280962234056,
+          0.16031755913197898,
+          1.1703213867720166,
+          1.0893307656255438,
+          2.0755890003014628,
+          0.4587651242424826,
+          2.631135191122077,
+          3.106454624928155,
+          2.6777544156949986,
+          129.46285907006882,
+          1.7254338260940187,
+          0.3503714554951216,
+          0.04512772162121337,
+          1.8034154941699683,
+          0.3126504913561803,
+          2.1017633570105545,
+          124.339623064574,
+          2.4773793938108497,
+          1.5045919425618308,
+          0.9886229830981392,
+          1.628959835351509,
+          0.8801410487969861,
+          1.7541533338030035,
+          0.7708767073826834,
+          1.8801608363046967,
+          0.6608351376723931,
+          2.5569947303582126,
+          1.114753394914544,
+          2.8532043385808947,
+          2.8711303009009725,
+          7.107150219512334,
+          6.184024439946711,
+          3.169310416193696,
+          3.188927189017477,
+          5.695263128171689,
+          2.70296584514017,
+          2.7194183039864015,
+          2.735973939320502,
+          2.7526280331671273
+        ],
+        "sum_squared_gaps_deg2": 32529.10115556217,
+        "relative_angular_velocity_deg_hour": -3.047277158021097,
+        "relative_cycle_hours": 118.13825304744651,
+        "maximum_wait_hours": 42.48476668073804,
+        "mean_wait_hours": 14.826123393988382,
+        "parking_angular_velocity_rad_s": -1.2107893596571448e-05
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 159849.89744357605,
+        "altitude_km": 153471.89744357605,
+        "count": 70,
+        "fraction": 0.20527859237536658,
+        "member_radius_range_km": [
+          149849.89744357605,
+          169606.52747529576
+        ],
+        "admissible_center_range_km": [
+          159606.52747529576,
+          159849.89744357605
+        ],
+        "source_ids": [
+          325867,
+          333951,
+          337992,
+          342198,
+          346386,
+          350682,
+          350726,
+          355043,
+          355088,
+          355135,
+          359337,
+          359382,
+          359431,
+          363770,
+          363819,
+          363869,
+          368364,
+          368415,
+          368470,
+          372956,
+          373010,
+          377523,
+          377573,
+          377630,
+          382059,
+          382221,
+          382280,
+          387028,
+          387088,
+          387160,
+          387161,
+          392032,
+          392033,
+          392096,
+          392097,
+          397131,
+          397230,
+          397299,
+          397300,
+          402606,
+          402730,
+          402731,
+          402732,
+          408409,
+          408410,
+          408411,
+          408412,
+          408500,
+          414199,
+          414200,
+          414277,
+          414278,
+          414342,
+          414343,
+          414344,
+          414345,
+          414346,
+          420640,
+          420641,
+          420642,
+          420643,
+          420644,
+          420645,
+          420646,
+          420647,
+          420648,
+          427284,
+          427343,
+          427344,
+          427345
+        ],
+        "asteroids_distinct": 432,
+        "v_soi_max_km_s": 2.105806596904532,
+        "v_soi_mean_km_s": 2.013423358461484,
+        "largest_gap_deg": 99.21225343902185,
+        "angular_gaps_deg": [
+          0.7220539566911088,
+          11.401466082478443,
+          7.045262269631314,
+          4.871486678313019,
+          1.1721882963466541,
+          0.9135559212442459,
+          0.5629711007224429,
+          4.4715320784529595,
+          3.254535897847866,
+          21.24921913870844,
+          3.77710159439696,
+          12.817992192520514,
+          99.21225343902185,
+          2.138697016475561,
+          0.18678773773839907,
+          0.505417073961894,
+          0.4732758966847541,
+          1.4754091178504325,
+          2.3481543290086506,
+          2.069077329226758,
+          0.290269086818995,
+          14.415920038156543,
+          1.9790954749948924,
+          36.162653650016665,
+          1.3062238867701126,
+          0.7187621403552384,
+          1.271044055900262,
+          0.7637855596877898,
+          1.2360145999165297,
+          0.8090383773207463,
+          1.2010969666071958,
+          0.8545332542528286,
+          1.1662572744629358,
+          2.031746341532312,
+          2.042989446490992,
+          0.643483535915891,
+          1.411017751199239,
+          0.7769454228215409,
+          0.8545860363066993,
+          0.4347421077990248,
+          0.9111385190561236,
+          2.2132553020085766,
+          12.012925737865771,
+          1.825686530823134,
+          0.6069049474018584,
+          2.4480275632610073,
+          2.8773710757778304,
+          2.739829331990393,
+          14.304839824556382,
+          1.1799323168166325,
+          1.5875021786206958,
+          1.828057118830543,
+          6.103768183420527,
+          1.4482254222343158,
+          11.309435119089642,
+          3.133705532308852,
+          4.108728685706296,
+          0.6132324838839054,
+          0.9609030945058521,
+          2.239509774229589,
+          1.1738144039579197,
+          4.9458610789365025,
+          9.736788037657504,
+          3.5533117390348252,
+          7.234650552035191,
+          0.2514364889768217,
+          2.4003324061951616,
+          0.34015393427114304,
+          0.8683170680630496,
+          4.003713393835255
+        ],
+        "sum_squared_gaps_deg2": 13065.156285615107,
+        "relative_angular_velocity_deg_hour": -2.5877879639971124,
+        "relative_cycle_hours": 139.1149526192022,
+        "maximum_wait_hours": 38.338633156705015,
+        "mean_wait_hours": 7.012185947669049,
+        "parking_angular_velocity_rad_s": -9.88022712072323e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 179940.2654900019,
+        "altitude_km": 173562.2654900019,
+        "count": 50,
+        "fraction": 0.1466275659824047,
+        "member_radius_range_km": [
+          169940.2654900019,
+          189639.63170737616
+        ],
+        "admissible_center_range_km": [
+          179639.63170737616,
+          179940.2654900019
+        ],
+        "source_ids": [
+          283330,
+          293643,
+          298712,
+          304124,
+          309612,
+          315032,
+          315085,
+          320858,
+          320913,
+          325777,
+          329979,
+          333670,
+          333849,
+          337891,
+          342092,
+          346102,
+          346113,
+          346271,
+          350567,
+          359255,
+          359295,
+          363599,
+          363689,
+          363727,
+          368278,
+          368318,
+          372834,
+          372867,
+          372907,
+          377397,
+          377443,
+          377479,
+          382124,
+          382169,
+          382170,
+          386935,
+          386975,
+          391935,
+          391936,
+          391978,
+          391979,
+          397174,
+          397175,
+          397229,
+          402658,
+          402659,
+          402660,
+          408335,
+          408336,
+          408337
+        ],
+        "asteroids_distinct": 1480,
+        "v_soi_max_km_s": 2.1022860901699465,
+        "v_soi_mean_km_s": 2.0137653292779665,
+        "largest_gap_deg": 81.62661413955206,
+        "angular_gaps_deg": [
+          6.359402321654672,
+          3.230945907175343,
+          33.44686471192679,
+          4.191710407022455,
+          3.0908305437136647,
+          6.020367197894963,
+          4.067804936796826,
+          20.498323331424388,
+          1.0329570892932907,
+          81.62661413955206,
+          2.5209162445864877,
+          0.33358927830934704,
+          5.4207464645332095,
+          5.235802709023005,
+          19.59155747867456,
+          2.006559954822592,
+          1.99700228680976,
+          2.3565018273032194,
+          0.08735068101384513,
+          2.1431808489313937,
+          4.114763153970472,
+          2.156218583389659,
+          9.932811217595258,
+          2.1223360485386706,
+          2.1298602213088316,
+          6.2538895801679075,
+          0.6146938462799199,
+          1.168981471525342,
+          1.1547421310289963,
+          2.7515264337962435,
+          2.418258667463931,
+          6.240965447070266,
+          14.261117292877032,
+          0.05042646071382251,
+          0.8920278257302243,
+          1.9104686740446368,
+          0.7888597453672901,
+          2.162625858300771,
+          4.164150467179184,
+          12.243016293621508,
+          5.314929217448594,
+          2.9279223665586755,
+          1.4152669412591763,
+          2.8862260193386646,
+          0.8153455440230459,
+          6.383201916421342,
+          9.896674493691819,
+          21.618161799482095,
+          15.984707063468647,
+          9.96679685787609
+        ],
+        "sum_squared_gaps_deg2": 10411.802840154804,
+        "relative_angular_velocity_deg_hour": -2.2561946425499535,
+        "relative_cycle_hours": 159.56070155061073,
+        "maximum_wait_hours": 36.178888381410914,
+        "mean_wait_hours": 6.40939261412709,
+        "parking_angular_velocity_rad_s": -8.272617332701881e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 200016.50379452933,
+        "altitude_km": 193638.50379452933,
+        "count": 32,
+        "fraction": 0.093841642228739,
+        "member_radius_range_km": [
+          190016.50379452933,
+          209474.0282106335
+        ],
+        "admissible_center_range_km": [
+          199474.0282106335,
+          200016.50379452933
+        ],
+        "source_ids": [
+          262235,
+          267581,
+          272900,
+          278115,
+          283273,
+          288431,
+          293528,
+          293580,
+          298644,
+          304054,
+          309510,
+          309563,
+          314981,
+          320803,
+          325720,
+          329862,
+          329916,
+          333788,
+          337754,
+          337832,
+          346181,
+          350536,
+          354860,
+          354891,
+          359220,
+          363612,
+          363632,
+          363658,
+          372787,
+          372807,
+          377416,
+          382086
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1086143360205765,
+        "v_soi_mean_km_s": 2.0432068392393887,
+        "largest_gap_deg": 79.83994023984212,
+        "angular_gaps_deg": [
+          11.69608155273583,
+          2.342866347477928,
+          32.6164291283593,
+          1.3134995745469382,
+          14.54256904356982,
+          14.577155049942675,
+          14.566094884384952,
+          79.83994023984212,
+          12.829931669700983,
+          13.710527702828301,
+          6.860109215721195,
+          3.105173678656598,
+          3.9118304633633443,
+          8.644245704773994,
+          12.176446750546404,
+          10.836210749150808,
+          3.845136948462766,
+          0.7800875579483204,
+          6.761879595594337,
+          5.865360509308346,
+          1.8770210640333858,
+          16.817109702321204,
+          11.95710315040219,
+          15.94334434230609,
+          9.621641212412783,
+          0.0162728946131665,
+          4.126966989953473,
+          5.138805708476696,
+          3.0410603402104925,
+          9.79060187827838,
+          10.203405521147488,
+          10.64509082892971
+        ],
+        "sum_squared_gaps_deg2": 10220.981473751945,
+        "relative_angular_velocity_deg_hour": -2.0058464458009273,
+        "relative_cycle_hours": 179.47535353647336,
+        "maximum_wait_hours": 39.803615280212696,
+        "mean_wait_hours": 7.0772155227290705,
+        "parking_angular_velocity_rad_s": -7.0588950244515855e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 220564.95282400885,
+        "altitude_km": 214186.95282400885,
+        "count": 25,
+        "fraction": 0.07331378299120235,
+        "member_radius_range_km": [
+          210564.95282400885,
+          230489.48723003533
+        ],
+        "admissible_center_range_km": [
+          220489.48723003533,
+          220564.95282400885
+        ],
+        "source_ids": [
+          216213,
+          228069,
+          233905,
+          239737,
+          245464,
+          256720,
+          262184,
+          267526,
+          272841,
+          278050,
+          288298,
+          298579,
+          303918,
+          303996,
+          309440,
+          314886,
+          320405,
+          320679,
+          320748,
+          325670,
+          329814,
+          342009,
+          346157,
+          350475,
+          359139
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.117728086327414,
+        "v_soi_mean_km_s": 2.0431786045987916,
+        "largest_gap_deg": 89.34095823819062,
+        "angular_gaps_deg": [
+          12.761138859619445,
+          13.019546111116934,
+          4.730729579167548,
+          5.134159359414415,
+          3.3733255123941746,
+          1.9923694941581829,
+          5.580958728520251,
+          35.357983649406954,
+          89.34095823819062,
+          19.90003790666688,
+          11.467349242335018,
+          26.16187677186977,
+          8.012175983661791,
+          7.857257833331289,
+          0.11984685174186893,
+          25.475153685692277,
+          2.0707626441492835,
+          1.437948753432181,
+          5.7296605586146825,
+          1.3846019768330962,
+          20.866285622763144,
+          4.257749728574993,
+          4.199982329873137,
+          37.14081652685462,
+          12.62732405161745
+        ],
+        "sum_squared_gaps_deg2": 13697.630727911555,
+        "relative_angular_velocity_deg_hour": -1.8071938468107902,
+        "relative_cycle_hours": 199.20386550413667,
+        "maximum_wait_hours": 49.43628952469782,
+        "mean_wait_hours": 10.527087149877403,
+        "parking_angular_velocity_rad_s": -6.095800046667737e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 240853.65198497297,
+        "altitude_km": 234475.65198497297,
+        "count": 23,
+        "fraction": 0.06744868035190615,
+        "member_radius_range_km": [
+          230853.65198497297,
+          249118.5795442675
+        ],
+        "admissible_center_range_km": [
+          239118.5795442675,
+          240853.65198497297
+        ],
+        "source_ids": [
+          181017,
+          186858,
+          192776,
+          198645,
+          198704,
+          204554,
+          222124,
+          251005,
+          262106,
+          267440,
+          272747,
+          277949,
+          283112,
+          288167,
+          293415,
+          298450,
+          309309,
+          314803,
+          320588,
+          325519,
+          325605,
+          333657,
+          337774
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1322803242911577,
+        "v_soi_mean_km_s": 2.059378614591155,
+        "largest_gap_deg": 86.67190347477548,
+        "angular_gaps_deg": [
+          4.973738935936851,
+          21.534986305043425,
+          9.474596373710554,
+          23.253647300964843,
+          24.931942944028634,
+          7.733320823541419,
+          86.67190347477548,
+          5.009386971198239,
+          4.320360991362122,
+          9.882915792657428,
+          10.51093962161994,
+          1.7658051062520599,
+          3.4113955791368653,
+          14.285861370377262,
+          5.591819724585406,
+          19.912838836244305,
+          4.702747051001097,
+          11.496145660097795,
+          11.599861843811937,
+          11.675008907929623,
+          11.69341413985751,
+          8.06016636867605,
+          47.50719587719118
+        ],
+        "sum_squared_gaps_deg2": 13094.736858310742,
+        "relative_angular_velocity_deg_hour": -1.6517158247086583,
+        "relative_cycle_hours": 217.95516796207934,
+        "maximum_wait_hours": 52.47385910954949,
+        "mean_wait_hours": 11.01105544510937,
+        "parking_angular_velocity_rad_s": -5.3420213243980925e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 264587.1285761644,
+        "altitude_km": 258209.12857616442,
+        "count": 16,
+        "fraction": 0.0469208211143695,
+        "member_radius_range_km": [
+          254587.12857616442,
+          267931.1976399871
+        ],
+        "admissible_center_range_km": [
+          257931.1976399871,
+          264587.1285761644
+        ],
+        "source_ids": [
+          157877,
+          163670,
+          169393,
+          192704,
+          204464,
+          222016,
+          245257,
+          250897,
+          261993,
+          267316,
+          272615,
+          277808,
+          282964,
+          298347,
+          303779,
+          314702
+        ],
+        "asteroids_distinct": 1937,
+        "v_soi_max_km_s": 2.137500502645576,
+        "v_soi_mean_km_s": 2.0555847330842623,
+        "largest_gap_deg": 101.48204170587938,
+        "angular_gaps_deg": [
+          42.877449832295284,
+          14.466415902305101,
+          38.56364963666597,
+          101.48204170587938,
+          15.642951820745282,
+          4.243703251533958,
+          12.865502622425822,
+          10.337938245880451,
+          10.370000964387714,
+          10.431963537890852,
+          10.509526641888158,
+          7.144022541757522,
+          1.5549136452087282,
+          32.03491301794725,
+          22.949148298766602,
+          24.525858334421912
+        ],
+        "sum_squared_gaps_deg2": 16903.302373890754,
+        "relative_angular_velocity_deg_hour": -1.5068351281670647,
+        "relative_cycle_hours": 238.91134024590272,
+        "maximum_wait_hours": 67.3478072078951,
+        "mean_wait_hours": 15.58021074354934,
+        "parking_angular_velocity_rad_s": -4.6396198862776565e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 284673.99614610773,
+        "altitude_km": 278295.99614610773,
+        "count": 21,
+        "fraction": 0.06158357771260997,
+        "member_radius_range_km": [
+          274673.99614610773,
+          294300.4056280587
+        ],
+        "admissible_center_range_km": [
+          284300.4056280587,
+          284673.99614610773
+        ],
+        "source_ids": [
+          152171,
+          198540,
+          233689,
+          239525,
+          267158,
+          272448,
+          293153,
+          402565,
+          402566,
+          408245,
+          408246,
+          408247,
+          408286,
+          420509,
+          420510,
+          420511,
+          420512,
+          420513,
+          420514,
+          420560,
+          420564
+        ],
+        "asteroids_distinct": 2369,
+        "v_soi_max_km_s": 2.1226027645113605,
+        "v_soi_mean_km_s": 2.0152745576265834,
+        "largest_gap_deg": 60.72222333801079,
+        "angular_gaps_deg": [
+          45.48576822977578,
+          3.753629705518648,
+          3.5520770421908594,
+          3.3701160287657217,
+          3.206133960494455,
+          3.058520651148271,
+          13.865904063769975,
+          2.7202305477803037,
+          2.6233705050624962,
+          14.538684331143926,
+          32.24110581966775,
+          3.1170337112087907,
+          9.970585471224894,
+          18.298283106370377,
+          15.56408004141835,
+          18.277269926029106,
+          9.452974018665799,
+          50.59446040288833,
+          0.7727796224336885,
+          44.81476947643171,
+          60.72222333801079
+        ],
+        "sum_squared_gaps_deg2": 12949.623015287547,
+        "relative_angular_velocity_deg_hour": -1.4073542665711245,
+        "relative_cycle_hours": 255.79913213828056,
+        "maximum_wait_hours": 43.14636675380557,
+        "mean_wait_hours": 12.77971577480115,
+        "parking_angular_velocity_rad_s": -4.157323059174896e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 305682.88792188716,
+        "altitude_km": 299304.88792188716,
+        "count": 21,
+        "fraction": 0.06158357771260997,
+        "member_radius_range_km": [
+          295682.88792188716,
+          310847.8580786964
+        ],
+        "admissible_center_range_km": [
+          300847.8580786964,
+          305682.88792188716
+        ],
+        "source_ids": [
+          180833,
+          221855,
+          256353,
+          277632,
+          386860,
+          386879,
+          391886,
+          397075,
+          397076,
+          402535,
+          402536,
+          408287,
+          408288,
+          420561,
+          427285,
+          427286,
+          427287,
+          427288,
+          427289,
+          427290,
+          427291
+        ],
+        "asteroids_distinct": 2192,
+        "v_soi_max_km_s": 2.156014663570652,
+        "v_soi_mean_km_s": 2.0311289487980324,
+        "largest_gap_deg": 56.32225920684209,
+        "angular_gaps_deg": [
+          12.122005150444739,
+          6.190669525669797,
+          6.015982677747402,
+          5.751519138015162,
+          5.448138776806786,
+          5.135620750378244,
+          43.93098623067968,
+          0.18738002139943433,
+          3.2353474384101446,
+          0.15320597538224945,
+          7.903460185353481,
+          46.89334852025479,
+          3.400960340485625,
+          22.66667800689538,
+          11.968010374539546,
+          9.55571180983955,
+          8.333581884303442,
+          28.888256539917904,
+          32.66684776467548,
+          56.32225920684209,
+          43.23002968195908
+        ],
+        "sum_squared_gaps_deg2": 12284.529628483077,
+        "relative_angular_velocity_deg_hour": -1.32048902850881,
+        "relative_cycle_hours": 272.62627119782854,
+        "maximum_wait_hours": 42.65257642499702,
+        "mean_wait_hours": 12.920854575743007,
+        "parking_angular_velocity_rad_s": -3.7361885009204268e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 327365.8989371338,
+        "altitude_km": 320987.8989371338,
+        "count": 4,
+        "fraction": 0.011730205278592375,
+        "member_radius_range_km": [
+          317365.8989371338,
+          328818.6804644271
+        ],
+        "admissible_center_range_km": [
+          318818.6804644271,
+          327365.8989371338
+        ],
+        "source_ids": [
+          186601,
+          233487,
+          372764,
+          420562
+        ],
+        "asteroids_distinct": 988,
+        "v_soi_max_km_s": 2.1661636551837997,
+        "v_soi_mean_km_s": 2.072106385148502,
+        "largest_gap_deg": 198.86997577725043,
+        "angular_gaps_deg": [
+          104.1728565152014,
+          2.225106687183114,
+          54.73206102036505,
+          198.86997577725043
+        ],
+        "sum_squared_gaps_deg2": 53401.80090348722,
+        "relative_angular_velocity_deg_hour": -1.2452060205104905,
+        "relative_cycle_hours": 289.10878526945504,
+        "maximum_wait_hours": 159.70849200979671,
+        "mean_wait_hours": 59.56377233953888,
+        "parking_angular_velocity_rad_s": -3.371206178593787e-06
+      },
+      {
+        "tolerance_km": 10000.0,
+        "radius_km": 358953.24187175307,
+        "altitude_km": 352575.24187175307,
+        "count": 1,
+        "fraction": 0.002932551319648094,
+        "member_radius_range_km": [
+          348953.24187175307,
+          348953.24187175307
+        ],
+        "admissible_center_range_km": [
+          338953.24187175307,
+          358953.24187175307
+        ],
+        "source_ids": [
+          368176
+        ],
+        "asteroids_distinct": 99,
+        "v_soi_max_km_s": 1.9863749925843792,
+        "v_soi_mean_km_s": 1.9863749925843792,
+        "largest_gap_deg": 360.0,
+        "angular_gaps_deg": [
+          360.0
+        ],
+        "sum_squared_gaps_deg2": 129600.0,
+        "relative_angular_velocity_deg_hour": -1.1554698169626605,
+        "relative_cycle_hours": 311.5615784290396,
+        "maximum_wait_hours": 311.5615784290396,
+        "mean_wait_hours": 155.7807892145198,
+        "parking_angular_velocity_rad_s": -2.936152786885608e-06
+      }
+    ]
+  },
+  "asteroid_definition": "Unione di SPK-ID distinti associati ai membri, senza sommare ETD o traiettorie ripetute.",
+  "association_model": "Miglior trasferimento di ogni asteroide, modello medio del cluster GA18.",
+  "speed_definition": "Norma della velocita SOI geocentrica inerziale, membri[:, 2:5], un peso per source_id.",
+  "color_limits_asteroids": [
+    0.0,
+    2369.0
+  ],
+  "color_limits_speed_km_s": [
+    1.9340798965822366,
+    2.1661636551837997
+  ],
+  "distinct_asteroids": 2722,
+  "model": "Stima cinematica: circolare kepleriana geocentrica retrograda e Luna circolare CR3BP.",
+  "parking_direction": -1,
+  "perigee_directions_verified": 341,
+  "mu_earth_km3_s2": 398722.68200000003,
+  "mu_moon_km3_s2": 4904.27564,
+  "moon_rate_rad_s": 2.6657229668406847e-06,
+  "angular_frame": "atan2(y,x) delle posizioni sinodiche geocentriche al perigeo.",
+  "omega_definition": "omega_rel = -sqrt(mu_earth/R**3) - n_moon.",
+  "maximum_wait_definition": "max(gap_deg) / abs(omega_rel_deg_per_hour).",
+  "mean_wait_definition": "sum(gap_deg**2) / (720 * abs(omega_rel_deg_per_hour)); fase iniziale uniforme.",
+  "color_definition": "Pallini e circolare: stessa statistica della fascia, non un tempo individuale a partire dal pallino.",
+  "assumptions": "Raggi della fascia approssimati con quello della circolare. Finestre ETD/arrivo e raccordi dinamici non verificati qui.",
+  "color_limits_hours": [
+    5.925204385860051,
+    311.5615784290396
+  ],
+  "normalization": "Logaritmica, stessa scala in ore per entrambe le metriche e le tre tolleranze.",
+  "colormap": "viridis_r"
+}

@@ -1,0 +1,145 @@
+{
+  "bins": 100,
+  "selected_asteroids": 4886,
+  "represented_asteroids": 4443,
+  "represented_clusters": 312,
+  "distinct_members": 2133757,
+  "catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/CHAMPION_GA_16_plots_vinf_time_K780/cluster_velocity_statistics.txt",
+  "report_sha256": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+  "source_files_sha256": {
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/05_eps_e_velocita_soi.npz": "09e015f3d8120faac1eb2941f901faf9112648f1d4820ca01b35276073fda849",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/05_eps_e_direzioni_soi.npz": "17b462d1cc9e96f93c6b6c61e62e5844abf40668ea88a7c634ac87bcc0adf0b8",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/06_eps_omega_velocita_soi.npz": "3e6b0556b46c14dadbae1e661a9ad60da3865ee06e4b13da93c66c6310d9a20b",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/06_eps_omega_direzioni_soi.npz": "7b4b2c3018266843891ea71d412c224cb51c6be7c9d4d4bb1f678265c825593d",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/07_hp_e_velocita_soi.npz": "1b031339a56ac050682b0b1e265c19029f789d0a6fbb26e9b4e3a364e984fd18",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/07_hp_e_direzioni_soi.npz": "a81ea97045ff9f7ebce3c910f89930abdd401d1196a329577a408dcb8639b615",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/08_hp_omega_velocita_soi.npz": "346f7aae9051ed769865c0d6db6e38b5f72ec9b55f183dc0cd4b30f8d7d0db46",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/08_hp_omega_direzioni_soi.npz": "8a44791dce637c8f777b915cb4b8a700228c0c2cdfdfb68bb6b36a05dbf7cedc",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/09_hp_theta_velocita_soi.npz": "5ffde12ccee1998bbe3e69f3f1ac433b95a49e78b6b196db41b54f773da476b2",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/09_hp_theta_direzioni_soi.npz": "9b508ef5d02a4642c6651e3ba7649868be896d67b81c06c88e18b1301da7a8fd",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/10_eps_theta_velocita_soi.npz": "ad4c639ef76d0892178960a957e048bf9b014211826c9fcdda6fcc19de376ac6",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/10_eps_theta_direzioni_soi.npz": "64a3faf0e2572f2b5f8aca6af59f47c5395e2f5d6cf64686a240e9f1f341b814",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/11_eps_phi_velocita_soi.npz": "730c4f277b8da1907e024fbfa796a81f837b179b57036cbc20c7d2a75fe77a89",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/11_eps_phi_direzioni_soi.npz": "953952f9ef8b6c8615975600251ee66b77d38a06e05724fe84e458b789adc769",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_velocita_soi_100x100/12_hp_phi_velocita_soi.npz": "f646fec94f0a8a41e243ab8bf752bcdcf3a266fe111909f34c43fe937902b83e",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/mappe_direzioni_soi_100x100/12_hp_phi_direzioni_soi.npz": "740bc9bbc83eec3f3fcecc5133f0e23f7672be76d877170f72c3fc11e0504e87"
+  },
+  "maps": [
+    {
+      "key": "05_eps_e",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "e al perigeo [-]"
+    },
+    {
+      "key": "06_eps_omega",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\omega_{\\mathrm{cat,corr}}$ al perigeo [deg]"
+    },
+    {
+      "key": "07_hp_e",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "e al perigeo [-]"
+    },
+    {
+      "key": "08_hp_omega",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\omega_{\\mathrm{cat,corr}}$ al perigeo [deg]"
+    },
+    {
+      "key": "09_hp_theta",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\theta$: Luna \u2192 perigeo al perigeo [deg]"
+    },
+    {
+      "key": "10_eps_theta",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\theta$: Luna \u2192 perigeo al perigeo [deg]"
+    },
+    {
+      "key": "11_eps_phi",
+      "xlabel": "$\\varepsilon$ al perigeo [km$^2$/s$^2$]",
+      "ylabel": "$\\phi_p$ ECLIPJ2000 [deg]"
+    },
+    {
+      "key": "12_hp_phi",
+      "xlabel": "$h_p = r_p - R_\\oplus$ sopra la superficie [km]",
+      "ylabel": "$\\phi_p$ ECLIPJ2000 [deg]"
+    }
+  ],
+  "occurrences": {
+    "field": "occurrences",
+    "definition": "Asteroidi distinti per cella, senza normalizzazione per il numero di traiettorie.",
+    "normalization": "linear",
+    "cmap": "viridis",
+    "color_limits_by_map": {
+      "05_eps_e": [
+        0,
+        1890
+      ],
+      "06_eps_omega": [
+        0,
+        2260
+      ],
+      "07_hp_e": [
+        0,
+        1880
+      ],
+      "08_hp_omega": [
+        0,
+        2408
+      ],
+      "09_hp_theta": [
+        0,
+        974
+      ],
+      "10_eps_theta": [
+        0,
+        2748
+      ],
+      "11_eps_phi": [
+        0,
+        220
+      ],
+      "12_hp_phi": [
+        0,
+        107
+      ]
+    }
+  },
+  "speed": {
+    "field": "speed_maximum",
+    "definition": "Norma euclidea delle colonne vx_soi, vy_soi, vz_soi individuali; geocentrica, km/s.",
+    "normalization": "power",
+    "gamma": 3,
+    "cmap": "inferno",
+    "color_limits_km_s": [
+      0.9221200622670105,
+      2.1661636551837997
+    ]
+  },
+  "direction": {
+    "field": "maximum_angle_deg[catalog]",
+    "definition": "Direzione della stessa traiettoria che fornisce speed_maximum.",
+    "frame": "Geocentrico inerziale del catalogo, Luna su +x a ETD.",
+    "zero": "+x",
+    "positive": "antiorario",
+    "normalization": "linear",
+    "cmap": "twilight",
+    "color_limits_deg": [
+      0,
+      360
+    ],
+    "tie_break": "source_id minimo, poi prima ETD valida."
+  },
+  "figures": [
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/05_eps_e_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/06_eps_omega_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/07_hp_e_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/08_hp_omega_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/09_hp_theta_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/10_eps_theta_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/11_eps_phi_occorrenze_velocita_direzione.png",
+    "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/12_hp_phi_occorrenze_velocita_direzione.png"
+  ],
+  "pdf": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/pannelli_occorrenze_velocita_direzione_100x100/mappe_05_12_occorrenze_velocita_direzione.pdf"
+}
