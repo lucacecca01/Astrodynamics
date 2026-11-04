@@ -1,0 +1,31 @@
+{
+  "source": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits",
+  "files": {
+    "riepilogo.txt": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+    "05_migliori_transfer_occorrenze_eps_e.png": "e6729ae6a456c13bb54f6ee5258dd4547f1c6b02d82fccc3bee072cd052ed957",
+    "12_migliori_transfer_occorrenze_hp_phi.png": "9869419051b933b2e17a2401fcb24302de4bfe65ce168a1c7571221826f331b1",
+    "07_migliori_transfer_occorrenze_rp_e.png": "b81c6b3f546e895cd6febe723d3174359529406024df526434ee8efd84e71bc3",
+    "08_migliori_transfer_occorrenze_rp_omega.png": "32388f0faa1c7d2a23843eccc1861e52ae4eea3dafe18c726da1ead1082a1f6e",
+    "10_migliori_transfer_occorrenze_eps_theta.png": "eb64ba3c5252f0074411e77ad3bcf084453672158ecbd4890e39bda13d2295ea",
+    "11_migliori_transfer_occorrenze_eps_phi.png": "862c24b804ce8fc30214530667f2a5f4bb00d02a5b41509c79e2a7e80340a5a4",
+    "06_migliori_transfer_occorrenze_eps_omega.png": "79ab0a95eb044b28b9d8009234273fcb5c8238b73a0208b1feff5d448b7a9f0a",
+    "09_migliori_transfer_occorrenze_rp_theta.png": "013ad80cff7df26938a86952588d529fc4568ffe6df1ab57141aec174201e20e",
+    "mappe_percentili/07_migliori_transfer_occorrenze_rp_e_griglie.npz": "d3f708a2ff35ee9dc6165671a6c0e3f6cf28d32ed6b562026e9031ac44803ca3",
+    "mappe_percentili/10_migliori_transfer_occorrenze_eps_theta_griglie.npz": "403ea1f1d0c43a0544ad27e5c6ed98755ea87ff7982f361e0b9f298916a282a8",
+    "mappe_percentili/12_migliori_transfer_occorrenze_hp_phi_griglie.npz": "761022e1938c77ea75a74487a09bb2e4b090215bd71617132c9c79b45ee2cd7e",
+    "mappe_percentili/06_migliori_transfer_occorrenze_eps_omega_griglie.npz": "e99419c5f31cbc13338ecbc93f3601e5fce29c67362ff0ec04e3262f36bf8a15",
+    "mappe_percentili/05_migliori_transfer_occorrenze_eps_e_griglie.npz": "0fb85c38fb79d0a1732bc458c9b68e34e7be0a4fa980d1425845985e2b6cce99",
+    "mappe_percentili/11_migliori_transfer_occorrenze_eps_phi_griglie.npz": "a5f30be50435bfcb2ce3a1a2121e8d9ab2a73e2c33b48fb9407074e20de73a6b",
+    "mappe_percentili/08_migliori_transfer_occorrenze_rp_omega_griglie.npz": "d7ae094c7e879fc3e6efc9f97223beca6856420be51f9ea9600c2953f5623d6f",
+    "mappe_percentili/09_migliori_transfer_occorrenze_rp_theta_griglie.npz": "c6d7e52784da7d32da5d2dd80c8b4c1177d1fc5e9aa0feea580f208d49e988d5",
+    "mappe_percentili/08_migliori_transfer_occorrenze_rp_omega_percentili.png": "3b309d4c561b5b331ccae55d8be527da67b8f0850fd71ef1e32449d0e3601785",
+    "mappe_percentili/05_migliori_transfer_occorrenze_eps_e_percentili.png": "42d0a3ae6207d5b4b68b9f367e524dbf668e5e8ff99a06c2a42fabde6fef2704",
+    "mappe_percentili/12_migliori_transfer_occorrenze_hp_phi_percentili.png": "3a49cea46247400a661f4068b49ef49e2de2b5906a2ec7658ffe3f1b084b1f56",
+    "mappe_percentili/09_migliori_transfer_occorrenze_rp_theta_percentili.png": "61f0ac2106977b0936a51d0b0bf846b26b536e2b5adaeb11f40dc01a0310f366",
+    "mappe_percentili/11_migliori_transfer_occorrenze_eps_phi_percentili.png": "e14f34e2eaaa707f6390a81b90b0d068eb7ea09dc2b5ebaca54be277e88e117d",
+    "mappe_percentili/10_migliori_transfer_occorrenze_eps_theta_percentili.png": "d73913b039762cb43025fa75d3071b163a304a63ef2f9d63668ae2590a4d1bed",
+    "mappe_percentili/06_migliori_transfer_occorrenze_eps_omega_percentili.png": "1071cdf90ff18f062914f5e4a94d3dc8cdfd0ae2b0ae6369c49e995c29ec6ea5",
+    "mappe_percentili/07_migliori_transfer_occorrenze_rp_e_percentili.png": "4ae738844bc2471cdc16ac4fe5a03566c26353c1af69a96137f9c626eca3c1eb",
+    "mappe_percentili/riepilogo.json": "58f660fbcbae72c81daefa60c40ae4c90b10bd13dff0413cfcfd02a3efe0a753"
+  }
+}

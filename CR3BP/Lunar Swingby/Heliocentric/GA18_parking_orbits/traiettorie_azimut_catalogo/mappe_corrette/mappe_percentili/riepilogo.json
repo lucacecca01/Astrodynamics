@@ -1,0 +1,338 @@
+{
+  "05_migliori_transfer_occorrenze_eps_e": [
+    {
+      "percentile": 97,
+      "threshold": 274.84000000000015,
+      "minimum_integer_count": 275,
+      "selected_cells": 156,
+      "occupied_cells": 5173,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030156582254011213,
+      "grid_fraction": 0.0156
+    },
+    {
+      "percentile": 99,
+      "threshold": 704.7599999999957,
+      "minimum_integer_count": 705,
+      "selected_cells": 52,
+      "occupied_cells": 5173,
+      "total_cells": 10000,
+      "occupied_fraction": 0.010052194084670405,
+      "grid_fraction": 0.0052
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 1013.1400000000003,
+      "minimum_integer_count": 1014,
+      "selected_cells": 26,
+      "occupied_cells": 5173,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005026097042335202,
+      "grid_fraction": 0.0026
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 1094.2400000000198,
+      "minimum_integer_count": 1095,
+      "selected_cells": 13,
+      "occupied_cells": 5173,
+      "total_cells": 10000,
+      "occupied_fraction": 0.002513048521167601,
+      "grid_fraction": 0.0013
+    }
+  ],
+  "06_migliori_transfer_occorrenze_eps_omega": [
+    {
+      "percentile": 97,
+      "threshold": 63.0,
+      "minimum_integer_count": 63,
+      "selected_cells": 2366,
+      "occupied_cells": 78007,
+      "total_cells": 250000,
+      "occupied_fraction": 0.030330611355391182,
+      "grid_fraction": 0.009464
+    },
+    {
+      "percentile": 99,
+      "threshold": 84.0,
+      "minimum_integer_count": 84,
+      "selected_cells": 785,
+      "occupied_cells": 78007,
+      "total_cells": 250000,
+      "occupied_fraction": 0.010063199456459036,
+      "grid_fraction": 0.00314
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 123.0,
+      "minimum_integer_count": 123,
+      "selected_cells": 397,
+      "occupied_cells": 78007,
+      "total_cells": 250000,
+      "occupied_fraction": 0.00508928685887164,
+      "grid_fraction": 0.001588
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 179.94000000000233,
+      "minimum_integer_count": 180,
+      "selected_cells": 196,
+      "occupied_cells": 78007,
+      "total_cells": 250000,
+      "occupied_fraction": 0.0025125950235235298,
+      "grid_fraction": 0.000784
+    }
+  ],
+  "07_migliori_transfer_occorrenze_rp_e": [
+    {
+      "percentile": 97,
+      "threshold": 410.27999999999884,
+      "minimum_integer_count": 411,
+      "selected_cells": 107,
+      "occupied_cells": 3557,
+      "total_cells": 10000,
+      "occupied_fraction": 0.03008152937868991,
+      "grid_fraction": 0.0107
+    },
+    {
+      "percentile": 99,
+      "threshold": 983.6400000000003,
+      "minimum_integer_count": 984,
+      "selected_cells": 36,
+      "occupied_cells": 3557,
+      "total_cells": 10000,
+      "occupied_fraction": 0.010120888389091932,
+      "grid_fraction": 0.0036
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 1033.6399999999976,
+      "minimum_integer_count": 1034,
+      "selected_cells": 18,
+      "occupied_cells": 3557,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005060444194545966,
+      "grid_fraction": 0.0018
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 1094.0,
+      "minimum_integer_count": 1094,
+      "selected_cells": 10,
+      "occupied_cells": 3557,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0028113578858588698,
+      "grid_fraction": 0.001
+    }
+  ],
+  "08_migliori_transfer_occorrenze_rp_omega": [
+    {
+      "percentile": 97,
+      "threshold": 49.0,
+      "minimum_integer_count": 49,
+      "selected_cells": 3181,
+      "occupied_cells": 100489,
+      "total_cells": 250000,
+      "occupied_fraction": 0.03165520604245241,
+      "grid_fraction": 0.012724
+    },
+    {
+      "percentile": 99,
+      "threshold": 76.0,
+      "minimum_integer_count": 76,
+      "selected_cells": 1007,
+      "occupied_cells": 100489,
+      "total_cells": 250000,
+      "occupied_fraction": 0.01002099732309009,
+      "grid_fraction": 0.004028
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 112.0,
+      "minimum_integer_count": 112,
+      "selected_cells": 509,
+      "occupied_cells": 100489,
+      "total_cells": 250000,
+      "occupied_fraction": 0.005065231020310681,
+      "grid_fraction": 0.002036
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 139.0,
+      "minimum_integer_count": 139,
+      "selected_cells": 253,
+      "occupied_cells": 100489,
+      "total_cells": 250000,
+      "occupied_fraction": 0.0025176885032192576,
+      "grid_fraction": 0.001012
+    }
+  ],
+  "09_migliori_transfer_occorrenze_rp_theta": [
+    {
+      "percentile": 97,
+      "threshold": 180.0,
+      "minimum_integer_count": 180,
+      "selected_cells": 248,
+      "occupied_cells": 8179,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030321555202347476,
+      "grid_fraction": 0.0248
+    },
+    {
+      "percentile": 99,
+      "threshold": 427.22000000000025,
+      "minimum_integer_count": 428,
+      "selected_cells": 82,
+      "occupied_cells": 8179,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0100256755104536,
+      "grid_fraction": 0.0082
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 890.0,
+      "minimum_integer_count": 890,
+      "selected_cells": 42,
+      "occupied_cells": 8179,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005135102090720137,
+      "grid_fraction": 0.0042
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 925.6650000000009,
+      "minimum_integer_count": 926,
+      "selected_cells": 21,
+      "occupied_cells": 8179,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0025675510453600685,
+      "grid_fraction": 0.0021
+    }
+  ],
+  "10_migliori_transfer_occorrenze_eps_theta": [
+    {
+      "percentile": 97,
+      "threshold": 341.0,
+      "minimum_integer_count": 341,
+      "selected_cells": 120,
+      "occupied_cells": 3954,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030349013657056147,
+      "grid_fraction": 0.012
+    },
+    {
+      "percentile": 99,
+      "threshold": 1041.8799999999992,
+      "minimum_integer_count": 1042,
+      "selected_cells": 40,
+      "occupied_cells": 3954,
+      "total_cells": 10000,
+      "occupied_fraction": 0.010116337885685382,
+      "grid_fraction": 0.004
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 1398.1150000000011,
+      "minimum_integer_count": 1399,
+      "selected_cells": 20,
+      "occupied_cells": 3954,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005058168942842691,
+      "grid_fraction": 0.002
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 1578.2300000000105,
+      "minimum_integer_count": 1579,
+      "selected_cells": 10,
+      "occupied_cells": 3954,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0025290844714213456,
+      "grid_fraction": 0.001
+    }
+  ],
+  "11_migliori_transfer_occorrenze_eps_phi": [
+    {
+      "percentile": 97,
+      "threshold": 147.0,
+      "minimum_integer_count": 147,
+      "selected_cells": 288,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030716723549488054,
+      "grid_fraction": 0.0288
+    },
+    {
+      "percentile": 99,
+      "threshold": 165.0,
+      "minimum_integer_count": 165,
+      "selected_cells": 98,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.010452218430034129,
+      "grid_fraction": 0.0098
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 175.0,
+      "minimum_integer_count": 175,
+      "selected_cells": 48,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.005119453924914676,
+      "grid_fraction": 0.0048
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 183.0,
+      "minimum_integer_count": 183,
+      "selected_cells": 26,
+      "occupied_cells": 9376,
+      "total_cells": 10000,
+      "occupied_fraction": 0.002773037542662116,
+      "grid_fraction": 0.0026
+    }
+  ],
+  "12_migliori_transfer_occorrenze_hp_phi": [
+    {
+      "percentile": 97,
+      "threshold": 67.0,
+      "minimum_integer_count": 67,
+      "selected_cells": 299,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.030260095132071653,
+      "grid_fraction": 0.0299
+    },
+    {
+      "percentile": 99,
+      "threshold": 76.0,
+      "minimum_integer_count": 76,
+      "selected_cells": 110,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.011132476469992915,
+      "grid_fraction": 0.011
+    },
+    {
+      "percentile": 99.5,
+      "threshold": 81.0,
+      "minimum_integer_count": 81,
+      "selected_cells": 55,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0055662382349964575,
+      "grid_fraction": 0.0055
+    },
+    {
+      "percentile": 99.75,
+      "threshold": 87.0,
+      "minimum_integer_count": 87,
+      "selected_cells": 26,
+      "occupied_cells": 9881,
+      "total_cells": 10000,
+      "occupied_fraction": 0.0026313126201801436,
+      "grid_fraction": 0.0026
+    }
+  ]
+}
