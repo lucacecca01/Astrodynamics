@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "protected_files": 1060,
+  "protected_changed": [],
+  "protected_missing": [],
+  "output": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_eps0p02_e0p04_a10000_rp10000_elliptic_within_soi_min100_K478",
+  "statistics_shape": [
+    478,
+    15
+  ],
+  "catalog_shape": [
+    5518229,
+    12
+  ],
+  "labels_match_result": true,
+  "source_ids_match_result": true,
+  "stats_cluster_counts_match_catalog": true,
+  "minimum_size_configured": 100,
+  "smallest_cluster": 163,
+  "assigned": 5518027,
+  "unassigned": 202,
+  "members_statistics": 5518027,
+  "png_count": 1,
+  "png_names": [
+    "orbital_size_dispersion_K478.png"
+  ],
+  "invalid_pngs": [],
+  "orbital_size_csv_rows": 478,
+  "integration_calls": 0,
+  "plots_requested": false
+}

@@ -1,0 +1,98 @@
+{
+  "before": {
+    "clusters": 491,
+    "assigned": 5518205,
+    "unassigned": 24,
+    "clusters_below_minimum": 13,
+    "members_below_minimum": 575
+  },
+  "after": {
+    "std_limit_eps": 0.02,
+    "std_limit_e": 0.04,
+    "trajectories": 5518229,
+    "clusters": 478,
+    "assigned": 5518027,
+    "unassigned": 202,
+    "min_size": 163,
+    "max_std_eps": 0.019930904424081873,
+    "max_std_e": 0.03930404813804338,
+    "weighted_mean_std_eps": 0.011363905974129585,
+    "weighted_mean_std_e": 0.021245748833883298,
+    "weighted_mean_std_speed_km_s": 0.11806739476803989,
+    "weighted_mean_direction_dispersion": 0.2873279813327894,
+    "max_std_a_km": 9997.972221652493,
+    "max_std_rp_km": 9990.209736721703,
+    "median_std_a_km": 6634.601349746123,
+    "median_std_rp_km": 7090.455483478661,
+    "weighted_mean_std_a_km": 6545.573853071755,
+    "weighted_mean_std_rp_km": 7277.291859470133,
+    "clusters_below_minimum": 0,
+    "members_below_minimum": 0
+  },
+  "minimum_size": 100,
+  "small_group_members_recovered": 397,
+  "small_group_members_unassigned": 178,
+  "previously_unassigned_recovered": 0,
+  "protected_large_group_members": 5517630,
+  "protected_large_group_members_preserved": true,
+  "earth_soi_km": 924663.6125892245,
+  "max_sigma": 2.5,
+  "connectivity_radius": 0.05,
+  "integration_calls": 0,
+  "fresh_kmeans_runs": 0,
+  "clustering_seconds": 311.1751070329992,
+  "fingerprint": "dc37cd2852711bd908730008df618bb4855b28b1a715c3c1b6e0422fe2d1216f",
+  "previous_fingerprint": "a9a320257bc7a359489ac1d596f387313bbd1ff1fb7f181e6b3a2c614b15a950",
+  "output": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_eps0p02_e0p04_a10000_rp10000_elliptic_within_soi_min100_K478",
+  "pair_prefilters": [
+    {
+      "pairs": 122112,
+      "rejected_direction": 59966,
+      "rejected_count": 0,
+      "rejected_std": 62038,
+      "full_validator_pairs": 108,
+      "moments": 495
+    },
+    {
+      "pairs": 114003,
+      "rejected_direction": 56280,
+      "rejected_count": 0,
+      "rejected_std": 57622,
+      "full_validator_pairs": 101,
+      "moments": 478
+    }
+  ],
+  "bridge_prefilters": [
+    {
+      "candidates": 23088,
+      "initial_groups": 478,
+      "initial_unassigned": 599,
+      "point_references": 91877042,
+      "node_references": 93148,
+      "signatures": 415584,
+      "updates": 17
+    },
+    {
+      "candidates": 23122,
+      "initial_groups": 478,
+      "initial_unassigned": 202,
+      "point_references": 91929571,
+      "node_references": 59892,
+      "signatures": 23122,
+      "updates": 0
+    }
+  ],
+  "recovery_prefilters": [
+    {
+      "masks": 734,
+      "groups_screened": 350852,
+      "moments": 604,
+      "rejected_direction": 155764,
+      "rejected_count": 0,
+      "rejected_std": 92497
+    }
+  ],
+  "fresh_kmeans_runs_scope": "Global K180 partitions only. Existing K180 proposals were reused; local two-way KMeans refinement was performed.",
+  "local_two_way_refinement_minimum_fits": 25,
+  "coverage_optimality": "No proof of globally optimal coverage or minimum cluster count. All originally assigned members of clusters with at least 100 members are preserved."
+}
