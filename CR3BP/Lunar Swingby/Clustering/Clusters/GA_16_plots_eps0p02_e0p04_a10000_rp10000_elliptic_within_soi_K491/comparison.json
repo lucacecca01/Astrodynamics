@@ -1,0 +1,78 @@
+{
+  "filter": {
+    "input": 5623694,
+    "retained": 5518229,
+    "excluded": 105465,
+    "excluded_non_elliptic": 38530,
+    "excluded_elliptic_a_above_soi": 66935
+  },
+  "earth_soi_km": 924663.6125892245,
+  "criterion": "elliptic and 0 < a <= Earth SOI",
+  "starting_guide_clusters": 492,
+  "starting_guide_unassigned": 17,
+  "after": {
+    "std_limit_eps": 0.02,
+    "std_limit_e": 0.04,
+    "trajectories": 5518229,
+    "clusters": 491,
+    "assigned": 5518205,
+    "unassigned": 24,
+    "min_size": 11,
+    "max_std_eps": 0.019930904424081873,
+    "max_std_e": 0.03930404813804338,
+    "weighted_mean_std_eps": 0.011362235508195059,
+    "weighted_mean_std_e": 0.021244110824532723,
+    "weighted_mean_std_speed_km_s": 0.11806301411396199,
+    "weighted_mean_direction_dispersion": 0.2873233211882775,
+    "max_std_a_km": 9980.926513204187,
+    "max_std_rp_km": 9990.209736721703,
+    "median_std_a_km": 6577.291486412847,
+    "median_std_rp_km": 6964.465520488076,
+    "weighted_mean_std_a_km": 6543.500772246013,
+    "weighted_mean_std_rp_km": 7276.337480267392
+  },
+  "size_std_limits_km": [
+    10000.0,
+    10000.0
+  ],
+  "minimum_size": 10,
+  "max_sigma": 2.5,
+  "eps_e_connectivity_radius": 0.05,
+  "integration_calls": 0,
+  "fresh_kmeans_runs": 0,
+  "proposal_method": "Previous partitions trimmed; revalidated on filtered normalization, not refitted KMeans.",
+  "clustering_seconds": 228.26726281100127,
+  "fingerprint": "a9a320257bc7a359489ac1d596f387313bbd1ff1fb7f181e6b3a2c614b15a950",
+  "output": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Clustering/Clusters/GA_16_plots_eps0p02_e0p04_a10000_rp10000_elliptic_within_soi_K491",
+  "pair_prefilters": [
+    {
+      "pairs": 130267,
+      "rejected_direction": 61636,
+      "rejected_count": 0,
+      "rejected_std": 68018,
+      "full_validator_pairs": 613,
+      "moments": 560
+    }
+  ],
+  "bridge_prefilters": [
+    {
+      "candidates": 23075,
+      "initial_groups": 547,
+      "initial_unassigned": 146,
+      "point_references": 91682853,
+      "node_references": 71054,
+      "signatures": 323050,
+      "updates": 13
+    }
+  ],
+  "recovery_prefilters": [
+    {
+      "masks": 24,
+      "groups_screened": 11784,
+      "moments": 491,
+      "rejected_direction": 5202,
+      "rejected_count": 0,
+      "rejected_std": 2370
+    }
+  ]
+}
