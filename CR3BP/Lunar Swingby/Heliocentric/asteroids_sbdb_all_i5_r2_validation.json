@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "new_catalog": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb_all_i5_r2.json",
+  "rows": 167868,
+  "unique_spkids": 167868,
+  "old_rows": 13055,
+  "old_records_preserved_exactly": true,
+  "old_prefix_order_preserved": true,
+  "old_orbital_elements_updated": false,
+  "added_rows": 154813,
+  "current_ga18_annulus_au": [
+    0.6,
+    1.4
+  ],
+  "loader_accepts_current_annulus": 13066,
+  "new_spkids_within_current_annulus": 11,
+  "requires_extended_RMAX_2": 154802,
+  "extended_annulus_au": [
+    0.6,
+    2.0
+  ],
+  "all_numerical_elements_finite": true,
+  "all_equinox_J2000": true,
+  "inclination_limit_deg": 5,
+  "all_pass_elliptic_and_radial_filter": true,
+  "ranges": {
+    "a": [
+      0.6100279810781064,
+      45.1953206
+    ],
+    "e": [
+      0.003936185246210357,
+      0.9649921497195851
+    ],
+    "i": [
+      0.005995218957480849,
+      4.999975922230277
+    ],
+    "q": [
+      0.0795317843706286,
+      1.9999999110146682
+    ],
+    "Q": [
+      0.7868083191251145,
+      88.46885029697886
+    ],
+    "epoch": [
+      2428097.5,
+      2461345.5
+    ]
+  },
+  "original_sha256": "9a04e249dae5a6a67b7c48940514878876a9c4e8d15274bfab708bce98d64fa7",
+  "new_sha256": "56584a0ea018c8769bbb227b9cc79aebcef34bc630d44d24dca9a6f9ea8d262e",
+  "metadata": {
+    "signature": {
+      "version": "1.0",
+      "source": "NASA/JPL SBDB (Small-Body DataBase) Query API"
+    },
+    "count": "167868",
+    "download": {
+      "retrieved_utc": "2026-11-03T01:37:05.419692+00:00",
+      "query": {
+        "fields": "spkid,full_name,epoch,a,e,i,om,w,ma,equinox,orbit_id",
+        "sb-kind": "a",
+        "full-prec": "true",
+        "sort": "spkid",
+        "sb-cdata": "{\"AND\":[\"e|GE|0\",\"e|LT|1\",\"a|GT|0\",\"q|LE|2\",\"ad|GE|0.6\",\"i|LT|5\"]}"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid%2Cfull_name%2Cepoch%2Ca%2Ce%2Ci%2Com%2Cw%2Cma%2Cequinox%2Corbit_id&sb-kind=a&full-prec=true&sort=spkid&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C2%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C5%22%5D%7D",
+      "response_count": 167868,
+      "response_sha256": "09c67aff77ee04ca0a2cc5f3ad808760794e96d6ea7170ae32a61a6a9a3af1cd"
+    },
+    "expansion": {
+      "method": "Preserve original records and order; append new SPK-IDs from the expanded query.",
+      "base_file": "asteroids_sbdb_all_i5.json",
+      "base_sha256": "9a04e249dae5a6a67b7c48940514878876a9c4e8d15274bfab708bce98d64fa7",
+      "base_count": 13055,
+      "base_download": {
+        "retrieved_utc": "2026-10-27T05:17:53.480087+00:00",
+        "query": {
+          "fields": "spkid,full_name,epoch,a,e,i,om,w,ma,equinox,orbit_id",
+          "sb-kind": "a",
+          "full-prec": "true",
+          "sort": "spkid",
+          "sb-cdata": "{\"AND\": [\"e|GE|0\", \"e|LT|1\", \"q|LE|1.4\", \"ad|GE|0.6\", \"i|LT|5\"]}"
+        },
+        "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=spkid%2Cfull_name%2Cepoch%2Ca%2Ce%2Ci%2Com%2Cw%2Cma%2Cequinox%2Corbit_id&sb-kind=a&full-prec=true&sort=spkid&sb-cdata=%7B%22AND%22%3A+%5B%22e%7CGE%7C0%22%2C+%22e%7CLT%7C1%22%2C+%22q%7CLE%7C1.4%22%2C+%22ad%7CGE%7C0.6%22%2C+%22i%7CLT%7C5%22%5D%7D",
+        "response_count": 13055
+      },
+      "first_added_target_id": 13055,
+      "added_count": 154813,
+      "old_spkids_not_in_current_query": [],
+      "existing_orbital_elements_updated": false,
+      "rejected_new_spkids_missing_or_invalid_elements": [],
+      "radial_annulus_au": [
+        0.6,
+        2.0
+      ],
+      "inclination_below_deg": 5.0
+    }
+  }
+}

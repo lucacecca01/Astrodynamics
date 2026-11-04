@@ -1,0 +1,9 @@
+{
+  "source": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_azimut_catalogo/mappe_corrette",
+  "requested_bins": 200,
+  "files": {
+    "riepilogo.txt": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+    "mappe_percentili/06_migliori_transfer_occorrenze_eps_omega_griglie.npz": "1881672e72700699710e113383570f2815ad6ebfed8b8cfdcaf843fbc5bc62c9",
+    "mappe_percentili/08_migliori_transfer_occorrenze_rp_omega_griglie.npz": "f9d0f8126f2967a1de1647e871b2caba540dc4b98a7fa007a55a1d6260db3f1b"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "signature": {
+    "n_plot": 101,
+    "rtol": 1e-09,
+    "atol": 1e-12,
+    "rhs": "ad35319be7ba43b8a545884db2021016dbe9dff30de976e07583d14f93381db3",
+    "source": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Generation/Escape_initial_conditions_CR3BP_x.txt",
+    "source_size": 1423319882,
+    "source_mtime_ns": 1791606201997752123,
+    "members_sha256": "a8c1dc33a9104a317426613b45371e68548b84c8fcceb8e11b3da6f306b9ae7b"
+  },
+  "curves_path": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_omega_catalogo_200x200/reconstructed_curves.npy",
+  "coordinates": "Earth-centered synodic, km",
+  "samples": 201,
+  "trajectories": 469944,
+  "verified_existing": 0,
+  "reused": [
+    {
+      "directory": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_azimut_catalogo",
+      "count": 246114,
+      "original_states_checked": true
+    },
+    {
+      "directory": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/30bdb05597ea6ce2af40",
+      "count": 179127,
+      "original_states_checked": true
+    },
+    {
+      "directory": "/home/lucacecca/Astrodynamics/.cache/ga18_high_occurrence_dense/05fe8cc98f2cfd01742b",
+      "count": 3547,
+      "original_states_checked": true
+    }
+  ],
+  "integrated": 41156,
+  "validation": "Original source states; full member rows; ETD <=1e-7 km; SOI and radial-event conic radius <=1 km; omega and apsidal axis <=0.02 deg; eps/e rtol=1e-5, atol=1e-6",
+  "radial_event_note": "A CR3BP minimum Earth distance may coincide with the osculating apocenter; phi is the osculating pericenter direction, not necessarily the radial-event position angle.",
+  "completed": 469944
+}

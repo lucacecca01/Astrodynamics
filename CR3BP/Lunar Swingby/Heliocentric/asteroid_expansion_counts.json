@@ -1,0 +1,109 @@
+{
+  "retrieved_at_utc": "2026-11-03T01:34:27.404832+00:00",
+  "results": [
+    {
+      "inclination_below_deg": 5,
+      "annulus_au": [
+        0.6,
+        1.4
+      ],
+      "count": 13066,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.4%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C5%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 10,
+      "annulus_au": [
+        0.6,
+        1.4
+      ],
+      "count": 26217,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.4%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C10%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 15,
+      "annulus_au": [
+        0.6,
+        1.4
+      ],
+      "count": 33005,
+      "signature": {
+        "version": "1.0",
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.4%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C15%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 20,
+      "annulus_au": [
+        0.6,
+        1.4
+      ],
+      "count": 37124,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.4%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C20%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": null,
+      "annulus_au": [
+        0.6,
+        1.4
+      ],
+      "count": 46330,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.4%22%2C%22ad%7CGE%7C0.6%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 5,
+      "annulus_au": [
+        0.6,
+        1.6
+      ],
+      "count": 15108,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C1.6%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C5%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 5,
+      "annulus_au": [
+        0.6,
+        2.0
+      ],
+      "count": 167868,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C2.0%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C5%22%5D%7D"
+    },
+    {
+      "inclination_below_deg": 5,
+      "annulus_au": [
+        0.6,
+        2.5
+      ],
+      "count": 349930,
+      "signature": {
+        "source": "NASA/JPL SBDB (Small-Body DataBase) Query API",
+        "version": "1.0"
+      },
+      "url": "https://ssd-api.jpl.nasa.gov/sbdb_query.api?sb-kind=a&sb-cdata=%7B%22AND%22%3A%5B%22e%7CGE%7C0%22%2C%22e%7CLT%7C1%22%2C%22a%7CGT%7C0%22%2C%22q%7CLE%7C2.5%22%2C%22ad%7CGE%7C0.6%22%2C%22i%7CLT%7C5%22%5D%7D"
+    }
+  ]
+}
