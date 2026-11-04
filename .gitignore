@@ -31,3 +31,9 @@ dist/
 /CR3BP/Lunar Swingby/Heliocentric/GA18_plots_2/
 /CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/traiettorie_percentili_per_mappa/
 /CR3BP/Lunar Swingby/Heliocentric/GA18_parking_plots_reali_planari/traiettorie_percentili_individuali/
+**/reconstructed_curves.npy
+**/trajectory_exit_catalog.txt
+**/trajectory_exit_catalog.npy
+**/delta_v_parcheggio_tutte_mappe_*.pdf
+**/delta_v_leo200_hohmann_tutte_mappe_*.pdf
+**/tavole_05_10_J2000_catalogo_tutti_percentili.pdf
