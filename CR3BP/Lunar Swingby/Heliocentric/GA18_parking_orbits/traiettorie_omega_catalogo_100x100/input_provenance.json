@@ -1,0 +1,9 @@
+{
+  "source": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_parking_orbits/traiettorie_omega_catalogo_200x200/mappe_corrette",
+  "requested_bins": 100,
+  "files": {
+    "riepilogo.txt": "382ea697f3c050f62a4e7e04743680a8c2cf2ad7858075166614c3681d54a8fa",
+    "mappe_percentili/06_migliori_transfer_occorrenze_eps_omega_griglie.npz": "5e9d202b3434ff00379b36f165529f7709d9478cf6d4a8d29760cf5e5dfa73c0",
+    "mappe_percentili/08_migliori_transfer_occorrenze_rp_omega_griglie.npz": "7e1890a0e5e473c2382edd2c492269da7aa41cb813c4c627f02b4f0dfa85822f"
+  }
+}
