@@ -1,0 +1,70 @@
+{
+  "source_run": "GA19_earth_returns_2",
+  "soi_radius_km": 924663.6125892245,
+  "earth_radius_km": 6378.0,
+  "typical_case": {
+    "row_index": 503,
+    "departure_cluster": 563,
+    "capture_cluster": 444,
+    "jd_departure": 2451545.0,
+    "tof_days": 709.0,
+    "branch": 1,
+    "revolutions": 1,
+    "minimum_day": 354.864482495315,
+    "minimum_distance_km": 352009.39104269067,
+    "intermediate_entry_day": 344.1177461950396,
+    "intermediate_exit_day": 365.6599189806096,
+    "crossings": [
+      [
+        0.01945446848562738,
+        "uscita"
+      ],
+      [
+        344.1177461950396,
+        "ingresso"
+      ],
+      [
+        365.6599189806096,
+        "uscita"
+      ],
+      [
+        708.985541852862,
+        "ingresso"
+      ]
+    ]
+  },
+  "earth_intersection_case": {
+    "row_index": 11433,
+    "departure_cluster": 45,
+    "capture_cluster": 98,
+    "jd_departure": 2451554.0,
+    "tof_days": 716.0,
+    "branch": 1,
+    "revolutions": 1,
+    "minimum_day": 358.03094624122235,
+    "minimum_distance_km": 318.15877132609046,
+    "intermediate_entry_day": 350.72514589380194,
+    "intermediate_exit_day": 365.3394383845559,
+    "crossings": [
+      [
+        0.001739520469451843,
+        "uscita"
+      ],
+      [
+        350.72514589380194,
+        "ingresso"
+      ],
+      [
+        365.3394383845559,
+        "uscita"
+      ],
+      [
+        715.99958537218,
+        "ingresso"
+      ]
+    ],
+    "nominal_body_entry_day": 357.9801630117078,
+    "nominal_body_exit_day": 358.08172929029695
+  },
+  "qualification": "Nominal planar Sun-only arcs, not integrations of actual Earth flybys or impacts."
+}
