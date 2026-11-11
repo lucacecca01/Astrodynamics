@@ -1,0 +1,40 @@
+{
+  "candidate": "/tmp/ga20_rp4r_fg3_surface_candidate_adapter.json",
+  "earth_soi_radius_km": 924663.6125892245,
+  "normalized_surface_positions": true,
+  "initial_distance_km": 924663.6125892239,
+  "final_distance_km": 924663.6126281938,
+  "initial_surface_error_km": -5.820766091346741e-10,
+  "final_surface_error_km": 3.896933048963547e-05,
+  "original_departure_centroid_deficit_km": 52.54109048540704,
+  "original_capture_centroid_deficit_km": 61.063062148634344,
+  "initial_radial_velocity_km_s": 1.8901068697879808,
+  "final_radial_velocity_km_s": -1.89532034501797,
+  "physical_flyby_rotation_rad": 5.560407705142588e-10,
+  "physical_speed_residual_km_s": 0.0,
+  "physical_return_position_miss_km": 6.102948535103599e-05,
+  "physical_return_velocity_difference_from_lambert_km_s": 1.0923627707079306e-11,
+  "true_soi_exit_seconds_from_start": 5.41393021849809e-07,
+  "true_first_entry_days": 1815.7532310264626,
+  "first_entry_seconds_from_nominal_end": 1.990795135498047e-05,
+  "no_intermediate_soi_contacts": true,
+  "adaptive_state_evaluations": 7324,
+  "earth_acceleration_upper_bound_assumed_km_s2": 0.0001,
+  "relative_acceleration_bound_km_s2": 0.00010595164114092884,
+  "classification_distance_tolerance_km": 0.01,
+  "classification_time_tolerance_s": 0.25,
+  "interior_local_earth_distance_minima": [
+    {
+      "days": 477.813929125343,
+      "earth_distance_km": 207854270.3027217
+    },
+    {
+      "days": 910.9707608976555,
+      "earth_distance_km": 299288135.25670195
+    },
+    {
+      "days": 1348.8200616023523,
+      "earth_distance_km": 213115662.4986277
+    }
+  ]
+}

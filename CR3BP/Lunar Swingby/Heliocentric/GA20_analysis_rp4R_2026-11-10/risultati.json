@@ -1,0 +1,1305 @@
+{
+  "generated_at_local": "2026-11-10T10:15:34.573636+13:00",
+  "timezone": "Pacific/Auckland",
+  "objective": "Catalogue analysis with minimum asteroid-centred periapsis4R and observational masses",
+  "catalogue_census": {
+    "generated_at_utc": "2026-11-09T21:07:11.637461+00:00",
+    "scope": "Coverage only. This file does not assert flyby feasibility or exhaustive transfer-search completion.",
+    "sources": {
+      "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb_all_i5.json": {
+        "sha256": "9a04e249dae5a6a67b7c48940514878876a9c4e8d15274bfab708bce98d64fa7",
+        "bytes": 3434701
+      },
+      "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/asteroids_sbdb_physical.json": {
+        "sha256": "2c30299ed40ebc66d2856c35b2b14331f5229174b6ce4b8e61a8e078065ad7e6",
+        "bytes": 2156422
+      },
+      "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/CR3BP_prova_GA_20.py": {
+        "sha256": "05aa618fd13002b831043cfe126fdc581ee07203be22fefab963d3bfa1a1662b",
+        "bytes": 38717
+      }
+    },
+    "current_departure_and_asteroid_encounter_window_jd_tdb": [
+      2461326.5,
+      2462056.5
+    ],
+    "requested_periapsis": "rp_min=4*R_AST measured from asteroid centre; surface altitude=3*R_AST",
+    "current_return_grid_days": {
+      "start": 200,
+      "stop_exclusive": 500,
+      "step": 1
+    },
+    "catalogue_count": 13055,
+    "passes_ga20_filters": 13055,
+    "physical_record_count": 13055,
+    "diameters_available": 158,
+    "diameters_missing": 12897,
+    "mass_classifications": {
+      "missing": 13051,
+      "assumed_density": 1,
+      "observational": 3
+    },
+    "eligible_observational_mass_and_radius": 3,
+    "radius_diameter_inconsistency_indices": [],
+    "archive_files_count": 4886,
+    "archive_bytes": 6992752512,
+    "catalogue_archive_presence_count": 4886,
+    "archive_read_policy": "Exact rows/dates read only for records containing a mass; all other archive files enumerated only, no zero inferred.",
+    "archives_read_exact": 3,
+    "read_errors": [],
+    "known_mass_records": [
+      {
+        "catalogue_index": 14,
+        "spkid": "20005604",
+        "name": "5604 (1992 FE)",
+        "passes_ga20_filters": true,
+        "physical_record_present": true,
+        "diameter_km": 0.55,
+        "radius_km": 0.275,
+        "rp_min_4r_km": 1.1,
+        "altitude_at_rp_min_km": 0.8250000000000001,
+        "mass_kg": 174000000000.0,
+        "mass_classification": "assumed_density",
+        "mass_scope": "",
+        "mass_source": "Stima sferica: D=0.55 km; densita assunta=2000 kg/m^3",
+        "mass_source_url": "",
+        "eligible_observational_mass_and_radius": false,
+        "archive_exists": true,
+        "archive_path": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_real_asteroids/Asteroide_5604 (1992 FE)/transfers_rendezvous.txt",
+        "outbound_count": 15821,
+        "outbound_departure_window_count": 15821,
+        "outbound_both_epochs_window_count": 15821,
+        "archive_departure_jd_min": 2461326.5,
+        "archive_departure_jd_max": 2461806.5,
+        "archive_arrival_jd_min": 2461558.5,
+        "archive_arrival_jd_max": 2461952.5,
+        "archive_tof_days_min": 96.0,
+        "archive_tof_days_max": 336.0,
+        "archive_elements_match_current": true,
+        "archive_count_status": "read_exact"
+      },
+      {
+        "catalogue_index": 40,
+        "spkid": "20025143",
+        "name": "25143 Itokawa (1998 SF36)",
+        "passes_ga20_filters": true,
+        "physical_record_present": true,
+        "diameter_km": 0.33,
+        "radius_km": 0.165,
+        "rp_min_4r_km": 0.66,
+        "altitude_at_rp_min_km": 0.495,
+        "mass_kg": 35100000000.0,
+        "mass_classification": "observational",
+        "mass_scope": "",
+        "mass_source": "Hayabusa/JAXA",
+        "mass_source_url": "https://www.isas.jaxa.jp/e/forefront/2006/yoshikawa/03.shtml",
+        "eligible_observational_mass_and_radius": true,
+        "archive_exists": false,
+        "archive_path": "",
+        "outbound_count": null,
+        "outbound_departure_window_count": null,
+        "outbound_both_epochs_window_count": null,
+        "archive_departure_jd_min": null,
+        "archive_departure_jd_max": null,
+        "archive_arrival_jd_min": null,
+        "archive_arrival_jd_max": null,
+        "archive_tof_days_min": null,
+        "archive_tof_days_max": null,
+        "archive_elements_match_current": null,
+        "archive_count_status": "absent"
+      },
+      {
+        "catalogue_index": 66,
+        "spkid": "20136617",
+        "name": "136617 (1994 CC)",
+        "passes_ga20_filters": true,
+        "physical_record_present": true,
+        "diameter_km": 0.62,
+        "radius_km": 0.31,
+        "rp_min_4r_km": 1.24,
+        "altitude_at_rp_min_km": 0.9299999999999999,
+        "mass_kg": 259350000000.0,
+        "mass_classification": "observational",
+        "mass_scope": "primary (Alpha), excluding the two satellites",
+        "mass_source": "Fang et al. (2011), AJ 141:154, Section 3.2; primary Alpha",
+        "mass_source_url": "https://doi.org/10.1088/0004-6256/141/5/154",
+        "eligible_observational_mass_and_radius": true,
+        "archive_exists": true,
+        "archive_path": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_real_asteroids/Asteroide_136617 (1994 CC)/transfers_rendezvous.txt",
+        "outbound_count": 2342,
+        "outbound_departure_window_count": 2342,
+        "outbound_both_epochs_window_count": 2342,
+        "archive_departure_jd_min": 2461566.5,
+        "archive_departure_jd_max": 2461685.5,
+        "archive_arrival_jd_min": 2461878.5,
+        "archive_arrival_jd_max": 2461940.5,
+        "archive_tof_days_min": 220.0,
+        "archive_tof_days_max": 315.0,
+        "archive_elements_match_current": true,
+        "archive_count_status": "read_exact"
+      },
+      {
+        "catalogue_index": 125,
+        "spkid": "20175706",
+        "name": "175706 (1996 FG3)",
+        "passes_ga20_filters": true,
+        "physical_record_present": true,
+        "diameter_km": 1.196,
+        "radius_km": 0.598,
+        "rp_min_4r_km": 2.392,
+        "altitude_at_rp_min_km": 1.794,
+        "mass_kg": 3500000000000.0,
+        "mass_classification": "observational",
+        "mass_scope": "primary, excluding the secondary",
+        "mass_source": "Wolters et al. (2011), MNRAS 418:1246-1257, Section 3; primary",
+        "mass_source_url": "https://academic.oup.com/mnras/article/418/2/1246/1073545",
+        "eligible_observational_mass_and_radius": true,
+        "archive_exists": true,
+        "archive_path": "/home/lucacecca/Astrodynamics/CR3BP/Lunar Swingby/Heliocentric/GA18_real_asteroids/Asteroide_175706 (1996 FG3)/transfers_rendezvous.txt",
+        "outbound_count": 451,
+        "outbound_departure_window_count": 451,
+        "outbound_both_epochs_window_count": 451,
+        "archive_departure_jd_min": 2461376.5,
+        "archive_departure_jd_max": 2461524.5,
+        "archive_arrival_jd_min": 2461816.5,
+        "archive_arrival_jd_max": 2461860.5,
+        "archive_tof_days_min": 329.0,
+        "archive_tof_days_max": 441.0,
+        "archive_elements_match_current": true,
+        "archive_count_status": "read_exact"
+      }
+    ],
+    "caveats": [
+      "GA18 archives contain outbound rendezvous candidates, not complete flyby missions.",
+      "Absence of an archive does not establish absence of an outbound solution.",
+      "Mass missing is not proof the physical mass has never been measured; the local physical JSON initially queried only sizes.",
+      "All13,055 catalogue rows are included in the CSV in unchanged order; no density-estimated mass is eligible."
+    ]
+  },
+  "analysis_configuration": {
+    "jd_departure_and_encounter_start": 2461326.5,
+    "jd_departure_and_encounter_end": 2462056.5,
+    "departure_step_days": 1,
+    "encounter_step_days": 1,
+    "corona_au": [
+      0.6,
+      1.4
+    ],
+    "cluster_count": 763,
+    "n_sigma": 2.5,
+    "outbound_maximum_revolutions": 2,
+    "current_return_days": [
+      200,
+      499
+    ],
+    "current_return_maximum_revolutions": 3,
+    "periapsis_rule": "rp_min=4R; minimum altitude=3R",
+    "soi_positions_normalized": true,
+    "velocity_speed_matching_tolerance_km_s": 0.001
+  },
+  "total_lambert_problem_calls": 357885913,
+  "total_lambert_branches_checked": 541139579,
+  "total_accepted_outbound_arcs": 11704,
+  "current_complete_candidates_found": 0,
+  "known_future_long_return_candidates_verified": 2,
+  "results": {
+    "itokawa": {
+      "summary": {
+        "catalogue_index": 40,
+        "spkid": "20025143",
+        "name": "25143 Itokawa (1998 SF36)",
+        "mass_kg": 35100000000.0,
+        "mass_scope": "asteroid",
+        "radius_km": 0.165,
+        "min_periapsis_km": 0.66,
+        "min_altitude_km": 0.495,
+        "lambert_problem_calls": 104347117,
+        "lambert_branches_checked": 167778061,
+        "solver_errors": 0,
+        "accepted_outbound_count": 0,
+        "outbound_branch_counts": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0
+        },
+        "current_complete_candidates_found": 0,
+        "current_status": "no_acceptable_outbound_on_daily_grid_plus_local_refinement",
+        "extended_future_candidate_verified": false,
+        "extended_return_days": null,
+        "extended_return_revolutions": null
+      },
+      "outbound_metadata": {
+        "catalogue_index": 40,
+        "body": "25143 Itokawa (1998 SF36)",
+        "mass_kg": 35100000000.0,
+        "radius_km": 0.165,
+        "min_periapsis_km": 0.66,
+        "jd_start": 2461326.5,
+        "jd_end": 2462056.5,
+        "departure_step_days": 1.0,
+        "encounter_step_days": 1.0,
+        "outbound_multi_revs": 2,
+        "normalized_soi_positions": true,
+        "lambert_problem_calls": 104347117,
+        "lambert_branches_checked": 167778061,
+        "solver_errors": 0,
+        "elapsed_seconds": 139.47663668799214,
+        "limitation": "Exhaustive only on the stated daily outbound grid and branch cap; continuous departures/encounters are not excluded by an empty result.",
+        "best_outbound_columns": [
+          "departure_residual_ratio_squared",
+          "jd_departure",
+          "jd_asteroid",
+          "departure_cluster_id",
+          "outbound_branch"
+        ]
+      },
+      "short_return_analysis": {
+        "catalogue_index": 40,
+        "body": "25143 Itokawa (1998 SF36)",
+        "mass_kg": 35100000000.0,
+        "mass_kind": "Hayabusa observational mass",
+        "mass_source": "https://www.isas.jaxa.jp/e/forefront/2006/yoshikawa/03.shtml",
+        "radius_km": 0.165,
+        "minimum_periapsis_km": 0.66,
+        "minimum_altitude_km": 0.495,
+        "current_window_status": "No acceptable outbound found on the complete daily grid or in the 50 best local continuous refinements; complete-return search therefore has no accepted outbound seed.",
+        "current_window": {
+          "jd_start": 2461326.5,
+          "jd_end": 2462056.5,
+          "return_tof_min_days": 200,
+          "return_tof_max_exclusive_days": 500,
+          "normalized_soi_positions": true,
+          "cluster_count": 763,
+          "departure_grid_count": 731,
+          "encounter_grid_count_in_corona": 406
+        },
+        "outbound_screening": {
+          "lambert_problem_calls": 104347117,
+          "lambert_branches_checked": 167778061,
+          "solver_errors": 0,
+          "maximum_outbound_revolutions": 2,
+          "accepted_outbound_count": 0,
+          "best_daily_residual_to_disk_radius": 4.676439061847841,
+          "elapsed_seconds": 139.47663668799214
+        },
+        "local_continuous_refinements": {
+          "count": 50,
+          "bounds_days": 3.0,
+          "accepted_count": 0,
+          "best_residual_to_disk_radius": 4.607667563480856,
+          "best_residual_km_s": 0.5981195994691757,
+          "permitted_radius_km_s": 0.12980962520163392
+        },
+        "historical_candidate_revalidated_with_4R": {
+          "name": "25143 Itokawa (1998 SF36)",
+          "catalogue_index": 40,
+          "jd_departure": 2451551.0,
+          "jd_flyby": 2451991.700955648,
+          "jd_capture": 2452043.5477746576,
+          "departure_cluster_id": 292,
+          "capture_cluster_id": 503,
+          "tof_outbound_days": 440.70095564802625,
+          "tof_return_days": 51.84681900984518,
+          "outbound_branch": 2,
+          "return_branch": 0,
+          "speed_in_km_s": 6.541444564062705,
+          "speed_out_km_s": 6.54144456405878,
+          "speed_residual_km_s": 3.924860436654853e-12,
+          "turn_angle_rad": 8.498566957995977e-11,
+          "max_turn_angle_rad": 1.6590198014682313e-10,
+          "velocity_rotation_error_km_s": 1.3876208501193728e-11,
+          "earth_soi_radius_km": 924663.6125892245,
+          "soi_positions_normalized": true,
+          "departure_residual_ratio": 0.6180648984478784,
+          "capture_residual_ratio": 0.7491232262668504,
+          "r0": [
+            -41535941.3277818,
+            141948818.5098864,
+            0.0
+          ],
+          "r_ast": [
+            -152669985.71225795,
+            -13172462.596720934,
+            0.0
+          ],
+          "r_capture": [
+            -90324225.61877394,
+            -122147504.52346902,
+            0.0
+          ],
+          "v0": [
+            -29.03347551226556,
+            -7.3380736080152245,
+            0.0
+          ],
+          "v_ast_arrival": [
+            2.3216375276912746,
+            -28.790725544645856,
+            0.0
+          ],
+          "v_ast_departure": [
+            2.3216375274624887,
+            -28.79072554515254,
+            0.0
+          ],
+          "v_capture": [
+            23.85292660843472,
+            -16.745074424435433,
+            0.0
+          ],
+          "asteroid_velocity": [
+            8.264338558702379,
+            -31.52473385493408,
+            0.0
+          ],
+          "root_success": true,
+          "source_seed": 7373,
+          "min_periapsis_km": 0.66,
+          "radius_km": 0.165,
+          "mass_kg": 35100000000.0,
+          "historical": true,
+          "within_current_window": false
+        },
+        "historical_physical_soi_validation": {
+          "candidate": "/tmp/ga20_rp4r_itokawa_historical_candidate.json",
+          "earth_soi_radius_km": 924663.6125892245,
+          "normalized_surface_positions": true,
+          "initial_distance_km": 924663.6125892369,
+          "final_distance_km": 924663.6121044245,
+          "initial_surface_error_km": 1.2456439435482025e-08,
+          "final_surface_error_km": -0.00048479996621608734,
+          "original_departure_centroid_deficit_km": 429.83170936757233,
+          "original_capture_centroid_deficit_km": 453.9771326560294,
+          "initial_radial_velocity_km_s": 1.20272314631245,
+          "final_radial_velocity_km_s": -1.1606860589539567,
+          "physical_flyby_rotation_rad": 8.295099007341157e-11,
+          "physical_speed_residual_km_s": 0.0,
+          "physical_return_position_miss_km": 6.461808959812628e-05,
+          "physical_return_velocity_difference_from_lambert_km_s": 1.866668422276789e-11,
+          "true_soi_exit_seconds_from_start": -7.937035562122219e-08,
+          "true_first_entry_days": 492.5477746530384,
+          "first_entry_seconds_from_nominal_end": -0.00041756778955459595,
+          "no_intermediate_soi_contacts": true,
+          "adaptive_state_evaluations": 2021,
+          "earth_acceleration_upper_bound_assumed_km_s2": 0.0001,
+          "relative_acceleration_bound_km_s2": 0.00010655098730360706,
+          "classification_distance_tolerance_km": 0.01,
+          "classification_time_tolerance_s": 0.25,
+          "interior_local_earth_distance_minima": [
+            {
+              "days": 245.8102325228282,
+              "earth_distance_km": 7794167.310935432
+            }
+          ]
+        },
+        "historical_candidate_excluded_from_current_window": true,
+        "limitations": [
+          "The daily grid check is exhaustive for the stated date grid and outbound branch cap, not a global proof over continuous dates.",
+          "Continuous refinement is local around 50 best daily seeds.",
+          "The historical candidate is in2000–2001 with return51.85days and does not satisfy the current dates or return200..499days."
+        ]
+      },
+      "extended_candidate": null,
+      "extended_physical_first_entry_audit": null,
+      "physical_data_provenance": {
+        "diameter_km": 0.33,
+        "radius_km": 0.165,
+        "diameter_sigma_km": null,
+        "radius_sigma_km": null,
+        "extent_km": "0.535x0.294x0.209",
+        "mass_kg": 35100000000.0,
+        "mass_source": "Hayabusa/JAXA",
+        "mass_source_url": "https://www.isas.jaxa.jp/e/forefront/2006/yoshikawa/03.shtml"
+      }
+    },
+    "cc": {
+      "summary": {
+        "catalogue_index": 66,
+        "spkid": "20136617",
+        "name": "136617 (1994 CC)",
+        "mass_kg": 259350000000.0,
+        "mass_scope": "primary (Alpha), excluding the two satellites",
+        "radius_km": 0.31,
+        "min_periapsis_km": 1.24,
+        "min_altitude_km": 0.9299999999999999,
+        "lambert_problem_calls": 89717355,
+        "lambert_branches_checked": 138012717,
+        "solver_errors": 0,
+        "accepted_outbound_count": 11200,
+        "outbound_branch_counts": {
+          "0": 2342,
+          "1": 7914,
+          "2": 944,
+          "3": 0,
+          "4": 0
+        },
+        "current_complete_candidates_found": 0,
+        "current_status": "no_close_earth_return_for_accepted_daily_outbound_arcs_at_three_tested_turns",
+        "extended_future_candidate_verified": true,
+        "extended_return_days": 1933.8066278405445,
+        "extended_return_revolutions": 6
+      },
+      "outbound_metadata": {
+        "catalogue_index": 66,
+        "body": "136617 (1994 CC)",
+        "mass_kg": 259350000000.0,
+        "radius_km": 0.31,
+        "min_periapsis_km": 1.24,
+        "jd_start": 2461326.5,
+        "jd_end": 2462056.5,
+        "departure_step_days": 1.0,
+        "encounter_step_days": 1.0,
+        "outbound_multi_revs": 2,
+        "normalized_soi_positions": true,
+        "lambert_problem_calls": 89717355,
+        "lambert_branches_checked": 138012717,
+        "solver_errors": 0,
+        "elapsed_seconds": 153.74480081000365,
+        "limitation": "Exhaustive only on the stated daily outbound grid and branch cap; continuous departures/encounters are not excluded by an empty result."
+      },
+      "short_return_analysis": {
+        "catalogue_index": 66,
+        "body": "136617 (1994 CC)",
+        "mass_kg": 259350000000.0,
+        "radius_km": 0.31,
+        "minimum_periapsis_km": 1.24,
+        "outbound_arc_count": 11200,
+        "distinct_encounter_dates": 69,
+        "return_tof_min_days": 200.0,
+        "return_tof_max_days_inclusive": 499.0,
+        "sample_step_days": 1.0,
+        "rotation_choices": [
+          "minus_delta_max",
+          "zero",
+          "plus_delta_max"
+        ],
+        "distance_evaluations": 10080000,
+        "propagated_trajectory_count": 33600,
+        "minimum_distance_km": 112928401.78046738,
+        "best_by_rotation": {
+          "-1": {
+            "distance_km": 112928402.08295503,
+            "return_tof_days": 200.0,
+            "sign": -1,
+            "turn_angle_rad": -2.759730604022934e-10,
+            "max_turn_angle_rad": 2.759730604022934e-10,
+            "outbound": {
+              "jd_departure": 2461326.5,
+              "jd_asteroid": 2461882.5,
+              "departure_cluster_id": 64,
+              "outbound_branch": 1,
+              "tof_out_days": 556.0,
+              "departure_disk_ratio": 0.9289228512053961,
+              "arrival_velocity_heliocentric": [
+                27.841785363319904,
+                -8.004977206340612,
+                0.0
+              ],
+              "vinf_minus": [
+                -7.065874070248032,
+                -7.158155828150582,
+                0.0
+              ],
+              "vinf_speed": 10.058119667049585
+            },
+            "refined_distance_km": 112928402.08295503,
+            "refined_return_tof_days": 200.0
+          },
+          "0": {
+            "distance_km": 112928401.93171117,
+            "return_tof_days": 200.0,
+            "sign": 0,
+            "turn_angle_rad": 0.0,
+            "max_turn_angle_rad": 2.759730604022934e-10,
+            "outbound": {
+              "jd_departure": 2461326.5,
+              "jd_asteroid": 2461882.5,
+              "departure_cluster_id": 64,
+              "outbound_branch": 1,
+              "tof_out_days": 556.0,
+              "departure_disk_ratio": 0.9289228512053961,
+              "arrival_velocity_heliocentric": [
+                27.841785363319904,
+                -8.004977206340612,
+                0.0
+              ],
+              "vinf_minus": [
+                -7.065874070248032,
+                -7.158155828150582,
+                0.0
+              ],
+              "vinf_speed": 10.058119667049585
+            },
+            "refined_distance_km": 112928401.93171117,
+            "refined_return_tof_days": 200.0
+          },
+          "1": {
+            "distance_km": 112928401.78046738,
+            "return_tof_days": 200.0,
+            "sign": 1,
+            "turn_angle_rad": 2.759730604022934e-10,
+            "max_turn_angle_rad": 2.759730604022934e-10,
+            "outbound": {
+              "jd_departure": 2461326.5,
+              "jd_asteroid": 2461882.5,
+              "departure_cluster_id": 64,
+              "outbound_branch": 1,
+              "tof_out_days": 556.0,
+              "departure_disk_ratio": 0.9289228512053961,
+              "arrival_velocity_heliocentric": [
+                27.841785363319904,
+                -8.004977206340612,
+                0.0
+              ],
+              "vinf_minus": [
+                -7.065874070248032,
+                -7.158155828150582,
+                0.0
+              ],
+              "vinf_speed": 10.058119667049585
+            },
+            "refined_distance_km": 112928401.78046738,
+            "refined_return_tof_days": 200.0
+          }
+        },
+        "max_extreme_vs_zero_position_separation_km": 0.36203897957452674,
+        "maximum_spacecraft_perihelion_speed_bound_km_s": 37.29979612621689,
+        "assumed_earth_speed_upper_bound_km_s": 50.0,
+        "sample_interpolation_distance_lower_bound_km": 109157050.58781481,
+        "earth_soi_km": 924663.6125892245,
+        "elapsed_seconds": 17.603223316022195,
+        "scope": "All accepted daily outbound arcs and three stated physical turn angles; not an exhaustive search over continuous departure or encounter dates or arbitrary scattering angles."
+      },
+      "extended_candidate": {
+        "body": "136617 (1994 CC)",
+        "catalogue_index": 66,
+        "spkid": "20136617",
+        "source_seed": "/tmp/cc_surface_complete_candidate.json",
+        "research_scope": "Extended continuous-time candidate, outside current return200..499days and multi_revs3 configuration.",
+        "in_current_return_grid": false,
+        "outbound_branch": 0,
+        "return_branch": 12,
+        "return_revolutions": 6,
+        "surface_normalized": true,
+        "soi_positions_normalized": true,
+        "soi_radius_km": 924663.6125892245,
+        "mass_kg": 259350000000.0,
+        "radius_km": 0.31,
+        "mu_ast": 1.730979705e-08,
+        "min_periapsis_km": 1.24,
+        "min_surface_altitude_km": 0.9299999999999999,
+        "jd_departure": 2461654.5,
+        "jd_asteroid": 2461899.5926758572,
+        "jd_capture": 2463833.399303698,
+        "tof_out_days": 245.09267585714753,
+        "tof_return_days": 1933.8066278405445,
+        "departure_cluster_id": 505,
+        "capture_cluster_id": 415,
+        "departure_residual": 0.03634855199430145,
+        "capture_residual": 0.08988136287841354,
+        "departure_radius": 0.13118286531213644,
+        "capture_radius": 0.09449365881050013,
+        "departure_disk_ratio": 0.27708307718247904,
+        "capture_disk_ratio": 0.9511893603216677,
+        "vinf_minus": 8.753250042300548,
+        "vinf_plus": 8.753250042299925,
+        "speed_residual": 6.235012506294879e-13,
+        "turn_angle_rad": 1.8142039226194988e-10,
+        "max_turn_angle_rad": 3.643859451509024e-10,
+        "physical_rotation_rad": 1.821929725754512e-10,
+        "required_periapsis_km": 2.4905611017313443,
+        "continuity_residual": 6.790834466087481e-12,
+        "departure_radial_km_s": 1.4236263049521285,
+        "capture_radial_km_s": -1.4335781947888466,
+        "r0": [
+          143322751.38926113,
+          -45071163.01431904,
+          0.0
+        ],
+        "ra": [
+          22078102.33695154,
+          -142403246.98641482,
+          0.0
+        ],
+        "r1": [
+          131803634.12185068,
+          -73331988.95583987,
+          0.0
+        ],
+        "v0": [
+          7.527364146128702,
+          26.960127631717846,
+          0.0
+        ],
+        "vin": [
+          29.256485792135187,
+          1.6780497573735502,
+          0.0
+        ],
+        "vout": [
+          29.256485793314933,
+          1.6780497563105348,
+          0.0
+        ],
+        "v1": [
+          13.406356170484587,
+          24.431435335214385,
+          -0.0
+        ],
+        "asteroid_velocity": [
+          35.11844011452524,
+          8.178578799324452,
+          0.0
+        ],
+        "physical_vout": [
+          29.256485793319538,
+          1.6780497563055432,
+          0.0
+        ]
+      },
+      "extended_physical_first_entry_audit": {
+        "candidate": "/tmp/ga20_rp4r_cc_extended_candidate.json",
+        "earth_soi_radius_km": 924663.6125892245,
+        "normalized_surface_positions": true,
+        "initial_distance_km": 924663.6125892262,
+        "final_distance_km": 924663.6116627562,
+        "initial_surface_error_km": 1.7462298274040222e-09,
+        "final_surface_error_km": -0.000926468288525939,
+        "original_departure_centroid_deficit_km": 175.38515818084124,
+        "original_capture_centroid_deficit_km": 209.09379684505984,
+        "initial_radial_velocity_km_s": 1.4236263049521285,
+        "final_radial_velocity_km_s": -1.4335781945628436,
+        "physical_flyby_rotation_rad": 1.821929725754512e-10,
+        "physical_speed_residual_km_s": 0.0,
+        "physical_return_position_miss_km": 0.0017589860993308456,
+        "physical_return_velocity_difference_from_lambert_km_s": 3.777696280370222e-10,
+        "true_soi_exit_seconds_from_start": -1.7875750790707912e-07,
+        "true_first_entry_days": 2178.8993036902143,
+        "first_entry_seconds_from_nominal_end": -0.0006460845470428467,
+        "no_intermediate_soi_contacts": true,
+        "adaptive_state_evaluations": 8791,
+        "earth_acceleration_upper_bound_assumed_km_s2": 0.0001,
+        "relative_acceleration_bound_km_s2": 0.00010935141494871518,
+        "classification_distance_tolerance_km": 0.01,
+        "classification_time_tolerance_s": 0.25,
+        "interior_local_earth_distance_minima": [
+          {
+            "days": 352.8223324403322,
+            "earth_distance_km": 124311043.24984783
+          },
+          {
+            "days": 688.8608595510127,
+            "earth_distance_km": 224851834.37432912
+          },
+          {
+            "days": 1093.5611186901845,
+            "earth_distance_km": 270245792.49022365
+          },
+          {
+            "days": 1473.7766584453243,
+            "earth_distance_km": 222542355.80025452
+          },
+          {
+            "days": 1812.948935924936,
+            "earth_distance_km": 122123477.65328464
+          }
+        ],
+        "state_adapter": "/tmp/ga20_rp4r_cc_extended_candidate_adapter.json",
+        "min_periapsis_km": 1.24,
+        "mass_kg": 259350000000.0,
+        "in_current_return_grid": false,
+        "return_revolutions": 6
+      },
+      "physical_data_provenance": {
+        "diameter_km": 0.62,
+        "radius_km": 0.31,
+        "diameter_sigma_km": null,
+        "radius_sigma_km": null,
+        "extent_km": null,
+        "diameter_reported_uncertainty_km": 0.06,
+        "diameter_source": "Radar shape model of the primary; quoted diameter uncertainty retained without assigning a sigma convention",
+        "diameter_source_url": "https://www.sciencedirect.com/science/article/pii/S0019103511003472",
+        "mass_kg": 259350000000.0,
+        "mass_sigma_kg": 10000000000.0,
+        "mass_uncertainty_convention": "Adopted 1-sigma uncertainty, Section 3.2",
+        "mass_scope": "primary (Alpha), excluding the two satellites",
+        "mass_method": "Three-body orbit fit to Arecibo and Goldstone radar range/Doppler observations",
+        "mass_source": "Fang et al. (2011), AJ 141:154, Section 3.2; primary Alpha",
+        "mass_source_url": "https://doi.org/10.1088/0004-6256/141/5/154"
+      }
+    },
+    "fg3": {
+      "summary": {
+        "catalogue_index": 125,
+        "spkid": "20175706",
+        "name": "175706 (1996 FG3)",
+        "mass_kg": 3500000000000.0,
+        "mass_scope": "primary, excluding the secondary",
+        "radius_km": 0.598,
+        "min_periapsis_km": 2.392,
+        "min_altitude_km": 1.794,
+        "lambert_problem_calls": 163821441,
+        "lambert_branches_checked": 235348801,
+        "solver_errors": 0,
+        "accepted_outbound_count": 504,
+        "outbound_branch_counts": {
+          "0": 451,
+          "1": 0,
+          "2": 53,
+          "3": 0,
+          "4": 0
+        },
+        "current_complete_candidates_found": 0,
+        "current_status": "no_close_earth_return_for_accepted_daily_outbound_arcs_at_three_tested_turns",
+        "extended_future_candidate_verified": true,
+        "extended_return_days": 1466.3635732890107,
+        "extended_return_revolutions": 3
+      },
+      "outbound_metadata": {
+        "catalogue_index": 125,
+        "body": "175706 (1996 FG3)",
+        "mass_kg": 3500000000000.0,
+        "radius_km": 0.598,
+        "min_periapsis_km": 2.392,
+        "jd_start": 2461326.5,
+        "jd_end": 2462056.5,
+        "departure_step_days": 1.0,
+        "encounter_step_days": 1.0,
+        "outbound_multi_revs": 2,
+        "normalized_soi_positions": true,
+        "lambert_problem_calls": 163821441,
+        "lambert_branches_checked": 235348801,
+        "solver_errors": 0,
+        "elapsed_seconds": 303.77423671697034,
+        "limitation": "Exhaustive only on the stated daily outbound grid and branch cap; continuous departures/encounters are not excluded by an empty result."
+      },
+      "short_return_analysis": {
+        "body": "175706 (1996 FG3)",
+        "source_outbound": "/tmp/ga20_rp4r_fg3_outbound.json",
+        "mass_kg": 3500000000000.0,
+        "radius_km": 0.598,
+        "min_periapsis_km": 2.392,
+        "return_grid_days": [
+          200,
+          499
+        ],
+        "grid_step_days": 1.0,
+        "outbound_matches": 504,
+        "physical_coasts_propagated": 1512,
+        "turn_fractions": [
+          -1,
+          0,
+          1
+        ],
+        "coasts_within_10soi": 0,
+        "best_coasts": [
+          {
+            "outbound_index": 441,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.02086637439281e-09,
+            "minimum_earth_distance_km": 227469961.67260253,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 441,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.02086637439281e-09,
+            "minimum_earth_distance_km": 227469962.37012944,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 441,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.02086637439281e-09,
+            "minimum_earth_distance_km": 227469963.06765616,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 440,
+            "jd_departure": 2461491.5,
+            "jd_asteroid": 2461834.5,
+            "departure_cluster_id": 102,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.013832899612779e-09,
+            "minimum_earth_distance_km": 227475839.4720175,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 440,
+            "jd_departure": 2461491.5,
+            "jd_asteroid": 2461834.5,
+            "departure_cluster_id": 102,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.013832899612779e-09,
+            "minimum_earth_distance_km": 227475840.1685123,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 440,
+            "jd_departure": 2461491.5,
+            "jd_asteroid": 2461834.5,
+            "departure_cluster_id": 102,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.013832899612779e-09,
+            "minimum_earth_distance_km": 227475840.86500707,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 442,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 73,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0214653921353594e-09,
+            "minimum_earth_distance_km": 227543429.7153152,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 442,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 73,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0214653921353594e-09,
+            "minimum_earth_distance_km": 227543430.41297635,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 442,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461835.5,
+            "departure_cluster_id": 73,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0214653921353594e-09,
+            "minimum_earth_distance_km": 227543431.11063746,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 446,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 105,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0308129885483327e-09,
+            "minimum_earth_distance_km": 227898528.59740072,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 446,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 105,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0308129885483327e-09,
+            "minimum_earth_distance_km": 227898529.29645592,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 446,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 105,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0308129885483327e-09,
+            "minimum_earth_distance_km": 227898529.99551103,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 445,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 101,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0310808828852133e-09,
+            "minimum_earth_distance_km": 227931548.26064447,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 445,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 101,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0310808828852133e-09,
+            "minimum_earth_distance_km": 227931548.95975783,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 445,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 101,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0310808828852133e-09,
+            "minimum_earth_distance_km": 227931549.65887105,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 444,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 70,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0310899107305697e-09,
+            "minimum_earth_distance_km": 227932657.91020563,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 444,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 70,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0310899107305697e-09,
+            "minimum_earth_distance_km": 227932658.60932094,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 444,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 70,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0310899107305697e-09,
+            "minimum_earth_distance_km": 227932659.30843621,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 443,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0315178070202416e-09,
+            "minimum_earth_distance_km": 227985013.80592063,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 443,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0315178070202416e-09,
+            "minimum_earth_distance_km": 227985014.50512972,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 443,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0315178070202416e-09,
+            "minimum_earth_distance_km": 227985015.20433876,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 449,
+            "jd_departure": 2461493.5,
+            "jd_asteroid": 2461837.5,
+            "departure_cluster_id": 68,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0388573954469678e-09,
+            "minimum_earth_distance_km": 227992776.24685737,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 449,
+            "jd_departure": 2461493.5,
+            "jd_asteroid": 2461837.5,
+            "departure_cluster_id": 68,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0388573954469678e-09,
+            "minimum_earth_distance_km": 227992776.94714352,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 449,
+            "jd_departure": 2461493.5,
+            "jd_asteroid": 2461837.5,
+            "departure_cluster_id": 68,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0388573954469678e-09,
+            "minimum_earth_distance_km": 227992777.6474295,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 447,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 114,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.0316215450897596e-09,
+            "minimum_earth_distance_km": 227997634.6076987,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 447,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 114,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.0316215450897596e-09,
+            "minimum_earth_distance_km": 227997635.30693045,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 447,
+            "jd_departure": 2461492.5,
+            "jd_asteroid": 2461836.5,
+            "departure_cluster_id": 114,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.0316215450897596e-09,
+            "minimum_earth_distance_km": 227997636.0061621,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 438,
+            "jd_departure": 2461467.5,
+            "jd_asteroid": 2461838.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 1.0,
+            "max_turn_rad": 1.03286911005597e-09,
+            "minimum_earth_distance_km": 228037046.39317334,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 438,
+            "jd_departure": 2461467.5,
+            "jd_asteroid": 2461838.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": 0.0,
+            "max_turn_rad": 1.03286911005597e-09,
+            "minimum_earth_distance_km": 228037047.08901423,
+            "return_days_at_minimum": 200.0
+          },
+          {
+            "outbound_index": 438,
+            "jd_departure": 2461467.5,
+            "jd_asteroid": 2461838.5,
+            "departure_cluster_id": 64,
+            "outbound_branch": 0,
+            "flyby_turn_fraction": -1.0,
+            "max_turn_rad": 1.03286911005597e-09,
+            "minimum_earth_distance_km": 228037047.7848553,
+            "return_days_at_minimum": 200.0
+          }
+        ],
+        "all_close_coasts": [],
+        "elapsed_seconds": 0.730067741998937,
+        "limitations": "Fixed daily outbound epochs; three allowable flyby angles sampled. Local minima refined in time. This does not exclude continuous outbound dates or prove all intermediate flyby angles, although their deflections are tiny."
+      },
+      "extended_candidate": {
+        "surface_normalized": true,
+        "soi_radius_km": 924663.6125892245,
+        "body": "175706 (1996 FG3)",
+        "mass_kg": 3500000000000.0,
+        "radius_km": 0.598,
+        "mu_ast": 2.336005e-07,
+        "min_periapsis_km": 2.392,
+        "jd_departure": 2461495.42,
+        "jd_asteroid": 2461844.809657737,
+        "jd_capture": 2463311.173231026,
+        "tof_out_days": 349.38965773722157,
+        "tof_return_days": 1466.3635732890107,
+        "departure_cluster_id": 68,
+        "capture_cluster_id": 114,
+        "departure_residual": 0.11056516260920309,
+        "capture_residual": 0.05126753570515231,
+        "departure_radius": 0.11265739767211591,
+        "capture_radius": 0.10482359283598837,
+        "return_branch": 6,
+        "return_revolutions": 3,
+        "vinf_minus": 13.252657613685422,
+        "vinf_plus": 13.252657613680691,
+        "speed_residual": 4.730438263322867e-12,
+        "turn_angle_rad": 5.559330161369805e-10,
+        "max_turn_angle_rad": 1.1120815410285176e-09,
+        "required_periapsis_km": 4.78492726581376,
+        "continuity_residual": 4.940525811068011e-12,
+        "departure_radial_km_s": 1.8901068697879808,
+        "capture_radial_km_s": -1.8953203449938023,
+        "r0": [
+          -147389125.45896775,
+          -25829084.37029787,
+          0.0
+        ],
+        "ra": [
+          9699589.465532571,
+          171039323.92180556,
+          0.0
+        ],
+        "r1": [
+          -149297239.98042002,
+          3011753.7804347826,
+          0.0
+        ],
+        "v0": [
+          4.780458797115118,
+          -31.40789959589517,
+          0.0
+        ],
+        "vin": [
+          -27.918621205121216,
+          -2.3221980983301913,
+          0.0
+        ],
+        "vout": [
+          -27.918621198006505,
+          -2.3221981002439023,
+          0.0
+        ],
+        "v1": [
+          -0.6027668520570659,
+          -31.82136750541185,
+          0.0
+        ],
+        "out_earth_distance_min_km": 924663.6125892239,
+        "back_earth_distance_min_km": 924663.6125904334,
+        "soi_sample_segments": [
+          [
+            "out",
+            [
+              [
+                0.0,
+                0.0
+              ]
+            ]
+          ],
+          [
+            "back",
+            []
+          ]
+        ],
+        "refined_local_earth_minima": [
+          [
+            "back",
+            128.42427157395463,
+            207854270.30247253
+          ],
+          [
+            "back",
+            561.5810931983066,
+            299288135.256723
+          ],
+          [
+            "back",
+            999.4304469276719,
+            213115662.49824303
+          ]
+        ],
+        "out_closure_position_km": 8.245019319357543e-07,
+        "back_closure_position_km": 1.2920881555636649e-06,
+        "departure_disk_ratio": 0.9814283384300942,
+        "capture_disk_ratio": 0.4890839391983803
+      },
+      "extended_physical_first_entry_audit": {
+        "candidate": "/tmp/ga20_rp4r_fg3_surface_candidate_adapter.json",
+        "earth_soi_radius_km": 924663.6125892245,
+        "normalized_surface_positions": true,
+        "initial_distance_km": 924663.6125892239,
+        "final_distance_km": 924663.6126281938,
+        "initial_surface_error_km": -5.820766091346741e-10,
+        "final_surface_error_km": 3.896933048963547e-05,
+        "original_departure_centroid_deficit_km": 52.54109048540704,
+        "original_capture_centroid_deficit_km": 61.063062148634344,
+        "initial_radial_velocity_km_s": 1.8901068697879808,
+        "final_radial_velocity_km_s": -1.89532034501797,
+        "physical_flyby_rotation_rad": 5.560407705142588e-10,
+        "physical_speed_residual_km_s": 0.0,
+        "physical_return_position_miss_km": 6.102948535103599e-05,
+        "physical_return_velocity_difference_from_lambert_km_s": 1.0923627707079306e-11,
+        "true_soi_exit_seconds_from_start": 5.41393021849809e-07,
+        "true_first_entry_days": 1815.7532310264626,
+        "first_entry_seconds_from_nominal_end": 1.990795135498047e-05,
+        "no_intermediate_soi_contacts": true,
+        "adaptive_state_evaluations": 7324,
+        "earth_acceleration_upper_bound_assumed_km_s2": 0.0001,
+        "relative_acceleration_bound_km_s2": 0.00010595164114092884,
+        "classification_distance_tolerance_km": 0.01,
+        "classification_time_tolerance_s": 0.25,
+        "interior_local_earth_distance_minima": [
+          {
+            "days": 477.813929125343,
+            "earth_distance_km": 207854270.3027217
+          },
+          {
+            "days": 910.9707608976555,
+            "earth_distance_km": 299288135.25670195
+          },
+          {
+            "days": 1348.8200616023523,
+            "earth_distance_km": 213115662.4986277
+          }
+        ]
+      },
+      "physical_data_provenance": {
+        "diameter_km": 1.196,
+        "radius_km": 0.598,
+        "diameter_sigma_km": 0.36,
+        "radius_sigma_km": 0.18,
+        "extent_km": null,
+        "mass_kg": 3500000000000.0,
+        "mass_error_lower_kg": 1900000000000.0,
+        "mass_error_upper_kg": 6400000000000.0,
+        "mass_uncertainty_convention": "As reported in Wolters et al. (2011), Section 3",
+        "mass_scope": "primary, excluding the secondary",
+        "mass_method": "Thermal dimensions combined with density constrained by binary orbital observations",
+        "mass_source": "Wolters et al. (2011), MNRAS 418:1246-1257, Section 3; primary",
+        "mass_source_url": "https://academic.oup.com/mnras/article/418/2/1246/1073545"
+      }
+    }
+  },
+  "limitations": [
+    "Only three objects have an observational mass and diameter in the local physical JSON. The remaining13052 are not declared infeasible: they are not dynamically evaluated with a measured mass. FE14 has an assumed-density mass and is excluded.",
+    "All13055 catalogue entries are censused. Complete outbound enumeration covers the stated daily departure/encounter grid,763 statistical velocity disks and all feasible Lambert branches up to2revolutions for the three eligible objects.",
+    "The short-return calculation propagates physically unpowered turns at minus maximum,zero and plus maximum. It is not an exhaustive search over every continuous departure/encounter date and every intermediate turn angle.",
+    "Itokawa received50 local continuous refinements within3days of the best daily seeds. No accepted outbound seed emerged.",
+    "SOI position centroids are projected radially onto the SOI sphere, preserving the catalogue velocity means,velocity radii and ETD phase conventions.",
+    "Long-return CC/FG3 examples and the historical Itokawa example are explicitly excluded from the current200..499day-return results.",
+    "Nominal observational masses and catalogue radii are used. Planar heliocentric two-body arcs and point-mass asteroid flybys do not include asteroid satellites,three-dimensional effects or reconstruction of an individual lunar catalogue member."
+  ],
+  "ga20_source_changed_during_analysis": false,
+  "ga20_source_sha256": "05aa618fd13002b831043cfe126fdc581ee07203be22fefab963d3bfa1a1662b"
+}

@@ -1,0 +1,126 @@
+{
+  "report.txt": {
+    "bytes": 4114,
+    "sha256": "89c56cc9667276e7599dd7cfeea540e9fe1784d9edffb407699e253e5e776a0a"
+  },
+  "catalogo_completo_13055.csv": {
+    "bytes": 2555958,
+    "sha256": "9b12caadf1626d77994b0a80ddd4f57f234a15275fe5dfcc6c7348d0a14d8cb8"
+  },
+  "missione_estesa_fg3.png": {
+    "bytes": 234984,
+    "sha256": "5c843064d13751f996b934bac5aee8db0a3fe8d509a2af4861f6e47f47e39993"
+  },
+  "riepilogo_bersagli.csv": {
+    "bytes": 1159,
+    "sha256": "551b2b1c276536be246709a4b4251f02734c21d0c38faf09d8c57c9fbcb35024"
+  },
+  "risultati.json": {
+    "bytes": 50815,
+    "sha256": "b44b678e1ba2f7ee6cc6397e628caabebbc9829eca278d0bee75c29688797b20"
+  },
+  "effetto_nuova_distanza.png": {
+    "bytes": 246210,
+    "sha256": "ec068d3aa648e7a4cb1b7afd7eb01dbfccdf92ec3bcec96a7e91b7370a7ee974"
+  },
+  "missione_estesa_cc.png": {
+    "bytes": 212304,
+    "sha256": "5268c237a771168a4bb199f69f904d500056d382e730ee6a468011186cca7be8"
+  },
+  "dettagli/ga20_rp4r_itokawa_historical_candidate.json": {
+    "bytes": 1612,
+    "sha256": "46c560604ccd0f3e003c17152c87b1bb152d5873c61e5da674e06bb26f0f013d"
+  },
+  "dettagli/ga20_all_rp4r_coverage.json": {
+    "bytes": 7184,
+    "sha256": "394e000fde7b39ecd027c76e361e33bebc6d28a0e2bed769ff6585bfbc021de8"
+  },
+  "dettagli/ga20_rp4r_fg3_extended_candidate.json": {
+    "bytes": 2287,
+    "sha256": "21046e7b8876aa2b8ebb1d818e426fca073a556cb6e2cae8d9d01ef1bc1e5e60"
+  },
+  "dettagli/ga20_rp4r_fg3_outbound.json": {
+    "bytes": 250750,
+    "sha256": "a2a77abb87b98088c1eb1570eb985d9889b9323b7fae7ca9c238fddbd1d2486b"
+  },
+  "dettagli/verifica_indipendente_fg3.json": {
+    "bytes": 4255,
+    "sha256": "6dc21119dc6d96a06659eefeeba4587dfdf2a4ce7a038532984636d7672ca40e"
+  },
+  "dettagli/ga20_rp4r_cc_extended_soi_validation.json": {
+    "bytes": 1976,
+    "sha256": "9e0fe140770b6115bcb0d478b56c43908cba7c5d87bc78fa5b92af8820b5c98b"
+  },
+  "dettagli/ga20_rp4r_cc_three_turns_report.json": {
+    "bytes": 3506,
+    "sha256": "6a5fde7686682a49b29ee975068cdf3a3740b604bdc8b1c762bd47131e6c20c6"
+  },
+  "dettagli/ga20_rp4r_cc_current_return_report.json": {
+    "bytes": 633,
+    "sha256": "32d3ada0e434ff03de80f23e23328b8fe8cde268dda319f49f9f36a8c1c70a0d"
+  },
+  "dettagli/ga20_rp4r_cc_extended_candidate.json": {
+    "bytes": 2245,
+    "sha256": "23614dff117a8becbe075f5eac209409ab06e7445a07d11fae7f800b3b79e27c"
+  },
+  "dettagli/ga20_rp4r_fg3_surface_soi_validation.json": {
+    "bytes": 1599,
+    "sha256": "51326964709a17adab8a3fc7400373779ce0de114cc170ccae2f4e5a98a5d0da"
+  },
+  "dettagli/ga20_rp4r_itokawa_historical_soi_validation.json": {
+    "bytes": 1419,
+    "sha256": "70183eb7a822a263e5584a33165b37caf84c7b7ab841a10110beab2ced4005c6"
+  },
+  "dettagli/ga20_rp4r_itokawa_outbound.json": {
+    "bytes": 9878,
+    "sha256": "e9b966927929973f4ba175869563a5addf6054fa14b7bd8441eede1042a4ca50"
+  },
+  "dettagli/ga20_rp4r_itokawa_report.json": {
+    "bytes": 5107,
+    "sha256": "85192388b8c54e2d0a671f2d9ac8ce60ea6a6288d1251a96ae568d8d934f068e"
+  },
+  "dettagli/ga20_rp4r_cc_outbound.json": {
+    "bytes": 5325033,
+    "sha256": "18c168fcd55203ca3c5fba559d4a24cda8e0a3455c83e0662ef2b3dd75561494"
+  },
+  "dettagli/ga20_rp4r_fg3_return_coasts.json": {
+    "bytes": 10974,
+    "sha256": "417ba3afdc02e63a11f3dee892fc4bfc3cdc6eed94a96d3aa86f84b3b8a4eb68"
+  },
+  "dettagli/verifica_indipendente_cc.json": {
+    "bytes": 4153,
+    "sha256": "f5d3932a63dab030fcfc6e4cad8bd09859656858c66f6e5eeb2b1668686e49e1"
+  },
+  "script_analisi/ga20_rp4r_build_analysis.py": {
+    "bytes": 11140,
+    "sha256": "1b43cbe319c73dcc286ec302e2583460046df54898ae2dfceb16c298032208c5"
+  },
+  "script_analisi/ga20_rp4r_itokawa_outbound.py": {
+    "bytes": 4806,
+    "sha256": "4b839f703c835cb5926e1173578fe03f0647ff6f92622db7c81b9944792f5f7d"
+  },
+  "script_analisi/ga20_validate_itokawa_complete.py": {
+    "bytes": 7803,
+    "sha256": "13cb8fa2de944c050ff826a0c740891ccd1857ec57198e69fc09e680780f865f"
+  },
+  "script_analisi/ga20_rp4r_return_search.py": {
+    "bytes": 8413,
+    "sha256": "1cbaa8c4a45fd9a9a25c647024f8dd7d920b1c8d7404de13f41f6a3b778549b2"
+  },
+  "script_analisi/ga20_rp4r_fg3_return_coasts.py": {
+    "bytes": 2887,
+    "sha256": "2f659e9579c5b2af317bc931d5abeac817e574d417c1f9ea0197db51e96e9a13"
+  },
+  "script_analisi/ga20_diagnose_1994cc.py": {
+    "bytes": 11957,
+    "sha256": "9f9e408575bb8bfbbbcc8fbad77612715a53984c30c277e1647685fa9d5efd7d"
+  },
+  "script_analisi/GA20_snapshot_analizzato.py": {
+    "bytes": 38717,
+    "sha256": "05aa618fd13002b831043cfe126fdc581ee07203be22fefab963d3bfa1a1662b"
+  },
+  "script_analisi/ga20_rp4r_cc_three_turns.py": {
+    "bytes": 5672,
+    "sha256": "b14b222b5be858c55e22387c5d87d6e6f0426fd069ff9480021742394c12e319"
+  }
+}

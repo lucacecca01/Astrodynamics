@@ -1,0 +1,155 @@
+{
+  "candidate": {
+    "surface_normalized": true,
+    "soi_radius_km": 924663.6125892245,
+    "body": "175706 (1996 FG3)",
+    "mass_kg": 3500000000000.0,
+    "radius_km": 0.598,
+    "mu_ast": 2.336005e-07,
+    "min_periapsis_km": 2.392,
+    "jd_departure": 2461495.42,
+    "jd_asteroid": 2461844.809657737,
+    "jd_capture": 2463311.173231026,
+    "tof_out_days": 349.38965773722157,
+    "tof_return_days": 1466.3635732890107,
+    "departure_cluster_id": 68,
+    "capture_cluster_id": 114,
+    "departure_residual": 0.11056516260920309,
+    "capture_residual": 0.05126753570515231,
+    "departure_radius": 0.11265739767211591,
+    "capture_radius": 0.10482359283598837,
+    "return_branch": 6,
+    "return_revolutions": 3,
+    "vinf_minus": 13.252657613685422,
+    "vinf_plus": 13.252657613680691,
+    "speed_residual": 4.730438263322867e-12,
+    "turn_angle_rad": 5.559330161369805e-10,
+    "max_turn_angle_rad": 1.1120815410285176e-09,
+    "required_periapsis_km": 4.78492726581376,
+    "continuity_residual": 4.940525811068011e-12,
+    "departure_radial_km_s": 1.8901068697879808,
+    "capture_radial_km_s": -1.8953203449938023,
+    "r0": [
+      -147389125.45896775,
+      -25829084.37029787,
+      0.0
+    ],
+    "ra": [
+      9699589.465532571,
+      171039323.92180556,
+      0.0
+    ],
+    "r1": [
+      -149297239.98042002,
+      3011753.7804347826,
+      0.0
+    ],
+    "v0": [
+      4.780458797115118,
+      -31.40789959589517,
+      0.0
+    ],
+    "vin": [
+      -27.918621205121216,
+      -2.3221980983301913,
+      0.0
+    ],
+    "vout": [
+      -27.918621198006505,
+      -2.3221981002439023,
+      0.0
+    ],
+    "v1": [
+      -0.6027668520570659,
+      -31.82136750541185,
+      0.0
+    ],
+    "out_earth_distance_min_km": 924663.6125892239,
+    "back_earth_distance_min_km": 924663.6125904334,
+    "soi_sample_segments": [
+      [
+        "out",
+        [
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      ],
+      [
+        "back",
+        []
+      ]
+    ],
+    "refined_local_earth_minima": [
+      [
+        "back",
+        128.42427157395463,
+        207854270.30247253
+      ],
+      [
+        "back",
+        561.5810931983066,
+        299288135.256723
+      ],
+      [
+        "back",
+        999.4304469276719,
+        213115662.49824303
+      ]
+    ],
+    "out_closure_position_km": 8.245019319357543e-07,
+    "back_closure_position_km": 1.2920881555636649e-06,
+    "departure_disk_ratio": 0.9814283384300942,
+    "capture_disk_ratio": 0.4890839391983803,
+    "name": "175706 (1996 FG3)",
+    "catalogue_index": 125,
+    "jd_flyby": 2461844.809657737,
+    "tof_outbound_days": 349.38965773722157,
+    "outbound_branch": 0
+  },
+  "verification": "independent reconstruction from original catalogue and statistics",
+  "outbound_lambert_branch_count": 1,
+  "return_lambert_branch_count": 7,
+  "departure_velocity_residual_km_s": 0.11056516260920664,
+  "departure_velocity_radius_km_s": 0.11265739767211591,
+  "departure_disk_ratio": 0.9814283384301258,
+  "capture_velocity_residual_km_s": 0.05126753570515231,
+  "capture_velocity_radius_km_s": 0.10482359283598837,
+  "capture_disk_ratio": 0.4890839391983803,
+  "speed_residual_km_s": 4.728661906483467e-12,
+  "turn_angle_rad": 5.559330161369805e-10,
+  "max_turn_angle_rad": 1.1120815410285176e-09,
+  "implied_pericentre_km": 4.78492726581376,
+  "minimum_pericentre_km": 2.392,
+  "outbound_position_closure_km": 5.750115603369896e-07,
+  "return_position_closure_km": 4.8437728076971485e-08,
+  "earth_soi_km": 924663.6125892245,
+  "departure_earth_distance_km": 924663.6125892239,
+  "capture_earth_distance_km": 924663.612589252,
+  "interior_local_minima": [
+    {
+      "tof_days": 477.81406245073686,
+      "distance_km": 207854270.3025079
+    },
+    {
+      "tof_days": 910.9707841390868,
+      "distance_km": 299288135.2567229
+    },
+    {
+      "tof_days": 1348.820101468326,
+      "distance_km": 213115662.49860588
+    }
+  ],
+  "soi_crossings": [
+    {
+      "tof_days": 0.0,
+      "jd_tdb": 2461495.42,
+      "direction": "exit",
+      "radial_velocity_km_s": 1.8901068697879793
+    }
+  ],
+  "max_sampling_interval_days": 0.04999875795465414,
+  "mass_kg": 3500000000000.0,
+  "mass_source": "https://academic.oup.com/mnras/article/418/2/1246/1073545"
+}

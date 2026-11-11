@@ -1,0 +1,70 @@
+{
+  "name": "25143 Itokawa (1998 SF36)",
+  "catalogue_index": 40,
+  "jd_departure": 2451551.0,
+  "jd_flyby": 2451991.700955648,
+  "jd_capture": 2452043.5477746576,
+  "departure_cluster_id": 292,
+  "capture_cluster_id": 503,
+  "tof_outbound_days": 440.70095564802625,
+  "tof_return_days": 51.84681900984518,
+  "outbound_branch": 2,
+  "return_branch": 0,
+  "speed_in_km_s": 6.541444564062705,
+  "speed_out_km_s": 6.54144456405878,
+  "speed_residual_km_s": 3.924860436654853e-12,
+  "turn_angle_rad": 8.498566957995977e-11,
+  "max_turn_angle_rad": 1.6590198014682313e-10,
+  "velocity_rotation_error_km_s": 1.3876208501193728e-11,
+  "earth_soi_radius_km": 924663.6125892245,
+  "soi_positions_normalized": true,
+  "departure_residual_ratio": 0.6180648984478784,
+  "capture_residual_ratio": 0.7491232262668504,
+  "r0": [
+    -41535941.3277818,
+    141948818.5098864,
+    0.0
+  ],
+  "r_ast": [
+    -152669985.71225795,
+    -13172462.596720934,
+    0.0
+  ],
+  "r_capture": [
+    -90324225.61877394,
+    -122147504.52346902,
+    0.0
+  ],
+  "v0": [
+    -29.03347551226556,
+    -7.3380736080152245,
+    0.0
+  ],
+  "v_ast_arrival": [
+    2.3216375276912746,
+    -28.790725544645856,
+    0.0
+  ],
+  "v_ast_departure": [
+    2.3216375274624887,
+    -28.79072554515254,
+    0.0
+  ],
+  "v_capture": [
+    23.85292660843472,
+    -16.745074424435433,
+    0.0
+  ],
+  "asteroid_velocity": [
+    8.264338558702379,
+    -31.52473385493408,
+    0.0
+  ],
+  "root_success": true,
+  "source_seed": 7373,
+  "min_periapsis_km": 0.66,
+  "radius_km": 0.165,
+  "mass_kg": 35100000000.0,
+  "historical": true,
+  "within_current_window": false
+}

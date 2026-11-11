@@ -1,0 +1,41 @@
+{
+  "accepted": 13,
+  "rejected_soi": 0,
+  "lambert_calls": 4413263,
+  "outbound_clusters": [
+    68,
+    115
+  ],
+  "capture_clusters": [
+    64,
+    68,
+    73,
+    105,
+    109,
+    111,
+    114
+  ],
+  "note": "Actual main, complete configured2-year departure/encounter grid,84returnTOFs,6joblibworkers,SAVE/PLOTdisabled. No fine dates or cluster hints.",
+  "execution_seconds_excluding_plots": 48.86,
+  "workers": 6,
+  "jd_start": 2461326.5,
+  "jd_end": 2462056.5,
+  "grid_step_days": [
+    10,
+    10,
+    10
+  ],
+  "local_time_radius_days": 10,
+  "local_return_start_offsets_days": [
+    0,
+    -10,
+    10
+  ],
+  "tests_passed": 10,
+  "coverage": "Heuristic seed ranking and finite local budget, not exhaustive.",
+  "source_sha256": {
+    "CR3BP_prova_GA_20.py": "d9d6a03ccf212ecb603a883fd7e7e2e9d2978b8bed28e3cc9511ecd3561e7701",
+    "ga20_transfer_search.py": "404c1d6a7e742a932e02d29d987f73237bb0cc75557c89b5bb4911a8823c5bc3",
+    "ga20_soi_validation.py": "fae7aeda059b12e9525262e5816f61fba38cbb5ba499db4958a4181c87ff024d"
+  }
+}

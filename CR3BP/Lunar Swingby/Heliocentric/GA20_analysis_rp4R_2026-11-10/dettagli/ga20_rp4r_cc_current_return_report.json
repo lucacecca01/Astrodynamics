@@ -1,0 +1,17 @@
+{
+  "catalogue_index": 66,
+  "body": "136617 (1994 CC)",
+  "return_tof_min_days": 200.0,
+  "return_tof_max_days": 499.0,
+  "rp_min_km": 1.24,
+  "outbound_coasts_screened": 11200,
+  "coast_grid_step_days": 2.0,
+  "coast_min_earth_distance_km": 112928401.85608912,
+  "capture_seeds": 0,
+  "continuous_attempts": 0,
+  "closed_roots": 0,
+  "best_roots": [],
+  "candidates": [],
+  "elapsed_seconds": 5.603495157964062,
+  "limitations": "Daily departure dates and outbound seed grid; screening of physical half-max positive turns; bounded continuous refinement of up to2500 selected encounter/return seeds. No global nonexistence proof."
+}

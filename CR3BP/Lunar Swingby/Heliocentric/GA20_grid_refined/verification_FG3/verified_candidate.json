@@ -1,0 +1,71 @@
+{
+  "jd_departure": 2461495.680026959,
+  "jd_asteroid": 2461844.8519900697,
+  "tof_return_days": 1465.7855279266523,
+  "departure_cluster_id": 68,
+  "capture_cluster_id": 105,
+  "outbound_branch": 0,
+  "return_branch": 6,
+  "departure_residual": 0.02552376471519712,
+  "departure_radius": 0.11265739767211591,
+  "capture_residual": 0.11344712010220902,
+  "capture_radius": 0.126094921258936,
+  "speed_error": 9.622524999031157e-12,
+  "turn_angle": 5.553985809936255e-10,
+  "max_turn_angle": 1.1115004466301517e-09,
+  "seed_times": [
+    2461496.5,
+    2461846.5,
+    1470.0
+  ],
+  "outbound_soi_pass": true,
+  "return_soi_pass": true,
+  "r0": [
+    -147230142.95810926,
+    -26494007.163248718,
+    0.0
+  ],
+  "r_asteroid": [
+    9610095.478582695,
+    171077600.22549534,
+    0.0
+  ],
+  "r_capture": [
+    -149218252.77558982,
+    4407450.715515516,
+    0.0
+  ],
+  "v0": [
+    4.915681348394075,
+    -31.39442008127046,
+    0.0
+  ],
+  "v_arrival": [
+    -27.911149508849014,
+    -2.3445577674154596,
+    0.0
+  ],
+  "v_return": [
+    -27.911149501741622,
+    -2.344557769336519,
+    0.0
+  ],
+  "v_capture": [
+    -0.854457017812897,
+    -31.823687697386678,
+    0.0
+  ],
+  "body": "175706 (1996 FG3)",
+  "catalogue_spkid": "20175706",
+  "mass_kg": 3500000000000.0,
+  "radius_km": 0.598,
+  "min_periapsis_km": 2.392,
+  "normalized_soi_positions": true,
+  "discovered_automatically": true,
+  "endpoint_candidates": 13,
+  "soi_validated_candidates": 13,
+  "soi_distance_tolerance_km": 0.01,
+  "soi_time_resolution_seconds": 0.25,
+  "source_discovery_json": "/tmp/ga20_fg3_automatic_10day_normalized_regression.json",
+  "validation_model": "Planar heliocentric Sun-only arcs; point-mass unpowered flyby; outgoing and first final incoming Earth SOI crossing"
+}

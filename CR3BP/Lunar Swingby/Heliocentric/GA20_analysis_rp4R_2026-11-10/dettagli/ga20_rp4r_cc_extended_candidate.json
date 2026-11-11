@@ -1,0 +1,87 @@
+{
+  "body": "136617 (1994 CC)",
+  "catalogue_index": 66,
+  "spkid": "20136617",
+  "source_seed": "/tmp/cc_surface_complete_candidate.json",
+  "research_scope": "Extended continuous-time candidate, outside current return200..499days and multi_revs3 configuration.",
+  "in_current_return_grid": false,
+  "outbound_branch": 0,
+  "return_branch": 12,
+  "return_revolutions": 6,
+  "surface_normalized": true,
+  "soi_positions_normalized": true,
+  "soi_radius_km": 924663.6125892245,
+  "mass_kg": 259350000000.0,
+  "radius_km": 0.31,
+  "mu_ast": 1.730979705e-08,
+  "min_periapsis_km": 1.24,
+  "min_surface_altitude_km": 0.9299999999999999,
+  "jd_departure": 2461654.5,
+  "jd_asteroid": 2461899.5926758572,
+  "jd_capture": 2463833.399303698,
+  "tof_out_days": 245.09267585714753,
+  "tof_return_days": 1933.8066278405445,
+  "departure_cluster_id": 505,
+  "capture_cluster_id": 415,
+  "departure_residual": 0.03634855199430145,
+  "capture_residual": 0.08988136287841354,
+  "departure_radius": 0.13118286531213644,
+  "capture_radius": 0.09449365881050013,
+  "departure_disk_ratio": 0.27708307718247904,
+  "capture_disk_ratio": 0.9511893603216677,
+  "vinf_minus": 8.753250042300548,
+  "vinf_plus": 8.753250042299925,
+  "speed_residual": 6.235012506294879e-13,
+  "turn_angle_rad": 1.8142039226194988e-10,
+  "max_turn_angle_rad": 3.643859451509024e-10,
+  "physical_rotation_rad": 1.821929725754512e-10,
+  "required_periapsis_km": 2.4905611017313443,
+  "continuity_residual": 6.790834466087481e-12,
+  "departure_radial_km_s": 1.4236263049521285,
+  "capture_radial_km_s": -1.4335781947888466,
+  "r0": [
+    143322751.38926113,
+    -45071163.01431904,
+    0.0
+  ],
+  "ra": [
+    22078102.33695154,
+    -142403246.98641482,
+    0.0
+  ],
+  "r1": [
+    131803634.12185068,
+    -73331988.95583987,
+    0.0
+  ],
+  "v0": [
+    7.527364146128702,
+    26.960127631717846,
+    0.0
+  ],
+  "vin": [
+    29.256485792135187,
+    1.6780497573735502,
+    0.0
+  ],
+  "vout": [
+    29.256485793314933,
+    1.6780497563105348,
+    0.0
+  ],
+  "v1": [
+    13.406356170484587,
+    24.431435335214385,
+    -0.0
+  ],
+  "asteroid_velocity": [
+    35.11844011452524,
+    8.178578799324452,
+    0.0
+  ],
+  "physical_vout": [
+    29.256485793319538,
+    1.6780497563055432,
+    0.0
+  ]
+}

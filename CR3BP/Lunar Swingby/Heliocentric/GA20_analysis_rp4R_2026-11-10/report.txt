@@ -1,0 +1,83 @@
+ANALISI GA20 — PERICENTRO MINIMO 4R
+
+Il catalogo contiene 13.055 asteroidi. Tutti sono stati censiti nel CSV.
+Nei dati locali, 158 hanno un diametro e solo tre hanno una massa
+osservativa utilizzabile insieme al raggio: Itokawa (40), 1994 CC (66)
+e 1996 FG3 (125). Gli altri 13.052 non sono dichiarati incompatibili:
+la loro fattibilità fisica non è valutata con una massa osservativa.
+La massa di 5604 (1992 FE), indice 14, deriva da una densità assunta
+ed è stata esclusa in accordo con la richiesta di usare masse osservative.
+
+CONFIGURAZIONE
+
+Partenze e incontri: JD 2461326.5–2462056.5 TDB, campionamento giornaliero.
+Corona degli incontri: 0,6–1,4 AU. Tutti i 763 cluster, dischi a 2,5 sigma.
+Tutti i rami Lambert disponibili fino a due rivoluzioni all'andata.
+Ritorni attuali: da 200 a 499 giorni dopo l'incontro con l'asteroide.
+Distanza minima dal centro: 4R. Quota minima sulla superficie: 3R.
+Centroidi di posizione proiettati sulla SOI; velocità e dischi conservati.
+Masse e raggi nominali del catalogo; nessuna densità ipotizzata aggiunta.
+
+RISULTATI
+
+Problemi Lambert risolti: 357.885.913.
+Rami esaminati: 541.139.579.
+Andate compatibili: 11.704.
+
+Itokawa, indice 40: rp minimo 0,660 km; quota minima 0,495 km.
+Nessuna andata compatibile sulla griglia giornaliera completa.
+Raffinati i 50 migliori semi entro +/-3 giorni: ancora nessuna andata
+compatibile. Il miglior scarto è 0,59812 km/s contro un raggio ammesso
+di 0,12981 km/s. Non ci sono semi di andata da cui cercare il ritorno.
+
+1994 CC, indice 66: rp minimo 1,240 km; quota minima 0,930 km.
+11.200 andate compatibili: 2.342 a zero rivoluzioni e 8.858 con una
+rivoluzione. Esaminate 33.600 traiettorie di ritorno con deviazione
+-delta_max, zero e +delta_max. Distanza terrestre minima nel periodo
+200–499 giorni: circa 112,93 milioni di km. Nessun candidato breve.
+
+1996 FG3, indice 125: rp minimo 2,392 km; quota minima 1,794 km.
+504 andate compatibili: 451 a zero rivoluzioni e 53 con una rivoluzione.
+Esaminate 1.512 traiettorie di ritorno con deviazione -delta_max, zero
+e +delta_max. Distanza terrestre minima nel periodo 200–499 giorni:
+circa 227,47 milioni di km. Nessun candidato breve.
+
+CONFRONTO CON RITORNI ESTESI
+
+FG3 conserva il candidato completo con ritorno di 1466,363573 giorni
+e tre rivoluzioni. CC conserva quello con ritorno di 1933,806628 giorni
+e sei rivoluzioni. Entrambi sono rifiniti con la nuova soglia 4R,
+rispettano i dischi e superano il controllo adattivo del primo ingresso
+nella SOI, con tolleranze di 10 metri e 0,25 secondi.
+Entrambi sono fuori dalla finestra attuale di ritorno 200–499 giorni.
+
+Itokawa conserva il candidato storico del 2000–2001, con ritorno di
+51,85 giorni. Questo caso è escluso sia dalle date attuali sia dal
+conteggio dei ritorni 200–499 giorni.
+
+INTERPRETAZIONE E LIMITI
+
+Il risultato negativo breve riguarda le andate della griglia indicata
+e gli angoli fisici esaminati. Non è una prova di impossibilità su tutte
+le epoche continue e su tutti gli angoli di deviazione intermedi.
+
+La soglia 4R aumenta la deviazione ammessa rispetto a R+50 km, ma alle
+velocità relative dei candidati trovati l'effetto rimane molto piccolo.
+I ritorni lunghi dipendono soprattutto dalle fasi delle orbite
+eliocentriche; ridurre il pericentro minimo non li sposta automaticamente
+nella finestra breve.
+
+Il modello è planare: archi eliocentrici a due corpi e flyby puntiforme.
+Non comprende i satelliti degli asteroidi, gli effetti tridimensionali
+o la ricostruzione di un singolo membro del catalogo lunare. La
+compatibilità dei dischi statistici non equivale a tale ricostruzione.
+
+FILE
+
+risultati.json: configurazione, conteggi, provenienza e verifiche.
+catalogo_completo_13055.csv: stato e disponibilità dati per ogni asteroide.
+riepilogo_bersagli.csv: riepilogo dei tre asteroidi valutabili.
+effetto_nuova_distanza.png: confronto del limite di deviazione.
+missione_estesa_cc.png e missione_estesa_fg3.png: missioni lunghe verificate.
+dettagli/: risultati numerici delle scansioni e verifiche.
+script_analisi/: copie degli script utilizzati e del file GA20 analizzato.

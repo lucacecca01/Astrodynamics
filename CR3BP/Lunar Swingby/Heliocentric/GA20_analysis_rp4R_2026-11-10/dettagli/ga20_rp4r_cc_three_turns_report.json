@@ -1,0 +1,113 @@
+{
+  "catalogue_index": 66,
+  "body": "136617 (1994 CC)",
+  "mass_kg": 259350000000.0,
+  "radius_km": 0.31,
+  "minimum_periapsis_km": 1.24,
+  "outbound_arc_count": 11200,
+  "distinct_encounter_dates": 69,
+  "return_tof_min_days": 200.0,
+  "return_tof_max_days_inclusive": 499.0,
+  "sample_step_days": 1.0,
+  "rotation_choices": [
+    "minus_delta_max",
+    "zero",
+    "plus_delta_max"
+  ],
+  "distance_evaluations": 10080000,
+  "propagated_trajectory_count": 33600,
+  "minimum_distance_km": 112928401.78046738,
+  "best_by_rotation": {
+    "-1": {
+      "distance_km": 112928402.08295503,
+      "return_tof_days": 200.0,
+      "sign": -1,
+      "turn_angle_rad": -2.759730604022934e-10,
+      "max_turn_angle_rad": 2.759730604022934e-10,
+      "outbound": {
+        "jd_departure": 2461326.5,
+        "jd_asteroid": 2461882.5,
+        "departure_cluster_id": 64,
+        "outbound_branch": 1,
+        "tof_out_days": 556.0,
+        "departure_disk_ratio": 0.9289228512053961,
+        "arrival_velocity_heliocentric": [
+          27.841785363319904,
+          -8.004977206340612,
+          0.0
+        ],
+        "vinf_minus": [
+          -7.065874070248032,
+          -7.158155828150582,
+          0.0
+        ],
+        "vinf_speed": 10.058119667049585
+      },
+      "refined_distance_km": 112928402.08295503,
+      "refined_return_tof_days": 200.0
+    },
+    "0": {
+      "distance_km": 112928401.93171117,
+      "return_tof_days": 200.0,
+      "sign": 0,
+      "turn_angle_rad": 0.0,
+      "max_turn_angle_rad": 2.759730604022934e-10,
+      "outbound": {
+        "jd_departure": 2461326.5,
+        "jd_asteroid": 2461882.5,
+        "departure_cluster_id": 64,
+        "outbound_branch": 1,
+        "tof_out_days": 556.0,
+        "departure_disk_ratio": 0.9289228512053961,
+        "arrival_velocity_heliocentric": [
+          27.841785363319904,
+          -8.004977206340612,
+          0.0
+        ],
+        "vinf_minus": [
+          -7.065874070248032,
+          -7.158155828150582,
+          0.0
+        ],
+        "vinf_speed": 10.058119667049585
+      },
+      "refined_distance_km": 112928401.93171117,
+      "refined_return_tof_days": 200.0
+    },
+    "1": {
+      "distance_km": 112928401.78046738,
+      "return_tof_days": 200.0,
+      "sign": 1,
+      "turn_angle_rad": 2.759730604022934e-10,
+      "max_turn_angle_rad": 2.759730604022934e-10,
+      "outbound": {
+        "jd_departure": 2461326.5,
+        "jd_asteroid": 2461882.5,
+        "departure_cluster_id": 64,
+        "outbound_branch": 1,
+        "tof_out_days": 556.0,
+        "departure_disk_ratio": 0.9289228512053961,
+        "arrival_velocity_heliocentric": [
+          27.841785363319904,
+          -8.004977206340612,
+          0.0
+        ],
+        "vinf_minus": [
+          -7.065874070248032,
+          -7.158155828150582,
+          0.0
+        ],
+        "vinf_speed": 10.058119667049585
+      },
+      "refined_distance_km": 112928401.78046738,
+      "refined_return_tof_days": 200.0
+    }
+  },
+  "max_extreme_vs_zero_position_separation_km": 0.36203897957452674,
+  "maximum_spacecraft_perihelion_speed_bound_km_s": 37.29979612621689,
+  "assumed_earth_speed_upper_bound_km_s": 50.0,
+  "sample_interpolation_distance_lower_bound_km": 109157050.58781481,
+  "earth_soi_km": 924663.6125892245,
+  "elapsed_seconds": 17.603223316022195,
+  "scope": "All accepted daily outbound arcs and three stated physical turn angles; not an exhaustive search over continuous departure or encounter dates or arbitrary scattering angles."
+}

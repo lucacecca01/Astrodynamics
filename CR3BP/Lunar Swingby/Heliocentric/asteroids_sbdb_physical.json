@@ -112,7 +112,9 @@
       "radius_km": 0.275,
       "diameter_sigma_km": null,
       "radius_sigma_km": null,
-      "extent_km": null
+      "extent_km": null,
+      "mass_kg": 1.74e11,
+      "mass_source": "Stima sferica: D=0.55 km; densita assunta=2000 kg/m^3"
     },
     "20005626": {
       "diameter_km": null,
@@ -301,7 +303,10 @@
       "radius_km": 0.165,
       "diameter_sigma_km": null,
       "radius_sigma_km": null,
-      "extent_km": "0.535x0.294x0.209"
+      "extent_km": "0.535x0.294x0.209",
+      "mass_kg": 3.51e10,
+      "mass_source": "Hayabusa/JAXA",
+      "mass_source_url": "https://www.isas.jaxa.jp/e/forefront/2006/yoshikawa/03.shtml"
     },
     "20026817": {
       "diameter_km": 1.172,
@@ -507,11 +512,21 @@
       "extent_km": null
     },
     "20136617": {
-      "diameter_km": null,
-      "radius_km": null,
+      "diameter_km": 0.62,
+      "radius_km": 0.31,
       "diameter_sigma_km": null,
       "radius_sigma_km": null,
-      "extent_km": null
+      "extent_km": null,
+      "diameter_reported_uncertainty_km": 0.06,
+      "diameter_source": "Radar shape model of the primary; quoted diameter uncertainty retained without assigning a sigma convention",
+      "diameter_source_url": "https://www.sciencedirect.com/science/article/pii/S0019103511003472",
+      "mass_kg": 2.5935e11,
+      "mass_sigma_kg": 1.0e10,
+      "mass_uncertainty_convention": "Adopted 1-sigma uncertainty, Section 3.2",
+      "mass_scope": "primary (Alpha), excluding the two satellites",
+      "mass_method": "Three-body orbit fit to Arecibo and Goldstone radar range/Doppler observations",
+      "mass_source": "Fang et al. (2011), AJ 141:154, Section 3.2; primary Alpha",
+      "mass_source_url": "https://doi.org/10.1088/0004-6256/141/5/154"
     },
     "20136618": {
       "diameter_km": null,
@@ -938,7 +953,15 @@
       "radius_km": 0.598,
       "diameter_sigma_km": 0.36,
       "radius_sigma_km": 0.18,
-      "extent_km": null
+      "extent_km": null,
+      "mass_kg": 3.5e12,
+      "mass_error_lower_kg": 1.9e12,
+      "mass_error_upper_kg": 6.4e12,
+      "mass_uncertainty_convention": "As reported in Wolters et al. (2011), Section 3",
+      "mass_scope": "primary, excluding the secondary",
+      "mass_method": "Thermal dimensions combined with density constrained by binary orbital observations",
+      "mass_source": "Wolters et al. (2011), MNRAS 418:1246-1257, Section 3; primary",
+      "mass_source_url": "https://academic.oup.com/mnras/article/418/2/1246/1073545"
     },
     "20177049": {
       "diameter_km": null,

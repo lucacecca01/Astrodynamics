@@ -1,0 +1,40 @@
+{
+  "output_dir": "/tmp/ga20_hybrid_output_smoke/GA20_grid_refined/Asteroide_175706 (1996 FG3)/run_20261111_105557_292172911",
+  "csv_columns": 11,
+  "csv_rows": 1,
+  "coarse_seed": [
+    2461496.5,
+    2461846.5,
+    1470.0
+  ],
+  "refined_dates": [
+    2461495.4410396167,
+    2461844.8135298113,
+    2463311.1556026284
+  ],
+  "branch_indices": [
+    0,
+    6
+  ],
+  "disk_ratios": [
+    0.8994035296575169,
+    0.49607978867025854
+  ],
+  "images": [
+    "SOI_00000_JD_2461495.44103962.png",
+    "orbite_SOI_00000_JD_2461495.44103962.png",
+    "orbite_tutte_le_SOI.png"
+  ],
+  "actual_plot_arc_checks": [
+    {
+      "join_error_km": 5.071322940361987e-07,
+      "outbound_start_error_km": 0.0,
+      "capture_end_error_km": 3.555357930549571e-06,
+      "outbound_points": 250,
+      "return_points": 250
+    }
+  ],
+  "soi_checks_both_pass": true,
+  "member_features": "Synthetic plotting-only features; original763velocitydisks/endpoints/asteroidmodel used.",
+  "empty_run_isolated": true
+}

@@ -1,0 +1,779 @@
+{
+  "source": "/tmp/ga20_fg3_automatic_10day_normalized_regression.json",
+  "elapsed_seconds": 0.8140897409757599,
+  "adaptive_distance_tolerance_km": 0.01,
+  "adaptive_time_resolution_seconds": 0.25,
+  "accepted_automatically": 13,
+  "checked_count": 13,
+  "soi_accepted_count": 13,
+  "first_return_pass": true,
+  "checks": [
+    {
+      "jd_departure": 2461495.680026959,
+      "jd_asteroid": 2461844.8519900697,
+      "tof_return_days": 1465.7855279266523,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 105,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.02552376471519712,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.11344712010220902,
+      "capture_radius": 0.126094921258936,
+      "speed_error": 9.622524999031157e-12,
+      "turn_angle": 5.553985809936255e-10,
+      "max_turn_angle": 1.1115004466301517e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147230142.95810926,
+        -26494007.163248718,
+        0.0
+      ],
+      "r_asteroid": [
+        9610095.478582695,
+        171077600.22549534,
+        0.0
+      ],
+      "r_capture": [
+        -149218252.77558982,
+        4407450.715515516,
+        0.0
+      ],
+      "v0": [
+        4.915681348394075,
+        -31.39442008127046,
+        0.0
+      ],
+      "v_arrival": [
+        -27.911149508849014,
+        -2.3445577674154596,
+        0.0
+      ],
+      "v_return": [
+        -27.911149501741622,
+        -2.344557769336519,
+        0.0
+      ],
+      "v_capture": [
+        -0.854457017812897,
+        -31.823687697386678,
+        0.0
+      ],
+      "body": "175706 (1996 FG3)",
+      "catalogue_spkid": "20175706",
+      "mass_kg": 3500000000000.0,
+      "radius_km": 0.598,
+      "min_periapsis_km": 2.392,
+      "normalized_soi_positions": true,
+      "discovered_automatically": true,
+      "endpoint_candidates": 13,
+      "soi_validated_candidates": 13,
+      "soi_distance_tolerance_km": 0.01,
+      "soi_time_resolution_seconds": 0.25,
+      "source_discovery_json": "/tmp/ga20_fg3_automatic_10day_normalized_regression.json",
+      "validation_model": "Planar heliocentric Sun-only arcs; point-mass unpowered flyby; outgoing and first final incoming Earth SOI crossing"
+    },
+    {
+      "jd_departure": 2461495.6139263385,
+      "jd_asteroid": 2461844.8454044545,
+      "tof_return_days": 1466.155867950681,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 64,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.0312995279018294,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.11555828456978004,
+      "capture_radius": 0.12980962520163392,
+      "speed_error": 1.4516388091578847e-11,
+      "turn_angle": 5.559380627069659e-10,
+      "max_turn_angle": 1.1116961974917121e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147270816.8703863,
+        -26325361.47686987,
+        0.0
+      ],
+      "r_asteroid": [
+        9624018.227286741,
+        171071649.57031175,
+        0.0
+      ],
+      "r_capture": [
+        -149253440.06129134,
+        3467576.2144749546,
+        0.0
+      ],
+      "v0": [
+        4.881951293854237,
+        -31.3978630891789,
+        0.0
+      ],
+      "v_arrival": [
+        -27.91246838667887,
+        -2.34038759126197,
+        0.0
+      ],
+      "v_return": [
+        -27.912468379566736,
+        -2.3403875931904228,
+        0.0
+      ],
+      "v_capture": [
+        -0.6804310421150633,
+        -31.826057931850535,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.4410396167,
+      "jd_asteroid": 2461844.8135298113,
+      "tof_return_days": 1466.3420728168571,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 114,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.10132446110833158,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.05200086578173434,
+      "capture_radius": 0.10482359283598837,
+      "speed_error": 3.552713678800501e-15,
+      "turn_angle": 5.558849333330794e-10,
+      "max_turn_angle": 1.1120395764463798e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147376365.39324674,
+        -25883035.695989333,
+        0.0
+      ],
+      "r_asteroid": [
+        9691403.728231043,
+        171042827.50632846,
+        0.0
+      ],
+      "r_capture": [
+        -149292590.6081613,
+        3058627.6535015525,
+        0.0
+      ],
+      "v0": [
+        4.791485107405734,
+        -31.406823116920833,
+        0.0
+      ],
+      "v_arrival": [
+        -27.91795574545897,
+        -2.324169948885551,
+        0.0
+      ],
+      "v_return": [
+        -27.91795573834585,
+        -2.3241699508032507,
+        0.0
+      ],
+      "v_capture": [
+        -0.6107110581702865,
+        -31.82189860376377,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.8192744264,
+      "jd_asteroid": 2461844.881070344,
+      "tof_return_days": 1465.792575754403,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 73,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.0762716993484843,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.10431820176558718,
+      "capture_radius": 0.1159113148713273,
+      "speed_error": 6.551204023708124e-12,
+      "turn_angle": 5.557712798735266e-10,
+      "max_turn_angle": 1.1112658397093545e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147143905.5764696,
+        -26848428.724177215,
+        0.0
+      ],
+      "r_asteroid": [
+        9548615.451861858,
+        171103859.21976903,
+        0.0
+      ],
+      "r_capture": [
+        -149196249.14108646,
+        4323254.958396668,
+        0.0
+      ],
+      "v0": [
+        4.988750929255891,
+        -31.386964449606253,
+        0.0
+      ],
+      "v_arrival": [
+        -27.90623363529896,
+        -2.358835618635811,
+        0.0
+      ],
+      "v_return": [
+        -27.906233628184363,
+        -2.3588356205521044,
+        0.0
+      ],
+      "v_capture": [
+        -0.8327793854774407,
+        -31.828818522896682,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.726932092,
+      "jd_asteroid": 2461844.854248477,
+      "tof_return_days": 1465.7842135862402,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 105,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.08238265520975387,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.11344550285377987,
+      "capture_radius": 0.126094921258936,
+      "speed_error": 5.403677505455562e-12,
+      "turn_angle": 5.556593693794853e-10,
+      "max_turn_angle": 1.111539884518113e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147211190.48177108,
+        -26613416.836572535,
+        0.0
+      ],
+      "r_asteroid": [
+        9605320.926411271,
+        171079640.5493811,
+        0.0
+      ],
+      "r_capture": [
+        -149218518.59352666,
+        4404949.509758315,
+        0.0
+      ],
+      "v0": [
+        4.93830400643156,
+        -31.390376320966315,
+        0.0
+      ],
+      "v_arrival": [
+        -27.910785944284655,
+        -2.345305909339129,
+        0.0
+      ],
+      "v_return": [
+        -27.910785937170097,
+        -2.345305911246345,
+        0.0
+      ],
+      "v_capture": [
+        -0.8535728338730194,
+        -31.823663102654237,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.6620397493,
+      "jd_asteroid": 2461844.848784502,
+      "tof_return_days": 1466.1468734197244,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 64,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.06710773094011908,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.11682148598358949,
+      "capture_radius": 0.12980962520163392,
+      "speed_error": 2.4868995751603507e-13,
+      "turn_angle": 5.563056759679957e-10,
+      "max_turn_angle": 1.1117150982385136e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147249861.6904305,
+        -26447925.030238673,
+        0.0
+      ],
+      "r_asteroid": [
+        9616872.42776616,
+        171074703.90908462,
+        0.0
+      ],
+      "r_capture": [
+        -149251910.69653344,
+        3482467.520817102,
+        0.0
+      ],
+      "v0": [
+        4.9054711352586935,
+        -31.393995726613102,
+        0.0
+      ],
+      "v_arrival": [
+        -27.91190839444287,
+        -2.341759528255901,
+        0.0
+      ],
+      "v_return": [
+        -27.911908387322296,
+        -2.341759530171492,
+        0.0
+      ],
+      "v_capture": [
+        -0.6825545069165789,
+        -31.82621960530316,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.6536179706,
+      "jd_asteroid": 2461844.847529171,
+      "tof_return_days": 1466.1651405736402,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 114,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.06570278167018008,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.09434113735934276,
+      "capture_radius": 0.10482359283598837,
+      "speed_error": 2.630784479151771e-12,
+      "turn_angle": 5.555947231814161e-10,
+      "max_turn_angle": 1.111731508086952e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147254867.94084024,
+        -26426432.010827634,
+        0.0
+      ],
+      "r_asteroid": [
+        9619526.340929449,
+        171073569.5893958,
+        0.0
+      ],
+      "r_capture": [
+        -149254227.40285397,
+        3438208.1268712776,
+        0.0
+      ],
+      "v0": [
+        4.9011309231720315,
+        -31.39446696523041,
+        0.0
+      ],
+      "v_arrival": [
+        -27.912130378443262,
+        -2.341101602231214,
+        0.0
+      ],
+      "v_return": [
+        -27.91213037133113,
+        -2.3411016041417136,
+        0.0
+      ],
+      "v_capture": [
+        -0.6745540024824677,
+        -31.82615537612699,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.790800052,
+      "jd_asteroid": 2461844.868173391,
+      "tof_return_days": 1465.872715686333,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 73,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.10152162382522982,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.07400380091843455,
+      "capture_radius": 0.1159113148713273,
+      "speed_error": 7.58682006107847e-12,
+      "turn_angle": 5.559750796382784e-10,
+      "max_turn_angle": 1.1114669343689046e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147172964.3779691,
+        -26776091.91476827,
+        0.0
+      ],
+      "r_asteroid": [
+        9575881.725809678,
+        171092217.00558376,
+        0.0
+      ],
+      "r_capture": [
+        -149215515.96666515,
+        4145214.621007024,
+        0.0
+      ],
+      "v0": [
+        4.971791251639665,
+        -31.386726836241177,
+        0.0
+      ],
+      "v_arrival": [
+        -27.908482574846133,
+        -2.3518864884590345,
+        0.0
+      ],
+      "v_return": [
+        -27.908482567730264,
+        -2.3518864903784333,
+        0.0
+      ],
+      "v_capture": [
+        -0.8022516532311239,
+        -31.826966739092413,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.706357617,
+      "jd_asteroid": 2461844.8538104226,
+      "tof_return_days": 1465.5955681289606,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 109,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.032361914947065126,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.0646628123990172,
+      "capture_radius": 0.07350378111486323,
+      "speed_error": 1.0462741784067475e-12,
+      "turn_angle": 5.560105153343075e-10,
+      "max_turn_angle": 1.1114132182787857e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147213893.0981395,
+        -26561113.585487433,
+        0.0
+      ],
+      "r_asteroid": [
+        9606247.028596312,
+        171079244.8090752,
+        0.0
+      ],
+      "r_capture": [
+        -149199442.13362655,
+        4892892.043703496,
+        0.0
+      ],
+      "v0": [
+        4.928993754335321,
+        -31.39304584102399,
+        0.0
+      ],
+      "v_arrival": [
+        -27.910735917137266,
+        -2.345928151309529,
+        0.0
+      ],
+      "v_return": [
+        -27.910735910019447,
+        -2.3459281532241607,
+        0.0
+      ],
+      "v_capture": [
+        -0.9446727124880804,
+        -31.821766936295802,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.7604067465,
+      "jd_asteroid": 2461844.8569465745,
+      "tof_return_days": 1465.5902992858953,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 109,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.0924206935090783,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.06613975075096067,
+      "capture_radius": 0.07350378111486323,
+      "speed_error": 7.45181694128405e-12,
+      "turn_angle": 5.556286721277602e-10,
+      "max_turn_angle": 1.1114481469544293e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147191175.63174212,
+        -26698703.798844315,
+        0.0
+      ],
+      "r_asteroid": [
+        9599616.802719027,
+        171082077.87921906,
+        0.0
+      ],
+      "r_capture": [
+        -149198823.80772522,
+        4898542.4032203015,
+        0.0
+      ],
+      "v0": [
+        4.955211918942951,
+        -31.388498794545946,
+        0.0
+      ],
+      "v_arrival": [
+        -27.910223054643836,
+        -2.347091613643372,
+        0.0
+      ],
+      "v_return": [
+        -27.9102230475326,
+        -2.34709161556255,
+        0.0
+      ],
+      "v_capture": [
+        -0.9451332864996395,
+        -31.82181920932562,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.4395608986,
+      "jd_asteroid": 2461844.808962158,
+      "tof_return_days": 1466.119004408096,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 111,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.10136785032686266,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.05063661842051123,
+      "capture_radius": 0.12666961932853282,
+      "speed_error": 1.0876632927647734e-11,
+      "turn_angle": 5.560945541103579e-10,
+      "max_turn_angle": 1.111992870215542e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147377262.81558535,
+        -25879244.725952316,
+        0.0
+      ],
+      "r_asteroid": [
+        9701059.947949946,
+        171038694.48451352,
+        0.0
+      ],
+      "r_capture": [
+        -149280045.1402504,
+        3643874.1372897513,
+        0.0
+      ],
+      "v0": [
+        4.790104773208363,
+        -31.406925400300388,
+        0.0
+      ],
+      "v_arrival": [
+        -27.918603292448978,
+        -2.322474704211149,
+        0.0
+      ],
+      "v_return": [
+        -27.918603285330295,
+        -2.3224747061194826,
+        0.0
+      ],
+      "v_capture": [
+        -0.7208286849108074,
+        -31.8194195207888,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.588598114,
+      "jd_asteroid": 2461844.833641381,
+      "tof_return_days": 1465.8133993963163,
+      "departure_cluster_id": 68,
+      "capture_cluster_id": 68,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.03885841373218622,
+      "departure_radius": 0.11265739767211591,
+      "capture_residual": 0.05620880138644167,
+      "capture_radius": 0.11265739767211591,
+      "speed_error": 8.615330671091215e-12,
+      "turn_angle": 5.559330611767689e-10,
+      "max_turn_angle": 1.1116641997371844e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147286356.15876406,
+        -26260671.486224312,
+        0.0
+      ],
+      "r_asteroid": [
+        9648886.514189139,
+        171061017.0117091,
+        0.0
+      ],
+      "r_capture": [
+        -149235084.01778358,
+        4376794.610654346,
+        0.0
+      ],
+      "v0": [
+        4.867715189079407,
+        -31.39923465295128,
+        0.0
+      ],
+      "v_arrival": [
+        -27.914266208154864,
+        -2.335444508888256,
+        0.0
+      ],
+      "v_return": [
+        -27.91426620103698,
+        -2.3354445107954986,
+        0.0
+      ],
+      "v_capture": [
+        -0.8524982046259432,
+        -31.820782278828105,
+        0.0
+      ]
+    },
+    {
+      "jd_departure": 2461495.38792568,
+      "jd_asteroid": 2461844.797722407,
+      "tof_return_days": 1466.1844490002072,
+      "departure_cluster_id": 115,
+      "capture_cluster_id": 111,
+      "outbound_branch": 0,
+      "return_branch": 6,
+      "departure_residual": 0.10152251829858018,
+      "departure_radius": 0.11281002808555848,
+      "capture_residual": 0.07119846051401496,
+      "capture_radius": 0.12666961932853282,
+      "speed_error": 9.338307904727117e-12,
+      "turn_angle": 5.560702190737391e-10,
+      "max_turn_angle": 1.112132547835327e-09,
+      "seed_times": [
+        2461496.5,
+        2461846.5,
+        1470.0
+      ],
+      "outbound_soi_pass": true,
+      "return_soi_pass": true,
+      "r0": [
+        -147411294.55828467,
+        -25746545.72995624,
+        0.0
+      ],
+      "r_asteroid": [
+        9724821.104364902,
+        171028521.24967587,
+        0.0
+      ],
+      "r_capture": [
+        -149294777.86505643,
+        3499641.308742849,
+        0.0
+      ],
+      "v0": [
+        4.762500258713326,
+        -31.40914034257569,
+        0.0
+      ],
+      "v_arrival": [
+        -27.9205411300786,
+        -2.316638235758165,
+        0.0
+      ],
+      "v_return": [
+        -27.920541122961435,
+        -2.3166382376691153,
+        0.0
+      ],
+      "v_capture": [
+        -0.6962503877990069,
+        -31.817880100275463,
+        0.0
+      ]
+    }
+  ]
+}
